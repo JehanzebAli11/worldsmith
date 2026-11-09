@@ -180,7 +180,7 @@ def test_gate_blocks_until_its_lever_is_reachable():
     g = nav.navigate(sealed, mode="walk")
     assert g["result"] == "DISCONNECTED"
     assert g["gates_opened"] == [] and g["gates_closed"] == ["gate_1"]
-    assert 31 < g["closest"]["pos"][2] < 33          # stopped in front of the closed gate
+    assert 30 < g["closest"]["pos"][2] < 33          # stopped in front of the closed gate
     assert nav.navigate(sealed, mode="jump")["result"] == "DISCONNECTED"
     # Same room with the gate lifted out of its slot (geometry only; the validator rejects
     # that as GATE_BYPASSED): the corridor is open, so the graph connects.

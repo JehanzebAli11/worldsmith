@@ -6,7 +6,10 @@
 verdict). `candidate` is a patch (a dict, or patch text) or a whole patched scene (a dict whose
 `schema` is `worldsmith.scene/...`). `stage` is the caller's stage (`M0`, `M1`; see
 `worldsmith.validator.patch.STAGES`). The result is `{ok, violations[], warnings[], graph}`
-(`Result.to_dict()`); `graph` is reserved for the WS-07 navigation approximation and is None.
+(`Result.to_dict()`); `graph` is the WS-07 navigation approximation (`validator/nav.py`, ADR
+0008) for a candidate judged geometrically, else None. It is information only: it never makes
+`ok` false (SPEC section 7: actual runs decide); a DISCONNECTED walk graph adds the warning
+GRAPH_DISCONNECTED_WALK.
 A rejected patch counts against the revision budget (SPEC section 7); counting is the caller's.
 
 Layers (codes in `CODES`, documented in docs/VALIDATOR.md; rules in ADR 0007):
@@ -26,10 +29,12 @@ Layers (codes in `CODES`, documented in docs/VALIDATOR.md; rules in ADR 0007):
 4. Difficulty (7.3): GAP_CHANGED, GAP_BELOW_MIN, GATE_LEVER_UNLINKED, GATE_BYPASSED,
    DETOUR_TOO_SHORT, PATH_BLOCKED.
 5. Structure (7.4): PENETRATION, OUTSIDE_ROOM, UNSUPPORTED, LAYOUT_BROKEN.
+6. Navigation approximation (7.5, WS-07): fills `graph`; warning GRAPH_DISCONNECTED_WALK only.
 
 Geometry (layers 3-5) runs only on a candidate inside the grammar (schema, strings and bounds
 pass); it uses the compiler's own part geometry (`compiler/geometry.py`), so the validator judges
-what would be built. Pure and deterministic: inputs are never mutated; violations are sorted.
+what would be built; so does the navigation graph (layer 6).
+Pure and deterministic: inputs are never mutated; violations are sorted.
 """
 
 from __future__ import annotations
@@ -44,6 +49,7 @@ from typing import Any, Iterable
 
 from worldsmith.compiler import geometry as geo
 from worldsmith.grammar import scene as sc
+from worldsmith.validator import nav
 from worldsmith.validator import patch as pt
 
 # --- rule constants (ADR 0007) ---------------------------------------------------------------
@@ -87,6 +93,8 @@ CODES = MappingProxyType({
 })
 WARNING_CODES = MappingProxyType({
     "BRIDGE_SHORT": "a bridge ends before its gap's far platform (allowed; F1-A is built that way)",
+    "GRAPH_DISCONNECTED_WALK": "the walk-mode navigation graph finds no path from spawn to goal"
+                               " (an approximation, ADR 0008; never a rejection: actual runs decide)",
 })
 
 # Exact names (lower case, underscores removed) of player physics properties; only used to
@@ -116,7 +124,7 @@ class Result:
     ok: bool
     violations: tuple[Violation, ...]
     warnings: tuple[Violation, ...]
-    graph: str | None = None
+    graph: dict | None = None   # WS-07 navigation approximation (nav.graph); never decides ok
     scene: dict | None = field(default=None, compare=False, repr=False)  # the judged candidate
 
     @property
@@ -141,10 +149,10 @@ class _Out:
         assert code in WARNING_CODES, code
         self.w.add((code, ref or "", message, ref))
 
-    def result(self, scene=None) -> Result:
+    def result(self, scene=None, graph=None) -> Result:
         v = tuple(Violation(c, m, r) for c, _, m, r in sorted(self.v, key=lambda t: t[:3]))
         w = tuple(Violation(c, m, r) for c, _, m, r in sorted(self.w, key=lambda t: t[:3]))
-        return Result(ok=not v, violations=v, warnings=w, graph=None, scene=scene)
+        return Result(ok=not v, violations=v, warnings=w, graph=graph, scene=scene)
 
 
 # --- entry points ------------------------------------------------------------------------------
@@ -212,8 +220,8 @@ def validate_patch(base: dict, patch: Any, *, stage: str) -> Result:
         return out.result()
 
     cand = _simulate(base, ops, out)
-    _judge(base, cand, out)
-    return out.result(cand)
+    graph = _judge(base, cand, out)
+    return out.result(cand, graph)
 
 
 def validate_scene_change(base: dict, scene: Any, *, stage: str) -> Result:
@@ -232,8 +240,8 @@ def validate_scene_change(base: dict, scene: Any, *, stage: str) -> Result:
     for e in pt.check_ops({"schema": pt.STAGE_SCHEMAS[stage][0], "ops": ops}, stage=stage):
         if e.startswith("stage:"):
             out.add("STAGE_OP_FORBIDDEN", "change " + e.split(": ", 1)[1], _op_ref(e))
-    _judge(base, scene, out)
-    return out.result(scene)
+    graph = _judge(base, scene, out)
+    return out.result(scene, graph)
 
 
 # --- patch layer helpers ------------------------------------------------------------------------
@@ -378,7 +386,8 @@ def _short(value: Any, limit: int = 40) -> str:
 
 # --- the scene judgement --------------------------------------------------------------------------
 
-def _judge(base: dict, cand: dict, out: _Out):
+def _judge(base: dict, cand: dict, out: _Out) -> dict | None:
+    """Add the candidate's violations and warnings to `out`; return its navigation graph."""
     errors = sc.validate_scene(cand)
     in_grammar = True
     for e in errors:
@@ -392,8 +401,17 @@ def _judge(base: dict, cand: dict, out: _Out):
         else:
             _map_ref(e, out)
     _protection(base, cand, out)
-    if in_grammar:
-        _geometry(base, cand, out)
+    if not in_grammar:
+        return None
+    _geometry(base, cand, out)
+    # 6. Navigation approximation (SPEC section 7 item 5, ADR 0008): information and a warning,
+    # never a violation.
+    graph = nav.graph(cand)
+    if graph is not None and graph["walk"]["result"] == "DISCONNECTED":
+        out.warn("GRAPH_DISCONNECTED_WALK",
+                 "walk graph DISCONNECTED under the ADR 0008 approximation (no jumps; not a"
+                 " proof: actual runs decide)", "graph.walk")
+    return graph
 
 
 def _map_ref(e: str, out: _Out):
