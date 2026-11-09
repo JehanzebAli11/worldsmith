@@ -488,3 +488,75 @@ One entry per session, newest last: **Done** · **Verified** · **Next** · **Op
    Recommended: yes.
 4. Allow a `version` bump in the paired fix's scene (a WS-05 patch bumps it; the M0 fix did
    not)? Recommended: yes.
+
+## 2026-11-09 22:05 PKT · WS-07
+
+**Done**
+- `validator/nav.py` (`worldsmith.validator.nav`): the SPEC §7 item 5 navigation approximation.
+  `navigate(scene, mode)` (`walk` | `jump`), `graph(scene)` (both modes, the validator's field),
+  `reach(dh)`. A coarse 1-stud grid over the top surfaces of the compiler's own part boxes
+  (`compiler/geometry.py`; solids = CanCollide on, so Decor neither blocks nor supports), a
+  vertical-cylinder body, walk edges (4 neighbours, step up ≤ 1, drops allowed, KillFloor =
+  hazard), jump edges in `jump` mode only (ballistic arc, swept body checked), gate precondition
+  (a gate is solid until a reachable node's body touches its lever's touch zone; latched; run to
+  a fixpoint), start = spawn top, goal = body overlaps the `GOAL_TOUCHED` trigger. Output per mode:
+  `result`, `basis` (`approximation` / `derived`), `path` node list (`pos`, `on`, `via`),
+  `gates_opened`, `gates_closed`, `reached_on`, `nodes`, `closest`. Cached by canonical JSON;
+  about 18 ms per scene for both modes on the VM.
+- Parameters in one block, `nav.PARAMS`, each with basis and source: measured (from
+  `bundles/m0/character/measure.json`, n = 1): `body_height` 5.19, `walk_speed` 16,
+  `jump_height` 7.2, `gravity` 196.2; derived: `body_radius` 2.09 (half the bbox's horizontal
+  diagonal), `jump_rise` 7.2, `jump_reach_flat` 8.669 (one measured jump: 8.75, n = 1);
+  assumed: `step_up` 1 (not measured; = ADR 0007 `FLOOR_BAND`); design: `cell` 1.
+- `validator/validate.py`: layer 6 fills `Result.graph` (now a dict, or `None` when geometry does
+  not run or the scene has no single spawn / no goal trigger) and adds the warning
+  `GRAPH_DISCONNECTED_WALK` (ref `graph.walk`) when walk mode is DISCONNECTED. It never adds a
+  violation and never changes `ok`.
+- `docs/ADR/0008-navigation-approximation.md` (the model, every parameter, fixture results,
+  limits: "never a physical proof … Actual runs decide"); `docs/VALIDATOR.md` (`graph`
+  documented, new warning row, order step 4).
+- Tests first at `143eca7` (collection failed: no `worldsmith.validator.nav`):
+  `tests/test_ws07_nav.py` (26 tests); WS-06 fixtures adjusted: `test_output_shape…` now expects
+  a CONNECTED walk graph instead of `None`, and the 5 F1-A legit cases that keep the 6-stud
+  bridge (`bridge_width_f1a`, `decor_off_route`, `gate_nudged`, `lever_within_ledge`,
+  `wall_off_route`) also expect `GRAPH_DISCONNECTED_WALK`. One test correction in the feat
+  commit `620b141`: the closed-gate stop is z 30.5 (gate face 33 − radius 2.09), not above 31.
+
+**Verified** (Linux VM on the Mac bridge, Python 3.10.12, venvs outside the repo)
+- Walk: F1-A DISCONNECTED (lever reached, gate opened, closest node on `bridge_1` at z 41.5;
+  the bridge ends at z 42); F1-A fix CONNECTED; F1-E CONNECTED. Synthetic: an 8-stud Wall across
+  the corridor → DISCONNECTED (lever not reached); bridge 17 (1-stud join) → CONNECTED; ledge
+  opening sealed → DISCONNECTED with `gate_1` closed, and CONNECTED once the gate is lifted out of
+  its slot (proves the gate, not the wall, blocks); Decor slab across the corridor → CONNECTED,
+  Decor slab in the hole → still DISCONNECTED.
+- Jump (labelled `derived`): F1-A DISCONNECTED (10-stud hole vs 8.669 derived reach; asserted
+  only as deterministic and labelled, not as truth: M0 measured one jump and no edges); bridge 12
+  (4-stud hole) → CONNECTED with a jump edge; bridge 4 (12-stud hole) → DISCONNECTED. Jump mode
+  never reaches fewer nodes than walk on the fixtures. The 1-stud grid makes the model's widest
+  level jump about one cell less than the reach (an 8-stud hole is not crossed); ADR 0008 says so.
+- `graph` identical across 3 processes with different `PYTHONHASHSEED`; inputs not mutated;
+  entity order irrelevant. Monkeypatching both modes to DISCONNECTED leaves `ok` and the
+  violations unchanged. All 69 reject / 13 accept WS-06 cases still pass.
+- `VENV=… ./scripts/test.sh -q` → `1301 passed` (includes WS-08's tests; 26 are WS-07's).
+  Fresh `git clone` at `06b9f75` + fresh venv, `make test` → `1301 passed in 14.78s`.
+- Consistency, not validation: the F1-A and fix walk results match the M0 gate (F1-A FELL 3/3,
+  fix SUCCESS 3/3, P0 never jumps; `docs/M0.md`).
+- Not verified: anything in Studio (CPU-only ticket); the model has not been compared with any
+  run beyond the two M0 scenes; Python 3.12; macOS `make test`; the built wheel's contents.
+
+**Next**
+- WS-09 (sampler) and WS-10 (architect) can read `graph` as a hint; WS-11 should store it in the
+  bundle beside each run's outcome so the model is checked against real runs over time.
+- README status is the control thread's (not edited here).
+
+**Open questions** (yes/no for the owner)
+1. Keep the step-up at an assumed 1 stud (no M0 measurement) until a live step probe exists?
+   Recommended: yes; a probe (walk into 0.5/1/1.5/2-stud steps, n ≥ 3 each) would replace it via
+   ADR.
+2. Body as a cylinder of radius 2.09 (holds the 4.00 × 1.20 bbox in any facing) rather than
+   the narrower HumanoidRootPart (2 × 1)? It closes openings under 4.18 studs. Recommended: yes
+   (conservative for a warning).
+3. Model what is built: Decor (CanCollide off) neither blocks nor supports in the graph, while
+   ADR 0007's hard rules still treat Decor as solid. Recommended: yes.
+4. Warn only on walk-mode DISCONNECTED (P0 never jumps); jump mode stays information only.
+   Recommended: yes.
