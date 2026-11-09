@@ -388,7 +388,7 @@ One entry per session, newest last: **Done** · **Verified** · **Next** · **Op
   `BRIDGE_SHORT` warning.
 
 **Verified** (Linux VM on the Mac bridge, Python 3.10.12, venvs outside the repo)
-- Every reject case is rejected and carries its expected codes; the 21 cases marked `exact`
+- Every reject case is rejected and carries its expected codes; the 28 cases marked `exact`
   carry exactly those (e.g. `bridge_beyond_join`, length 19 in M0 → only `PENETRATION`;
   `gate_moved_away`, an M1-allowed move → only `GATE_BYPASSED`; `wall_blocks_corridor` → only
   `PATH_BLOCKED`; `decor_as_floor` → only `NEW_FLOOR`; `four_ops` → only `TOO_MANY_OPS`;
