@@ -141,14 +141,15 @@ def test_both_input_kinds_are_exercised():
 
 # --- agreement with the patch engine (WS-05) -------------------------------------------
 
-@pytest.mark.parametrize("path", REJECT + ACCEPT, ids=lambda p: p.stem)
+PATCH_CASES = [p for p in REJECT + ACCEPT if "patch" in _case(p) or "patch_file" in _case(p)]
+
+
+@pytest.mark.parametrize("path", PATCH_CASES, ids=lambda p: p.stem)
 def test_validator_is_at_least_as_strict_as_apply_patch(path):
     """Whatever apply_patch rejects, the validator rejects; whatever the validator accepts,
     apply_patch applies, to the same scene."""
     case = _case(path)
     base, cand, res = _run(case)
-    if not isinstance(cand, dict) or cand.get("schema", "").startswith("worldsmith.scene/"):
-        pytest.skip("not a patch object")
     try:
         applied = pt.apply_patch(base, cand, stage=case["stage"])
     except pt.PatchError:

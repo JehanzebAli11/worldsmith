@@ -27,5 +27,7 @@
       }
     ]
   },
-  "warnings": []
+  "warnings": [
+    "BRIDGE_SHORT"
+  ]
 }
