@@ -18,7 +18,7 @@ EV_IDS = {"LEVER_ACTIVATED": "lever_1", "GATE_OPENED": "gate_1", "BRIDGE_CROSSED
           "KILL_FLOOR_TOUCHED": "kill_floor", "GOAL_TOUCHED": "trig_goal"}
 
 
-def play_result(nonce, params, events=(), *, status="route_done", died=False, jumps=0,
+def play_result(nonce, params, events=(), *, status="route_done", died=False, jumps=0, removed=False,
                 captured=None, chunk=50, extra_logs=(), report_nonce=None, params_override=None,
                 drop_report=False, is_timeout=False):
     """events: [(EVENT, "x,y,z" or "na")] in order."""
@@ -27,7 +27,7 @@ def play_result(nonce, params, events=(), *, status="route_done", died=False, ju
         lines.append(ev_line(nonce, name, EV_IDS[name], pos, 1794237655.0 + k))
     report = {"nonce": report_nonce or nonce, "params": params_override or params, "status": status,
               "detail": "", "events": list(lines if captured is None else captured), "waypoints": [],
-              "died": died, "jumps": jumps, "ticks": 120, "scene_hash": "x", "t_died": -1,
+              "died": died, "removed": removed, "characters_added": 1, "jumps": jumps, "ticks": 120, "scene_hash": "x", "t_died": -1,
               "pos_died": "na", "last_supported": "na", "start_pos": "na", "t_route_start": 1.0,
               "events_dropped": 0, "t_end": 9.5}
     s = json.dumps(report)

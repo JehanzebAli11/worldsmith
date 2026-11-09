@@ -258,6 +258,12 @@ def test_death_without_kill_floor_event_is_unclassified(params, area):
     assert classify.classify_attempt(r, N1, params, area)["outcome"] == "UNCLASSIFIED"
 
 
+def test_character_removed_without_dying_is_harness_error(params, area):
+    # Seen in the first F1-E smoke run: the auto-loaded character replaced the controller's.
+    r = play_result(N1, params, [], status="died", removed=True)
+    assert classify.classify_attempt(r, N1, params, area)["outcome"] == "HARNESS_ERROR"
+
+
 def test_deadline_is_timeout_with_missing_event_tags(params, area):
     out = classify.classify_attempt(play_result(N1, params, [], status="deadline"), N1, params, area)
     assert out["outcome"] == "TIMEOUT" and out["tags"] == ["TIMEOUT", "LEVER_NOT_ACTIVATED"]
