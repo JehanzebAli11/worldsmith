@@ -1,0 +1,17 @@
+{
+  "case": "scene_width_f1e",
+  "why": "F1-E width change as a whole patched scene.",
+  "base": "F1-E",
+  "stage": "M1",
+  "scene_edits": [
+    {
+      "path": [
+        "entity",
+        "bridge_1",
+        "width"
+      ],
+      "value": 7
+    }
+  ],
+  "warnings": []
+}

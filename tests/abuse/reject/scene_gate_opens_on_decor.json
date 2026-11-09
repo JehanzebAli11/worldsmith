@@ -1,0 +1,24 @@
+{
+  "case": "scene_gate_opens_on_decor",
+  "spec16": [
+    "gate_opens_elsewhere"
+  ],
+  "why": "The gate points at the lamp, as a whole patched scene.",
+  "base": "F1-A",
+  "stage": "M1",
+  "scene_edits": [
+    {
+      "path": [
+        "entity",
+        "gate_1",
+        "opens_on"
+      ],
+      "value": "decor_1"
+    }
+  ],
+  "expect": [
+    "GATE_LEVER_UNLINKED",
+    "REF_INVALID",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

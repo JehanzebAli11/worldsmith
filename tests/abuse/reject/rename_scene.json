@@ -1,0 +1,21 @@
+{
+  "case": "rename_scene",
+  "spec16": [
+    "remove_protected"
+  ],
+  "why": "Change scene_id.",
+  "base": "F1-A",
+  "stage": "M1",
+  "scene_edits": [
+    {
+      "path": [
+        "scene_id"
+      ],
+      "value": "f1_z"
+    }
+  ],
+  "expect": [
+    "PROTECTED_CHANGED",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

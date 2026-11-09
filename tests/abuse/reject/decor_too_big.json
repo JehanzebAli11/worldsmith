@@ -1,0 +1,36 @@
+{
+  "case": "decor_too_big",
+  "spec16": [
+    "out_of_bounds"
+  ],
+  "why": "An added Decor 20 studs wide (bound 16).",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "add",
+        "entity": {
+          "id": "decor_2",
+          "type": "Decor",
+          "palette": "banner",
+          "pos": [
+            -28,
+            3,
+            4
+          ],
+          "size": [
+            20,
+            6,
+            1
+          ]
+        }
+      }
+    ]
+  },
+  "expect": [
+    "OUT_OF_BOUNDS"
+  ]
+}

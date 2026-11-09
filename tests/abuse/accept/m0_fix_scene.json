@@ -1,0 +1,8 @@
+{
+  "case": "m0_fix_scene",
+  "why": "The hand-authored fix.json as a whole patched scene.",
+  "base": "F1-A",
+  "stage": "M0",
+  "scene_file": "scenes/F1-A/fix.json",
+  "warnings": []
+}

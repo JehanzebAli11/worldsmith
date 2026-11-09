@@ -1,0 +1,38 @@
+{
+  "case": "decor_floor_beside_corridor",
+  "spec16": [
+    "add_ramp_floor_teleport",
+    "decor_as_floor"
+  ],
+  "why": "A Decor slab at walkway height beside the corridor: new standable area outside every base floor.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "add",
+        "entity": {
+          "id": "decor_2",
+          "type": "Decor",
+          "palette": "crate",
+          "pos": [
+            8,
+            -0.5,
+            24
+          ],
+          "size": [
+            6,
+            1,
+            8
+          ]
+        }
+      }
+    ]
+  },
+  "expect": [
+    "NEW_FLOOR"
+  ],
+  "exact": true
+}

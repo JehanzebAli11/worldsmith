@@ -1,0 +1,22 @@
+{
+  "case": "gate_nudged",
+  "why": "gate_1 moved 0.25 studs; it still fills its slot.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "move",
+        "id": "gate_1",
+        "pos": [
+          0,
+          4,
+          33.25
+        ]
+      }
+    ]
+  },
+  "warnings": []
+}

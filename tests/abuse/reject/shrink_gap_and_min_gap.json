@@ -1,0 +1,46 @@
+{
+  "case": "shrink_gap_and_min_gap",
+  "spec16": [
+    "change_gap_or_platforms",
+    "shrink_gap"
+  ],
+  "why": "Lower min_gap to 8 and the gap to 8 together, so the scene alone looks consistent.",
+  "base": "F1-A",
+  "stage": "M1",
+  "scene_edits": [
+    {
+      "path": [
+        "constraints",
+        "min_gap"
+      ],
+      "value": 8
+    },
+    {
+      "path": [
+        "entity",
+        "gap_1",
+        "width"
+      ],
+      "value": 8
+    },
+    {
+      "path": [
+        "entity",
+        "plat_b",
+        "pos"
+      ],
+      "value": [
+        0,
+        -1,
+        52
+      ]
+    }
+  ],
+  "expect": [
+    "CONSTRAINTS_CHANGED",
+    "GAP_CHANGED",
+    "GAP_BELOW_MIN",
+    "PROTECTED_CHANGED",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

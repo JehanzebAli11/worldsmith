@@ -1,0 +1,14 @@
+{
+  "case": "not_json",
+  "spec16": [
+    "patch_layer"
+  ],
+  "why": "Truncated JSON.",
+  "base": "F1-A",
+  "stage": "M0",
+  "patch_text": "{\"schema\": \"worldsmith.patch/0.1\", \"ops\": [",
+  "expect": [
+    "PATCH_MALFORMED"
+  ],
+  "exact": true
+}

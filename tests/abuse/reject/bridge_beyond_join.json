@@ -1,0 +1,25 @@
+{
+  "case": "bridge_beyond_join",
+  "spec16": [
+    "bridge_overlaps_platform"
+  ],
+  "why": "bridge_1.length 19 sinks 3 studs into plat_b (join allows 1).",
+  "base": "F1-A",
+  "stage": "M0",
+  "patch": {
+    "schema": "worldsmith.patch/0.1",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "set",
+        "id": "bridge_1",
+        "field": "length",
+        "value": 19
+      }
+    ]
+  },
+  "expect": [
+    "PENETRATION"
+  ],
+  "exact": true
+}

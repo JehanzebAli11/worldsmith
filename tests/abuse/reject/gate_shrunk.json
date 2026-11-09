@@ -1,0 +1,29 @@
+{
+  "case": "gate_shrunk",
+  "spec16": [
+    "delete_or_open_gate"
+  ],
+  "why": "Shrink the gate so it no longer fills the corridor.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "set",
+        "id": "gate_1",
+        "field": "size",
+        "value": [
+          8,
+          2,
+          1
+        ]
+      }
+    ]
+  },
+  "expect": [
+    "GATE_BYPASSED",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

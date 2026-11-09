@@ -1,0 +1,28 @@
+{
+  "case": "gate_lifted",
+  "spec16": [
+    "delete_or_open_gate"
+  ],
+  "why": "Lift the gate so the player walks under it.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "move",
+        "id": "gate_1",
+        "pos": [
+          0,
+          10,
+          33.5
+        ]
+      }
+    ]
+  },
+  "expect": [
+    "GATE_BYPASSED"
+  ],
+  "exact": true
+}

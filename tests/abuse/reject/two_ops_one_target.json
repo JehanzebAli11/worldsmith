@@ -1,0 +1,31 @@
+{
+  "case": "two_ops_one_target",
+  "spec16": [
+    "patch_layer"
+  ],
+  "why": "Two sets of bridge_1.length.",
+  "base": "F1-A",
+  "stage": "M0",
+  "patch": {
+    "schema": "worldsmith.patch/0.1",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "set",
+        "id": "bridge_1",
+        "field": "length",
+        "value": 10
+      },
+      {
+        "op": "set",
+        "id": "bridge_1",
+        "field": "length",
+        "value": 12
+      }
+    ]
+  },
+  "expect": [
+    "OP_CONFLICT"
+  ],
+  "exact": true
+}

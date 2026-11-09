@@ -1,0 +1,22 @@
+{
+  "case": "physics_unlocked",
+  "spec16": [
+    "player_physics"
+  ],
+  "why": "Unlock player_physics in the constraints.",
+  "base": "F1-A",
+  "stage": "M1",
+  "scene_edits": [
+    {
+      "path": [
+        "constraints",
+        "player_physics"
+      ],
+      "value": "unlocked"
+    }
+  ],
+  "expect": [
+    "PHYSICS_CHANGED",
+    "SCHEMA_INVALID"
+  ]
+}

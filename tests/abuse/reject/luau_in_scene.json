@@ -1,0 +1,23 @@
+{
+  "case": "luau_in_scene",
+  "spec16": [
+    "code_payload"
+  ],
+  "why": "Luau in a scene field, as a whole patched scene.",
+  "base": "F1-A",
+  "stage": "M1",
+  "scene_edits": [
+    {
+      "path": [
+        "entity",
+        "decor_1",
+        "palette"
+      ],
+      "value": "lamp\nInstance.new('Part')"
+    }
+  ],
+  "expect": [
+    "CODE_PAYLOAD",
+    "SCHEMA_INVALID"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "case": "lever_in_corridor",
+  "spec16": [
+    "lever_in_corridor"
+  ],
+  "why": "lever_1 moved into the corridor.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "move",
+        "id": "lever_1",
+        "pos": [
+          0,
+          0,
+          24
+        ]
+      }
+    ]
+  },
+  "expect": [
+    "DETOUR_TOO_SHORT",
+    "UNSUPPORTED"
+  ]
+}

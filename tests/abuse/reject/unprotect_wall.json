@@ -1,0 +1,35 @@
+{
+  "case": "unprotect_wall",
+  "spec16": [
+    "remove_protected"
+  ],
+  "why": "Drop wall_r from the protected list.",
+  "base": "F1-A",
+  "stage": "M1",
+  "scene_edits": [
+    {
+      "path": [
+        "protected"
+      ],
+      "value": [
+        "spawn",
+        "goal",
+        "kill_floor",
+        "bounds",
+        "plat_a",
+        "corridor",
+        "ledge_1",
+        "plat_b",
+        "gap_1",
+        "wall_l1",
+        "wall_l2",
+        "trig_bridge",
+        "trig_goal"
+      ]
+    }
+  ],
+  "expect": [
+    "PROTECTED_CHANGED",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

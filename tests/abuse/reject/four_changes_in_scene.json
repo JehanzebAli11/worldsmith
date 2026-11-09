@@ -1,0 +1,51 @@
+{
+  "case": "four_changes_in_scene",
+  "spec16": [
+    "too_many_ops"
+  ],
+  "why": "Four field changes in a whole patched scene.",
+  "base": "F1-A",
+  "stage": "M1",
+  "scene_edits": [
+    {
+      "path": [
+        "entity",
+        "bridge_1",
+        "length"
+      ],
+      "value": 16
+    },
+    {
+      "path": [
+        "entity",
+        "bridge_1",
+        "width"
+      ],
+      "value": 7
+    },
+    {
+      "path": [
+        "entity",
+        "bridge_1",
+        "lateral_offset"
+      ],
+      "value": 0.5
+    },
+    {
+      "path": [
+        "entity",
+        "lever_1",
+        "pos"
+      ],
+      "value": [
+        -14,
+        0,
+        24
+      ]
+    }
+  ],
+  "expect": [
+    "TOO_MANY_OPS"
+  ],
+  "exact": true
+}

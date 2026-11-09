@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/JehanzebAli11/worldsmith/grammar/patch_schema_0.2.json",
+  "title": "worldsmith.patch/0.2",
+  "description": "One bounded scene patch with the M1 op kinds (ADR 0007). Closed: unknown keys and ops are rejected; strings are IDs or a hex hash. What a patch may SAY is wider than what a stage ALLOWS: worldsmith.validator.patch.STAGES decides which (op, id, field) pairs are applied, so the validator can name what a rejected op tried to do. An added entity is checked by the scene schema after it is applied. Value ranges: grammar/bounds.yaml.",
+  "type": "object",
+  "required": [
+    "schema",
+    "base_hash",
+    "ops"
+  ],
+  "properties": {
+    "schema": {
+      "const": "worldsmith.patch/0.2"
+    },
+    "base_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "ops": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/$defs/op"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,31}$"
+    },
+    "vec3": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "set_op": {
+      "description": "Set one field of one entity. value: a number, an ID (a reference field) or a vector.",
+      "type": "object",
+      "required": [
+        "op",
+        "id",
+        "field",
+        "value"
+      ],
+      "properties": {
+        "op": {
+          "const": "set"
+        },
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "field": {
+          "$ref": "#/$defs/id"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "$ref": "#/$defs/vec3"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "move_op": {
+      "description": "Set the pos of one entity that has a pos.",
+      "type": "object",
+      "required": [
+        "op",
+        "id",
+        "pos"
+      ],
+      "properties": {
+        "op": {
+          "const": "move"
+        },
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "pos": {
+          "$ref": "#/$defs/vec3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "add_op": {
+      "description": "Add one entity. Its content is checked by grammar/schema.json once applied.",
+      "type": "object",
+      "required": [
+        "op",
+        "entity"
+      ],
+      "properties": {
+        "op": {
+          "const": "add"
+        },
+        "entity": {
+          "type": "object",
+          "required": [
+            "id",
+            "type"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "remove_op": {
+      "description": "Remove one entity. No stage allows it; it exists so the validator can name the attempt.",
+      "type": "object",
+      "required": [
+        "op",
+        "id"
+      ],
+      "properties": {
+        "op": {
+          "const": "remove"
+        },
+        "id": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "op": {
+      "description": "Dispatch on op. unevaluatedProperties closes this level too.",
+      "type": "object",
+      "required": [
+        "op"
+      ],
+      "properties": {
+        "op": {
+          "enum": [
+            "set",
+            "move",
+            "add",
+            "remove"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "op": {
+                "const": "set"
+              }
+            },
+            "required": [
+              "op"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/set_op"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "op": {
+                "const": "move"
+              }
+            },
+            "required": [
+              "op"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/move_op"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "op": {
+                "const": "add"
+              }
+            },
+            "required": [
+              "op"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/add_op"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "op": {
+                "const": "remove"
+              }
+            },
+            "required": [
+              "op"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/remove_op"
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

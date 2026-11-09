@@ -1,0 +1,27 @@
+{
+  "case": "goal_behind_spawn",
+  "spec16": [
+    "move_goal_or_spawn",
+    "goal_behind_spawn"
+  ],
+  "why": "Put the goal on the spawn platform, behind the start of the route.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "set",
+        "id": "goal",
+        "field": "on",
+        "value": "plat_a"
+      }
+    ]
+  },
+  "expect": [
+    "PROTECTED_CHANGED",
+    "LAYOUT_BROKEN",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

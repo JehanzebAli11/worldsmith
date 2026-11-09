@@ -1,0 +1,19 @@
+{
+  "case": "bridge_offset_f1e",
+  "why": "F1-E bridge_1.lateral_offset 0 -> 1.",
+  "base": "F1-E",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+    "ops": [
+      {
+        "op": "set",
+        "id": "bridge_1",
+        "field": "lateral_offset",
+        "value": 1
+      }
+    ]
+  },
+  "warnings": []
+}

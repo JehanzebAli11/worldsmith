@@ -1,0 +1,8 @@
+{
+  "case": "m0_fix_in_m1",
+  "why": "The M0 fix is also legal in M1.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch_file": "scenes/F1-A/patches/m0_fix.json",
+  "warnings": []
+}

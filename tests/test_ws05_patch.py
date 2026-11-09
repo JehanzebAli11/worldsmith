@@ -63,7 +63,7 @@ def test_patch_schema_id_and_op_cap():
 
 
 def test_m0_stage_allows_exactly_bridge_1_length():
-    assert set(pt.STAGES) == {"M0"}
+    assert "M0" in pt.STAGES  # WS-06 adds M1 (ADR 0007); M0 itself is unchanged
     rules = pt.STAGES["M0"]
     assert len(rules) == 1
     rule = rules[0]
@@ -256,7 +256,7 @@ def test_bridge_1_must_be_a_bridge_in_the_scene():
 
 
 def test_unknown_stage_is_a_programming_error():
-    for stage in ["M1", "m0", "", None]:
+    for stage in ["M9", "m0", "", None]:  # M1 exists since WS-06
         with pytest.raises(ValueError) as exc:
             pt.apply_patch(_f1a(), _patch(), stage=stage)
         assert not isinstance(exc.value, pt.PatchError)

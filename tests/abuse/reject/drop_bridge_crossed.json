@@ -1,0 +1,24 @@
+{
+  "case": "drop_bridge_crossed",
+  "spec16": [
+    "success_without_bridge_crossed"
+  ],
+  "why": "required_events without BRIDGE_CROSSED.",
+  "base": "F1-A",
+  "stage": "M1",
+  "scene_edits": [
+    {
+      "path": [
+        "constraints",
+        "required_events"
+      ],
+      "value": [
+        "GOAL_TOUCHED"
+      ]
+    }
+  ],
+  "expect": [
+    "REQUIRED_EVENTS_CHANGED",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

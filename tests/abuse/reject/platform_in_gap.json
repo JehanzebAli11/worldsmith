@@ -1,0 +1,37 @@
+{
+  "case": "platform_in_gap",
+  "spec16": [
+    "add_ramp_floor_teleport",
+    "platform_or_ramp_in_gap"
+  ],
+  "why": "Add a Platform filling the gap.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "add",
+        "entity": {
+          "id": "plat_c",
+          "type": "Platform",
+          "pos": [
+            0,
+            -1,
+            47
+          ],
+          "size": [
+            6,
+            2,
+            10
+          ]
+        }
+      }
+    ]
+  },
+  "expect": [
+    "NEW_FLOOR",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

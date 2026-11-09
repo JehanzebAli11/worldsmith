@@ -1,0 +1,30 @@
+{
+  "case": "wall_off_route",
+  "why": "A low wall on plat_b's edge, outside the walkway.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "add",
+        "entity": {
+          "id": "wall_x",
+          "type": "Wall",
+          "pos": [
+            7,
+            2,
+            64
+          ],
+          "size": [
+            1,
+            4,
+            6
+          ]
+        }
+      }
+    ]
+  },
+  "warnings": []
+}

@@ -1,0 +1,36 @@
+{
+  "case": "wall_as_floor_in_gap",
+  "spec16": [
+    "add_ramp_floor_teleport"
+  ],
+  "why": "An allowed op (add Wall) used as a floor slab in the gap, top flush with the walkway.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "add",
+        "entity": {
+          "id": "wall_g",
+          "type": "Wall",
+          "pos": [
+            0,
+            -1,
+            47
+          ],
+          "size": [
+            6,
+            2,
+            10
+          ]
+        }
+      }
+    ]
+  },
+  "expect": [
+    "NEW_FLOOR"
+  ],
+  "exact": true
+}

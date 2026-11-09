@@ -1,0 +1,28 @@
+{
+  "case": "goal_moved_by_pos",
+  "spec16": [
+    "move_goal_or_spawn"
+  ],
+  "why": "A move op on the goal (which has no pos; it sits on its platform).",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "move",
+        "id": "goal",
+        "pos": [
+          0,
+          0,
+          6
+        ]
+      }
+    ]
+  },
+  "expect": [
+    "BAD_TARGET",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

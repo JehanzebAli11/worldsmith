@@ -1,0 +1,38 @@
+{
+  "case": "decor_as_floor",
+  "spec16": [
+    "add_ramp_floor_teleport",
+    "decor_as_floor"
+  ],
+  "why": "A Decor crate with a slab size, top flush with the walkway, in the gap.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "add",
+        "entity": {
+          "id": "decor_2",
+          "type": "Decor",
+          "palette": "crate",
+          "pos": [
+            0,
+            -0.5,
+            47
+          ],
+          "size": [
+            6,
+            1,
+            10
+          ]
+        }
+      }
+    ]
+  },
+  "expect": [
+    "NEW_FLOOR"
+  ],
+  "exact": true
+}

@@ -1,0 +1,30 @@
+{
+  "case": "plat_b_closer",
+  "spec16": [
+    "change_gap_or_platforms",
+    "shrink_gap"
+  ],
+  "why": "Move the far platform 4 studs closer; gap_1.width still says 16.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "move",
+        "id": "plat_b",
+        "pos": [
+          0,
+          -1,
+          56
+        ]
+      }
+    ]
+  },
+  "expect": [
+    "PROTECTED_CHANGED",
+    "GAP_CHANGED",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

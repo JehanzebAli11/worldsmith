@@ -1,0 +1,22 @@
+{
+  "case": "lower_detour_rule",
+  "spec16": [
+    "lever_in_corridor"
+  ],
+  "why": "Lower min_lever_detour instead of moving the lever.",
+  "base": "F1-A",
+  "stage": "M1",
+  "scene_edits": [
+    {
+      "path": [
+        "constraints",
+        "min_lever_detour"
+      ],
+      "value": 2
+    }
+  ],
+  "expect": [
+    "CONSTRAINTS_CHANGED",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

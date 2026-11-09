@@ -1,0 +1,38 @@
+{
+  "case": "jump_power_on_decor",
+  "spec16": [
+    "player_physics"
+  ],
+  "why": "Smuggle JumpPower in on an added Decor.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "add",
+        "entity": {
+          "id": "decor_2",
+          "type": "Decor",
+          "palette": "plant",
+          "pos": [
+            -6.5,
+            1,
+            2
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "JumpPower": 100
+        }
+      }
+    ]
+  },
+  "expect": [
+    "PHYSICS_CHANGED",
+    "SCHEMA_INVALID"
+  ]
+}

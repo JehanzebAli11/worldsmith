@@ -1,0 +1,26 @@
+{
+  "case": "script_key_on_op",
+  "spec16": [
+    "code_payload"
+  ],
+  "why": "An extra script key on an op.",
+  "base": "F1-A",
+  "stage": "M0",
+  "patch": {
+    "schema": "worldsmith.patch/0.1",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "set",
+        "id": "bridge_1",
+        "field": "length",
+        "value": 16,
+        "script": "print('hi')"
+      }
+    ]
+  },
+  "expect": [
+    "CODE_PAYLOAD",
+    "SCHEMA_INVALID"
+  ]
+}

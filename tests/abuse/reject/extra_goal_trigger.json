@@ -1,0 +1,30 @@
+{
+  "case": "extra_goal_trigger",
+  "spec16": [
+    "success_without_bridge_crossed"
+  ],
+  "why": "Add a second GOAL_TOUCHED trigger.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "add",
+        "entity": {
+          "id": "trig_goal_2",
+          "type": "Trigger",
+          "event": "GOAL_TOUCHED",
+          "on": "goal",
+          "region": "whole",
+          "height": 30
+        }
+      }
+    ]
+  },
+  "expect": [
+    "REQUIRED_EVENTS_CHANGED",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "case": "teleport_pad",
+  "spec16": [
+    "add_ramp_floor_teleport"
+  ],
+  "why": "Add an entity of a type outside the closed set (a teleport pad).",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "add",
+        "entity": {
+          "id": "tp_1",
+          "type": "TeleportPad",
+          "pos": [
+            0,
+            0.5,
+            10
+          ],
+          "size": [
+            4,
+            1,
+            4
+          ]
+        }
+      }
+    ]
+  },
+  "expect": [
+    "TELEPORT",
+    "SCHEMA_INVALID",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

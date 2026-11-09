@@ -1,0 +1,8 @@
+{
+  "case": "m0_fix",
+  "why": "The M0 fix (scenes/F1-A/patches/m0_fix.json).",
+  "base": "F1-A",
+  "stage": "M0",
+  "patch_file": "scenes/F1-A/patches/m0_fix.json",
+  "warnings": []
+}

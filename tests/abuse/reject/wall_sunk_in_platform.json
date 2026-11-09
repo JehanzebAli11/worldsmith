@@ -1,0 +1,36 @@
+{
+  "case": "wall_sunk_in_platform",
+  "spec16": [
+    "bridge_overlaps_platform"
+  ],
+  "why": "An added Wall sunk into plat_b.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "add",
+        "entity": {
+          "id": "wall_x",
+          "type": "Wall",
+          "pos": [
+            7,
+            1,
+            64
+          ],
+          "size": [
+            1,
+            4,
+            4
+          ]
+        }
+      }
+    ]
+  },
+  "expect": [
+    "PENETRATION"
+  ],
+  "exact": true
+}

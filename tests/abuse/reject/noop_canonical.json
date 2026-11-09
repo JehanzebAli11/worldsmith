@@ -1,0 +1,25 @@
+{
+  "case": "noop_canonical",
+  "spec16": [
+    "noop"
+  ],
+  "why": "6.0004 is 6 at canonical precision.",
+  "base": "F1-A",
+  "stage": "M0",
+  "patch": {
+    "schema": "worldsmith.patch/0.1",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "set",
+        "id": "bridge_1",
+        "field": "length",
+        "value": 6.0004
+      }
+    ]
+  },
+  "expect": [
+    "NOOP_PATCH"
+  ],
+  "exact": true
+}

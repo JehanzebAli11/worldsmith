@@ -1,0 +1,37 @@
+{
+  "case": "luau_in_decor_palette",
+  "spec16": [
+    "code_payload"
+  ],
+  "why": "require() as a Decor palette.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "add",
+        "entity": {
+          "id": "decor_2",
+          "type": "Decor",
+          "palette": "require(4242)",
+          "pos": [
+            -6.5,
+            1,
+            2
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ]
+        }
+      }
+    ]
+  },
+  "expect": [
+    "CODE_PAYLOAD",
+    "SCHEMA_INVALID"
+  ]
+}

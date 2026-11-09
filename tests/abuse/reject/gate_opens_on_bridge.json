@@ -1,0 +1,27 @@
+{
+  "case": "gate_opens_on_bridge",
+  "spec16": [
+    "delete_or_open_gate",
+    "gate_opens_elsewhere"
+  ],
+  "why": "Point the gate's opens_on at the bridge.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "set",
+        "id": "gate_1",
+        "field": "opens_on",
+        "value": "bridge_1"
+      }
+    ]
+  },
+  "expect": [
+    "GATE_LEVER_UNLINKED",
+    "REF_INVALID",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

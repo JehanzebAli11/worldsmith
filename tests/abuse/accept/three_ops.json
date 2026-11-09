@@ -1,0 +1,43 @@
+{
+  "case": "three_ops",
+  "why": "Fix, widen, and a plant: three allowed ops.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "set",
+        "id": "bridge_1",
+        "field": "length",
+        "value": 16
+      },
+      {
+        "op": "set",
+        "id": "bridge_1",
+        "field": "width",
+        "value": 7
+      },
+      {
+        "op": "add",
+        "entity": {
+          "id": "decor_2",
+          "type": "Decor",
+          "palette": "plant",
+          "pos": [
+            -6.5,
+            1,
+            2
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ]
+        }
+      }
+    ]
+  },
+  "warnings": []
+}

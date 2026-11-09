@@ -1,0 +1,14 @@
+{
+  "case": "noop_scene",
+  "spec16": [
+    "noop"
+  ],
+  "why": "The base scene handed back unchanged.",
+  "base": "F1-A",
+  "stage": "M0",
+  "scene_edits": [],
+  "expect": [
+    "NOOP_PATCH"
+  ],
+  "exact": true
+}

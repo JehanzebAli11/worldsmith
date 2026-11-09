@@ -1,0 +1,26 @@
+{
+  "case": "gravity_m0",
+  "spec16": [
+    "player_physics"
+  ],
+  "why": "Set a gravity field.",
+  "base": "F1-A",
+  "stage": "M0",
+  "patch": {
+    "schema": "worldsmith.patch/0.1",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "set",
+        "id": "kill_floor",
+        "field": "gravity",
+        "value": 20
+      }
+    ]
+  },
+  "expect": [
+    "PHYSICS_CHANGED",
+    "BAD_TARGET",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}

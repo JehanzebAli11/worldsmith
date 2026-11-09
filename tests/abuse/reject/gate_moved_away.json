@@ -1,0 +1,28 @@
+{
+  "case": "gate_moved_away",
+  "spec16": [
+    "delete_or_open_gate"
+  ],
+  "why": "An allowed op (move gate_1) that parks the gate off the route: permanently open.",
+  "base": "F1-A",
+  "stage": "M1",
+  "patch": {
+    "schema": "worldsmith.patch/0.2",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "move",
+        "id": "gate_1",
+        "pos": [
+          0,
+          4,
+          10
+        ]
+      }
+    ]
+  },
+  "expect": [
+    "GATE_BYPASSED"
+  ],
+  "exact": true
+}

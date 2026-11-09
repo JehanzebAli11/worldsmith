@@ -1,0 +1,27 @@
+{
+  "case": "m0_trigger_height",
+  "spec16": [
+    "non_bridge_op_m0",
+    "success_without_bridge_crossed"
+  ],
+  "why": "Shrink the BRIDGE_CROSSED trigger.",
+  "base": "F1-A",
+  "stage": "M0",
+  "patch": {
+    "schema": "worldsmith.patch/0.1",
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "op": "set",
+        "id": "trig_bridge",
+        "field": "height",
+        "value": 2
+      }
+    ]
+  },
+  "expect": [
+    "STAGE_OP_FORBIDDEN",
+    "PROTECTED_CHANGED",
+    "REQUIRED_EVENTS_CHANGED"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "case": "scene_goal_on_plat_a",
+  "spec16": [
+    "move_goal_or_spawn",
+    "goal_behind_spawn"
+  ],
+  "why": "The same goal move, handed to the validator as a whole patched scene.",
+  "base": "F1-A",
+  "stage": "M1",
+  "scene_edits": [
+    {
+      "path": [
+        "entity",
+        "goal",
+        "on"
+      ],
+      "value": "plat_a"
+    }
+  ],
+  "expect": [
+    "PROTECTED_CHANGED",
+    "LAYOUT_BROKEN",
+    "STAGE_OP_FORBIDDEN"
+  ]
+}
