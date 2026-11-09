@@ -156,7 +156,7 @@ def test_build_script_shape(path):
     assert lua.isascii()
     assert f'local WS_HASH = "{canonical_hash(scene)}"' in lua
     assert f"local WS_VERSION = {scene['version']}" in lua
-    assert "RunService:IsRunning()" in lua.split("local WS_HASH", 1)[0]   # refuses play mode first
+    assert "\"RunService\"):IsRunning()" in lua.split("local WS_HASH", 1)[0]   # refuses play mode first
     assert 'root.Name = "Worldsmith"' in lua
     assert lua.index("old:Destroy()") < lua.index("root.Parent = workspace")  # swap at the end
     assert lua.rstrip().endswith('print("WS_BUILD_OK|" .. WS_HASH .. "|" .. tostring(#root:GetDescendants()))')
@@ -305,8 +305,8 @@ def _synthetic(axis):
 ])
 def test_bridge_and_landing_follow_the_gap_axis(axis, bridge, landing):
     n = _nodes(geometry.expected_tree(_synthetic(axis)))
-    assert (n["bridge_1"]["pos"], n["bridge_1"]["size"]) == list(bridge)
-    assert (n["trig_bridge"]["pos"], n["trig_bridge"]["size"]) == list(landing)
+    assert (n["bridge_1"]["pos"], n["bridge_1"]["size"]) == tuple(bridge)
+    assert (n["trig_bridge"]["pos"], n["trig_bridge"]["size"]) == tuple(landing)
 
 
 @pytest.mark.parametrize("towards,yaw,size", [
