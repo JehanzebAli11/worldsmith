@@ -1,0 +1,35 @@
+{
+ "config_file": "config/m0.yaml",
+ "config_sha256": "15884b5aed16e4e3074384e59b54a34e5e058fe36c2f0a0d24fc0f67731647c6",
+ "controller_sha256": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+ "created": "2026-11-09T15:48:31.639391Z",
+ "episode": "smoke2-F1-E",
+ "n_attempts": 1,
+ "nonces": [
+  "2478f490d6a684cf"
+ ],
+ "origin": [
+  0,
+  100,
+  0
+ ],
+ "player": {
+  "claim": "Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result.",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "tier": "P0"
+ },
+ "role": "smoke",
+ "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+ "run_id": "m0-2026-11-09T154831",
+ "scene_file": "scenes/F1-E/scene.json",
+ "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+ "scene_version": 1,
+ "schema": "worldsmith.m0episode/0.1",
+ "t_attempt_s": 60,
+ "tool_timeouts_s": {
+  "get_studio_mode": 15,
+  "run_code": 30,
+  "run_script_in_play_mode": 90,
+  "start_stop_play": 30
+ }
+}

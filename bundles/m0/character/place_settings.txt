@@ -1,0 +1,11 @@
+run_code (Edit mode), 2026-11-09 ~20:35 PKT, before:
+[OUTPUT] IsEdit=true IsRunning=false
+[OUTPUT] before LoadCharacterAppearance=true CharacterAutoLoads=true
+[OUTPUT] StarterCharacter=false
+[OUTPUT] UserEmotesEnabled=true AutoJumpEnabled=true
+[OUTPUT] spawn Workspace.SpawnLocation 0, 0.5, 0
+[OUTPUT] workspace SpawnLocations=1
+[OUTPUT] Worldsmith=true hash=92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d
+run_code (Edit mode), set:
+SP.LoadCharacterAppearance = false; Players.CharacterAutoLoads = true
+[OUTPUT] WS_PLACE|LoadCharacterAppearance=false|CharacterAutoLoads=true|StarterCharacter=false

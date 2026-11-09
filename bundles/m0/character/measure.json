@@ -1,0 +1,74 @@
+{
+ "accessories": 0,
+ "base_parts": 16,
+ "bbox": [
+  4.000000953674316,
+  5.187471389770508,
+  1.1979091167449951
+ ],
+ "character_auto_loads": true,
+ "clothing": 0,
+ "floor": "Plastic",
+ "gravity": 196.1999969482422,
+ "hip_height": 2,
+ "hrp_owner_is_player": true,
+ "hrp_size": [
+  2,
+  2,
+  1
+ ],
+ "hrp_y_standing": 4,
+ "jump": {
+  "air_time": 0.5489319167099893,
+  "apex_rise": 7.303686141967773,
+  "horizontal": 8.75286865234375,
+  "landing": [
+   79.11421966552734,
+   2.913414478302002,
+   -2.3965208530426025
+  ],
+  "method": "server Humanoid.Jump",
+  "takeoff": [
+   70.3613510131836,
+   3.1231210231781006,
+   -2.3965208530426025
+  ],
+  "vel_before": [
+   16.000160217285156,
+   0,
+   0
+  ],
+  "y_ground": 3.0000457763671875
+ },
+ "jump_height": 7.199999809265137,
+ "jump_power": 50,
+ "load_character_appearance": false,
+ "max_slope": 89,
+ "rig": "R15",
+ "scales": {
+  "BodyDepthScale": "none",
+  "BodyHeightScale": "none",
+  "BodyProportionScale": "none",
+  "BodyTypeScale": "none",
+  "BodyWidthScale": "none",
+  "HeadScale": "none"
+ },
+ "spawned_at": [
+  -1.9550342559814453,
+  4,
+  -2.396872043609619
+ ],
+ "use_jump_power": false,
+ "walk60": {
+  "cmd_to_finished": 3.900070749921724,
+  "end_pos": [
+   57.23069381713867,
+   3.0000457763671875,
+   -2.3965208530426025
+  ],
+  "latency_cmd_to_move": 0.2663775831460953,
+  "move_to_59_5": "none",
+  "reached": true
+ },
+ "walk_speed": 16
+}

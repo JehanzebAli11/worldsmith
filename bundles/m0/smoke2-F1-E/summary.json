@@ -1,0 +1,44 @@
+{
+ "attempted": 1,
+ "attempts": [
+  {
+   "attempt": 1,
+   "cause": "UNCLASSIFIED",
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "BRIDGE_CROSSED",
+    "GOAL_TOUCHED"
+   ],
+   "fell_in_area": null,
+   "outcome": "SUCCESS",
+   "tags": [
+    "SUCCESS"
+   ]
+  }
+ ],
+ "build": {
+  "build_line": "WS_BUILD_OK|f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3|26",
+  "descendants": 26,
+  "expected_descendants": 26,
+  "ok": true,
+  "readback_differences": 0
+ },
+ "config_sha256": "15884b5aed16e4e3074384e59b54a34e5e058fe36c2f0a0d24fc0f67731647c6",
+ "controller_sha256": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+ "counts": {
+  "SUCCESS": 1
+ },
+ "detail": "",
+ "episode": "smoke2-F1-E",
+ "n": 1,
+ "player_tier": "P0",
+ "role": "smoke",
+ "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+ "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+ "scene_version": 1,
+ "schema": "worldsmith.m0summary/0.1",
+ "status": "complete",
+ "successes": 1,
+ "t_attempt_s": 60
+}

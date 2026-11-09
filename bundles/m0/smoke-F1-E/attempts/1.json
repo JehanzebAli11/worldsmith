@@ -1,0 +1,39 @@
+{
+ "attempt": 1,
+ "call_index": 5,
+ "cause": "UNCLASSIFIED",
+ "detail": "controller status 'died', no goal event",
+ "events": [],
+ "events_agree": true,
+ "fell_in_area": null,
+ "nonce": "db80494dbe9d2515",
+ "outcome": "UNCLASSIFIED",
+ "raw_file": "attempts/1.raw.txt",
+ "raw_sha256": "ebac78098c86e68400c85b8b258eac202c2e22220b1ebb9dc4b99b452240c73c",
+ "relay_elapsed_s": 62.885,
+ "report": {
+  "detail": "",
+  "died": false,
+  "events_dropped": 0,
+  "jumps": 0,
+  "last_supported": "0.00,3.11,6.00",
+  "pos_died": "na",
+  "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+  "start_pos": "0.00,3.11,6.00",
+  "status": "died",
+  "t_died": -1,
+  "t_end": 4.446156125050038,
+  "t_route_start": 2.4165367500390857,
+  "ticks": 16,
+  "waypoints": []
+ },
+ "t_wall": "2026-11-09T15:47:47.489963Z",
+ "tags": [
+  "UNCLASSIFIED"
+ ],
+ "tool": {
+  "duration_s": 4.452056416776031,
+  "error": "nil",
+  "is_timeout": false
+ }
+}
