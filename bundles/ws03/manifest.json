@@ -1,0 +1,69 @@
+{
+ "ticket": "WS-03",
+ "date": "2026-11-09",
+ "studio": "owner's unsaved local place 'Place1' (PlaceId 0, Baseplate template), Edit mode, Roblox Studio on the owner's Mac",
+ "mcp": "studio-rust-mcp-server plugin (tools: run_code, insert_model, get_console_output, start_stop_play, run_script_in_play_mode, get_studio_mode)",
+ "origin": [
+  0,
+  100,
+  0
+ ],
+ "origin_reason": "Baseplate top is y=0; the room is built 100 studs above it so the kill floor (scene y -30) sits above the Baseplate",
+ "builds": {
+  "F1-A": {
+   "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+   "build_ok_descendants": 26,
+   "expected_descendants": 26,
+   "readback": "0 differences, 26/26 nodes",
+   "built": 2
+  },
+  "F1-E": {
+   "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+   "build_ok_descendants": 26,
+   "expected_descendants": 26,
+   "readback": "0 differences, 26/26 nodes",
+   "built": 1
+  }
+ },
+ "tolerance": {
+  "pos": 0.01,
+  "size": 0.01,
+  "rot": 0.01
+ },
+ "timings": {
+  "readback_round_trip_s": 1.753,
+  "readback_round_trip_note": "wall clock between device_bash date calls around one run_code call (includes tool overhead), n=1",
+  "build_round_trip": "not isolated: the measured interval includes the agent writing the 11 KB script into the tool call",
+  "play_runs_server_duration_s": {
+   "measure": 15.378,
+   "probe_F1-E": 12.531,
+   "probe_F1-A": 11.542
+  }
+ },
+ "probe_controller_sha256": "5ac0b859d28deeff3512265ff8896b3d794777b56f56f5acc00705480309239c",
+ "nonces": {
+  "F1-E": "e2b2e1569e7e2f36",
+  "F1-A": "4159eea3cda42358"
+ },
+ "files": {
+  "F1-A.build.luau": "eeb1016c78c111be7d1263d95725c8a93b52ee95a7c22045c41b0c1724056417",
+  "F1-A.build.output.txt": "906b098a34029f954082a0531819b02e89d91b3f842a2196137d98317ae6476e",
+  "F1-A.compare.txt": "4cbb85b83b9a49596c118c016f5b373987de991681fe0f18649197c07d38d020",
+  "F1-A.probe.raw.json": "254357c4ce307d6ae6432e0ea4bf8fa1da35f8fcc0fcf64e381480ceb2cf34e9",
+  "F1-A.readback.raw.txt": "964e59bac835d20f0b3c0312289b48fdc479ae978002ecb31249507fd1c66d4f",
+  "F1-E.build.luau": "50c59a2a833a831d98f37b8c786f5ea630230f84074315acd080585c29b21197",
+  "F1-E.build.output.txt": "690cb6a5c7c479f372e602841030fe311a826c3b29d26fbbf6dee88cb6ca393c",
+  "F1-E.compare.txt": "4cbb85b83b9a49596c118c016f5b373987de991681fe0f18649197c07d38d020",
+  "F1-E.console_parallel.txt": "c4575adf5688c61e65d3ddf4f7e1e3db08acecd10420a6a370e07c98102e4f2f",
+  "F1-E.probe.raw.json": "7cf4ab2137d681dd03ea8414d30f1179f4b379ba8b9c7c91119ccb498453ce9a",
+  "F1-E.readback.raw.txt": "ef9f1ac3471f8c7c3d0cee88a4620db219736d9e4f0e0f5eb66dd28f920ade95",
+  "measure.raw.json": "c6c55a81dacb702599691348257a7babdc66ad3e709679676c5b430b9c3cfe3b",
+  "nonce_F1-E.txt": "f97a14fd494a4c4a082fcd59355b68015e7254c7f3b6b86cd9da11e273a02c73",
+  "p0_probe_controller.luau": "5ac0b859d28deeff3512265ff8896b3d794777b56f56f5acc00705480309239c",
+  "p0_probe_controller.sha256": "bfc987ea37844560375c5491ca15d09f57e4559e30df03e544874ec09ef5c388",
+  "t_build_end.txt": "6fae2fd39a8eb10c92f8fb0b51f2fb8dd93a85222714d0b87f111ce6d4ae5266",
+  "t_build_start.txt": "5352f535bf092ea0ea5c6b25bd2c24a06d66e019408be764b8fb93d246739423",
+  "t_readback_end.txt": "da6f750bfcfef6097b3595ccd82abefef57e32a3dc81960a192a07593cf32e27",
+  "t_readback_start.txt": "2c0c558619ca7afd04cc11a3fab77135a5f1024a53dca0de90e8f627f418e6bc"
+ }
+}
