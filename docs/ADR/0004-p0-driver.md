@@ -1,7 +1,8 @@
 # ADR 0004: How the P0 player drives the character (route a vs route b)
 
-- **Status:** proposed (WS-03, 9 Nov 2026). Recommendation below; the owner decides. Nothing
-  here is an M0 result: each probe ran **once** on one place, as a feasibility check.
+- **Status:** accepted, option A (owner decision, 9 Nov 2026 20:29 PKT; implemented in WS-04).
+  Proposed in WS-03. Nothing in the WS-03 evidence below is an M0 result: each probe ran
+  **once** on one place, as a feasibility check. M0 results are in `docs/M0.md`.
 - **Evidence:** `bundles/ws03/` (raw tool outputs, `manifest.json` with SHA-256 of each file).
 
 ## Naming
@@ -146,3 +147,20 @@ Route (b) was **not** run in WS-03; nothing above about it is measured by us.
 - The printed positions are approximate (finding 2); classification uses geometry footprints.
 - The default character is the owner's avatar (`LoadCharacterAppearance = true`), so its size
   can change with his avatar; see HANDOFF open questions.
+
+## Decision (owner, 9 Nov 2026 20:29 PKT)
+
+1. **Option A.** P0 is **server-scripted `Humanoid:MoveTo` waypoints** sent as one fixed,
+   reviewed server script per attempt through `run_script_in_play_mode`; it **never jumps**.
+   SPEC §9's P0 row now says exactly that, keeps the claim limit ("not an Autopilot or agent
+   result") and adds "server-scripted MoveTo waypoints; never jumps". Every clip and caption
+   discloses the driver.
+2. `T_attempt` = 60 s, declared in the committed `config/m0.yaml` before any comparison run; the
+   config's SHA-256 is logged with every attempt.
+3. The character is fixed before M0: `StarterPlayer.LoadCharacterAppearance = false` (default
+   R15 instead of the owner's avatar), `Players.CharacterAutoLoads` left true, set by `run_code`
+   in Edit mode and re-measured once (`places/README.md`, `bundles/m0/character/`).
+4. F1-A's 10-stud hole stays for M0.
+5. One Studio run at a time.
+
+How WS-04 reads results under this route (no console polling) is ADR 0005.
