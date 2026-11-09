@@ -8,7 +8,8 @@ with `pos` the character's HumanoidRootPart in the scene frame (2 decimals) or `
 from `workspace:GetServerTimeNow()` (3 decimals). Console lines have no type and include other
 plugins' output, so a line counts only if the tag starts the line (after an optional Studio
 timestamp), every field is well formed, the event is one of EVENTS, and the nonce is this
-run's. Everything else is ignored.
+run's. Everything else is ignored. Allowed line prefixes: `[OUTPUT] ` (the Studio MCP's
+form for print() lines) and a Studio timestamp.
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ NONCE_RE = re.compile(r"[0-9a-f]{8,32}")
 
 _NUM2 = r"-?\d+\.\d{2}"
 _LINE_RE = re.compile(
-    r"^\s*(?:\d{1,2}:\d{2}:\d{2}\.\d+\s+)?"
+    r"^\s*(?:\[OUTPUT\]\s+)?(?:\d{1,2}:\d{2}:\d{2}\.\d+\s+)?"
     r"WS\|(?P<nonce>[0-9a-f]{8,32}|-)\|(?P<event>[A-Z_]+)\|id=(?P<id>[a-z][a-z0-9_]{0,31})"
     rf"\|pos=(?P<pos>na|{_NUM2},{_NUM2},{_NUM2})\|t=(?P<t>\d+\.\d{{3}})"
     r"(?:\s+-\s+(?:Server|Client)(?:\s+-\s+[\w./:]+)?)?\s*$"

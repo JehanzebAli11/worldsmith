@@ -104,7 +104,9 @@ def compile_arm(nonce: str) -> str:
 
 # --- read-back -----------------------------------------------------------------------------
 
-_READBACK_RE = re.compile(r"^(?:\d{1,2}:\d{2}:\d{2}\.\d+\s+)?WS_READBACK\|(\d+)\|(\d+)\|(.*?)\s*$")
+# Optional prefixes: a Studio timestamp, or "[OUTPUT] " (how the Studio MCP's run_code returns
+# print() lines; seen live in WS-03).
+_READBACK_RE = re.compile(r"^(?:\[OUTPUT\]\s+)?(?:\d{1,2}:\d{2}:\d{2}\.\d+\s+)?WS_READBACK\|(\d+)\|(\d+)\|(.*?)\s*$")
 
 
 def parse_readback(output: str) -> dict:

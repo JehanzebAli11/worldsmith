@@ -352,10 +352,21 @@ def test_parse_readback_rejects_missing_or_duplicate_chunks():
         build.parse_readback("nothing here")
 
 
-def test_parse_readback_accepts_studio_line_prefixes():
+@pytest.mark.parametrize("prefix", ["10:11:12.345  ", "[OUTPUT] "])
+def test_parse_readback_accepts_studio_line_prefixes(prefix):
+    # "[OUTPUT] " is how the Studio MCP's run_code returns print() lines (seen live, WS-03).
     tree = {"roots": 0, "root": None, "nodes": []}
-    out = "\n".join("10:11:12.345  " + l for l in _readback_output(tree, noise=False).splitlines())
+    out = "\n".join(prefix + l for l in _readback_output(tree, noise=False).splitlines())
     assert build.parse_readback(out) == tree
+
+
+def test_live_f1a_readback_matches(tmp_path):
+    """The raw read-back recorded live in WS-03 (bundles/ws03, git-ignored) if present."""
+    raw_path = REPO_ROOT / "bundles" / "ws03" / "F1-A.readback.raw.txt"
+    if not raw_path.is_file():
+        pytest.skip("no live read-back recorded in this checkout")
+    got = build.parse_readback(raw_path.read_text(encoding="utf-8"))
+    assert build.compare_tree(geometry.expected_tree(raw(F1A), origin=(0, 100, 0)), got) == []
 
 
 def test_compare_identical_is_clean():

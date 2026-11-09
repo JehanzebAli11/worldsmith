@@ -63,7 +63,7 @@ def test_foreign_and_malformed_lines_are_ignored(foreign):
 
 @pytest.mark.parametrize("prefix,suffix", [
     ("", ""), ("12:34:56.789  ", ""), ("12:34:56.789  ", "  -  Server - ws_event:14"),
-    ("", "  -  Server"), ("  ", "  "),
+    ("", "  -  Server"), ("  ", "  "), ("[OUTPUT] ", ""),
 ])
 def test_studio_timestamp_prefix_and_context_suffix_are_accepted(prefix, suffix):
     assert len(console.parse_events(prefix + line() + suffix, N)) == 1
