@@ -1,0 +1,17 @@
+{
+  "schema": "worldsmith.p0route/0.1",
+  "family": "F1",
+  "frame": "scene",
+  "chosen_from": "F1-E (passing control) and the shared F1 layout, before any M0 comparison; the same nine waypoints the WS-03 route (a) probe used (bundles/ws03/p0_probe_controller.luau)",
+  "waypoints": [
+    {"name": "corridor", "pos": [0, 0, 20]},
+    {"name": "ledge_entry", "pos": [-6, 0, 24]},
+    {"name": "lever_zone", "pos": [-13, 0, 24]},
+    {"name": "corridor_mid", "pos": [0, 0, 24]},
+    {"name": "before_gate", "pos": [0, 0, 31]},
+    {"name": "past_gate", "pos": [0, 0, 35.5]},
+    {"name": "bridge", "pos": [0, 0, 40]},
+    {"name": "landing", "pos": [0, 0, 55]},
+    {"name": "goal", "pos": [0, 0, 60]}
+  ]
+}

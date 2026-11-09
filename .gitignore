@@ -17,6 +17,12 @@ bundles/*
 !bundles/.gitkeep
 # WS-03 live evidence is small (< 100 KB) and kept for review
 !bundles/ws03/
+# WS-04 M0 bundles (raw tool results, small) are the evidence docs/M0.md cites
+!bundles/m0/
 
 # macOS
 .DS_Store
+
+# Roblox place files (the owner's local place; places/README.md lists its settings)
+places/*.rbxl
+places/*.rbxl.lock

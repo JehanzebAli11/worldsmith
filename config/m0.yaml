@@ -1,0 +1,57 @@
+# M0 gate configuration (WS-04). Declared and committed BEFORE any comparison run; never edited
+# after. Its SHA-256 (of these bytes) is logged with every attempt. Owner decisions, 9 Nov 2026
+# 20:29 PKT: P0 = server-scripted Humanoid:MoveTo waypoints, T_attempt = 60 s, F1-A unchanged.
+schema: worldsmith.m0config/0.1
+
+timing:
+  t_attempt: 60       # s, server-side deadline inside the controller, from the script's start
+  t_waypoint: 10      # s, per waypoint before moving on (MoveTo's own limit is about 8 s)
+  settle: 2           # s, after the route or a death, for the last events to print
+  tick: 0.05          # s, the controller's watch loop (the bounded in-script poll)
+
+n_attempts: 3         # SPEC section 9: N = 3 per scene version
+pass_k: 3             # SPEC section 9: pass bar 3/3; never lowered
+
+origin: [0, 100, 0]   # build offset on the Baseplate place (WS-03); outside the scene hash
+
+# FELL counts as "in the gap_1 area" when the KILL_FLOOR_TOUCHED position (x, z) lies in the
+# gap's footprint grown by this margin. Server positions lag the client by about 2 to 3.5 studs
+# (ADR 0004 finding 2), so the margin is larger than that.
+gap_area_margin_studs: 4
+
+player:
+  tier: P0
+  driver: "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps"
+  claim: "Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result."
+
+route:
+  file: config/p0_route_F1.json
+  sha256: b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a
+
+controller:
+  template: runner/templates/p0_controller.luau
+  sha256: 3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034
+
+# Every MCP call has its own timeout (s). run_script_in_play_mode passes it as the tool's own
+# `timeout` argument (play is stopped when it expires); it must exceed t_attempt so the
+# controller's server deadline fires first. The other tools take no timeout argument on this
+# MCP; see ADR 0005 for how those are bounded.
+tool_timeouts_s:
+  get_studio_mode: 15
+  run_code: 30
+  start_stop_play: 30
+  run_script_in_play_mode: 90
+
+scenes:
+  before:
+    file: scenes/F1-A/scene.json
+    canonical_hash: 92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d
+  after:
+    file: scenes/F1-A/fix.json
+    canonical_hash: 49371fa767666577d2f1c30571231069af8eeaeb2eace76e6e832f38c281a396
+
+# SPEC section 14, M0: before = FELL in the gap_1 area k/N; after = BRIDGE_CROSSED then
+# GOAL_TOUCHED k/N; same controller hash; read-back matches before each scene's attempts.
+gate:
+  before: {expect: FELL, area: gap_1}
+  after: {expect: SUCCESS, order: [BRIDGE_CROSSED, GOAL_TOUCHED]}
