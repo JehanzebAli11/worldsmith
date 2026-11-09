@@ -1,0 +1,20 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+
+# Secrets: never commit env files (the example file is allowed)
+.env
+.env.*
+!.env.example
+
+# Run outputs: bundles are generated, keep only the folder
+bundles/*
+!bundles/.gitkeep
+
+# macOS
+.DS_Store

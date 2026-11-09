@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "worldsmith"
+version = "0.0.1"
+description = "Closed-loop world revision for an owned Roblox room: frozen player, bounded patches, independent validator."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Jehanzeb Ali" }]
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+# Pinned; versions and licences are recorded in deps.md.
+dev = ["pytest==9.2.0"]
+
+[project.urls]
+Repository = "https://github.com/JehanzebAli11/worldsmith"
+
+# Flat layout: the repository root is the `worldsmith` package and the
+# SPEC section 11 folders are its subpackages. See docs/ADR/0001-layout.md.
+[tool.setuptools]
+packages = [
+    "worldsmith",
+    "worldsmith.grammar",
+    "worldsmith.validator",
+    "worldsmith.compiler",
+    "worldsmith.runner",
+    "worldsmith.architect",
+    "worldsmith.baselines",
+]
+
+[tool.setuptools.package-dir]
+"worldsmith" = "."
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["tests"]
+addopts = "-ra"
