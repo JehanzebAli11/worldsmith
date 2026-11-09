@@ -7,8 +7,9 @@ that an independent validator must approve. Then the room is rebuilt from scratc
 player actually retries, and the tool emits a side-by-side replay bundle. The full design is in
 [`docs/SPEC.md`](docs/SPEC.md).
 
-**Status: WS-01: skeleton only; nothing built or run yet.** There are no results in this
-repository. Ticket status is in [`docs/TICKETS.md`](docs/TICKETS.md).
+**Status: WS-02: scene grammar (schema, bounds, canonical hash) and the hand-authored F1-A,
+F1-A fix and F1-E fixtures (`scenes/`); nothing built in Studio or run yet.** There are no
+results in this repository. Ticket status is in [`docs/TICKETS.md`](docs/TICKETS.md).
 
 ## Honest limits
 
