@@ -435,7 +435,7 @@
       "additionalProperties": false
     },
     "Trigger": {
-      "description": "Event volume derived from its host's geometry: region of the host footprint, from the host top up by height.",
+      "description": "Event volume derived from its host's geometry, from the host's top surface up by height. region landing: host is a Gap; the first 2 studs of the gap's to-platform, measured from its gap-facing edge, across that platform's full width (BRIDGE_CROSSED; ADR 0003). region whole: host is the Goal; the goal's footprint (GOAL_TOUCHED).",
       "type": "object",
       "required": [
         "id",
@@ -463,7 +463,7 @@
         },
         "region": {
           "enum": [
-            "far_half",
+            "landing",
             "whole"
           ]
         },

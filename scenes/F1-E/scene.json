@@ -20,7 +20,7 @@
     {"id": "gate_1", "type": "Gate", "pos": [0, 4, 33.5], "size": [8, 8, 1], "opens_on": "lever_1"},
     {"id": "gap_1", "type": "Gap", "from": "corridor", "to": "plat_b", "axis": "+Z", "width": 16},
     {"id": "bridge_1", "type": "Bridge", "spans": "gap_1", "length": 16, "width": 8, "thickness": 1, "lateral_offset": 0},
-    {"id": "trig_bridge", "type": "Trigger", "event": "BRIDGE_CROSSED", "on": "bridge_1", "region": "far_half", "height": 6},
+    {"id": "trig_bridge", "type": "Trigger", "event": "BRIDGE_CROSSED", "on": "gap_1", "region": "landing", "height": 6},
     {"id": "plat_b", "type": "Platform", "pos": [0, -1, 60], "size": [16, 2, 16]},
     {"id": "goal", "type": "Goal", "on": "plat_b", "size": [4, 1, 4]},
     {"id": "trig_goal", "type": "Trigger", "event": "GOAL_TOUCHED", "on": "goal", "region": "whole", "height": 6},

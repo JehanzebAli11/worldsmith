@@ -1,6 +1,7 @@
 # ADR 0002: F1 scene schema, bounds and canonical hash
 
-- **Status:** accepted (WS-02, 9 Nov 2026)
+- **Status:** accepted (WS-02, 9 Nov 2026); Trigger hosts and regions amended by ADR 0003
+  (`BRIDGE_CROSSED` now sits on the far side of the gap).
 - **Context:** SPEC §6 asks for a closed scene grammar (`worldsmith.scene/0.1`) with a closed
   entity-type set, hard numeric bounds in `grammar/bounds.yaml`, no code or free-text fields,
   unknown keys rejected, and `canonical_hash` = SHA-256 of canonical JSON with fixed float

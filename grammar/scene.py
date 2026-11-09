@@ -9,7 +9,8 @@ What this module checks, and what it leaves to others (docs/ADR/0002-scene-schem
 - bounds: `grammar/bounds.yaml`. Every number in [min, max] for its field; a numeric field
   with no bound is rejected (fail closed).
 - references: IDs unique, `bounds` reserved, every reference exists and has the right type,
-  lever and gate point at each other, protected names exist.
+  lever and gate point at each other, each trigger event has its one host type and region
+  (ADR 0003), protected names exist.
 
 Protection, the locked gap, difficulty, structure (penetration, inside-the-room) and the
 navigation approximation belong to the WS-06/WS-07 validator, not here.
@@ -55,7 +56,14 @@ REFERENCES: dict[str, dict[str, tuple[str, ...]]] = {
     "Gate": {"opens_on": ("Lever",)},
     "Gap": {"from": ("Platform",), "to": ("Platform",)},
     "Bridge": {"spans": ("Gap",)},
-    "Trigger": {"on": ("Bridge", "Goal")},
+    "Trigger": {"on": ("Gap", "Goal")},
+}
+
+# Each event has exactly one host type and region (ADR 0003): BRIDGE_CROSSED sits on the far
+# side of a gap (the first 2 studs of its `to` platform), GOAL_TOUCHED on the goal pad.
+TRIGGER_PAIRS: dict[str, tuple[str, str]] = {
+    "BRIDGE_CROSSED": ("Gap", "landing"),
+    "GOAL_TOUCHED": ("Goal", "whole"),
 }
 
 _PACKAGE = "worldsmith.grammar"
@@ -262,6 +270,16 @@ def check_references(scene: dict) -> list[str]:
             elif hit["type"] not in allowed:
                 errors.append(f"ref: {eid}.{field}: {target!r} is a {hit['type']},"
                               f" expected {' or '.join(allowed)}")
+        if etype == "Trigger":
+            host_type, region = TRIGGER_PAIRS[ent["event"]]
+            host = by_id.get(ent["on"])
+            if host is not None and host["type"] in REFERENCES["Trigger"]["on"] \
+                    and host["type"] != host_type:
+                errors.append(f"ref: {eid}.on: {ent['event']} must sit on a {host_type},"
+                              f" not a {host['type']}")
+            if ent["region"] != region:
+                errors.append(f"ref: {eid}.region: {ent['event']} uses region {region!r},"
+                              f" not {ent['region']!r}")
         if etype == "Gap" and ent["from"] == ent["to"]:
             errors.append(f"ref: {eid}: from and to are the same platform {ent['from']!r}")
         if etype == "Lever":

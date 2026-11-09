@@ -9,6 +9,6 @@ identify hand-authored fixtures. They are not results.
 
 | File | scene_id | version | canonical_hash |
 | --- | --- | --- | --- |
-| `F1-A/fix.json` | f1_a | 1 | `deadce5a9aa3cfb1837609d976bffd0f8479215db4dfed0338b331594564645b` |
-| `F1-A/scene.json` | f1_a | 1 | `9432f2f42ee27b925ce08cc1a01e1924d7cf19627eb07a87ab3b718c3b89dda6` |
-| `F1-E/scene.json` | f1_e | 1 | `5d4fdd8f40ebef1de2ef592a2ee4bee0823aa70fa2c05b0ec31ab2deaaa5bc8a` |
+| `F1-A/fix.json` | f1_a | 1 | `49371fa767666577d2f1c30571231069af8eeaeb2eace76e6e832f38c281a396` |
+| `F1-A/scene.json` | f1_a | 1 | `92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d` |
+| `F1-E/scene.json` | f1_e | 1 | `f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3` |
