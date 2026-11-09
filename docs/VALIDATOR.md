@@ -22,8 +22,15 @@ result.scene       # the candidate scene that was judged (None if the patch laye
   scene (`worldsmith.scene/0.1`).
 - `base_scene` must be a valid scene and `stage` a known stage; otherwise `ValueError` (a caller
   bug, not a verdict).
-- `graph` is reserved for WS-07's navigation approximation (`CONNECTED` / `DISCONNECTED`) and is
-  `None` until then.
+- `graph` is WS-07's navigation approximation ([ADR 0008](ADR/0008-navigation-approximation.md),
+  `worldsmith.validator.nav`): `{"model", "note", "params", "walk", "jump"}`, where each mode has
+  `result` (`CONNECTED` / `DISCONNECTED`), `basis` (`approximation` for walk, `derived` for
+  jump), the `path` node list (or `null`), `gates_opened`, `gates_closed`, `reached_on`, `nodes`
+  and `closest`. It is **an approximation, never a proof**: actual runs decide (SPEC §7). It never
+  changes `ok` and never adds a violation; a DISCONNECTED walk graph adds the warning
+  `GRAPH_DISCONNECTED_WALK`. `graph` is `None` when the candidate is not judged geometrically
+  (stopped at the patch layer, or outside the grammar) or has no single spawn or no
+  `GOAL_TOUCHED` trigger.
 - `ref` locates a violation: `ops[i]`, `entity:<id>`, `pair:<a>+<b>`, `scene.<key>`, a patch path,
   or `null`. Messages are for people and may change; **codes are stable**.
 - Pure and deterministic: inputs are never mutated, violations are sorted by (code, ref, message)
@@ -72,6 +79,7 @@ Warnings never reject a patch:
 | Code | Meaning |
 | --- | --- |
 | `BRIDGE_SHORT` | A bridge ends before its gap's far platform (F1-A is built that way on purpose). |
+| `GRAPH_DISCONNECTED_WALK` | The walk-mode graph (no jumps: what P0 can do) finds no path from spawn to goal under the ADR 0008 approximation (F1-A, with its 10-stud hole, has it). Information only; actual runs decide. |
 
 ## Order and stopping
 
@@ -84,13 +92,14 @@ Warnings never reject a patch:
 3. **Scene checks:** grammar (schema, strings, bounds, references), then protection; then, only
    for a scene inside the grammar, geometry (gap, gate, lever, walkway, new floors, penetration,
    room box, layout).
+4. **Navigation** (only for a scene inside the grammar): the walk and jump graphs (ADR 0008) fill
+   `graph`; a DISCONNECTED walk graph adds `GRAPH_DISCONNECTED_WALK`. Never a violation.
 
 One case can carry several codes. The abuse suite asserts that each case carries at least its
 expected codes, and exactly those where the case says `"exact": true`.
 
 ## Not here
 
-- Navigation (`graph`): WS-07, an approximation, never a proof.
 - Classifying runs (`SUCCESS` needs `BRIDGE_CROSSED` then `GOAL_TOUCHED`): `runner/classify.py`
   (WS-04 tests `test_goal_without_bridge_is_not_success` and `test_goal_before_bridge_is_not_success`);
   the validator covers the scene side of "success without `BRIDGE_CROSSED`".
