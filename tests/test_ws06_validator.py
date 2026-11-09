@@ -176,7 +176,8 @@ def test_output_shape_matches_spec_section_7():
                       stage="M0")
     d = res.to_dict()
     assert set(d) == {"ok", "violations", "warnings", "graph"}
-    assert d["ok"] is True and d["violations"] == [] and d["graph"] is None  # graph: WS-07
+    assert d["ok"] is True and d["violations"] == []
+    assert d["graph"]["walk"]["result"] == "CONNECTED"  # graph: WS-07 (ADR 0008)
     json.dumps(d)
     bad = vd.validate(raw(F1A), _case(ABUSE / "reject" / "shrink_gap_m0.json")["patch"], stage="M0")
     d = bad.to_dict()

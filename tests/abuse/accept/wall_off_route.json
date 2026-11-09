@@ -27,6 +27,7 @@
     ]
   },
   "warnings": [
-    "BRIDGE_SHORT"
+    "BRIDGE_SHORT",
+    "GRAPH_DISCONNECTED_WALK"
   ]
 }
