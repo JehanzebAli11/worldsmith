@@ -78,7 +78,8 @@ def test_fixture_wiring(path):
     assert entity(s, "gate_1")["opens_on"] == "lever_1"
     assert entity(s, "bridge_1")["spans"] == "gap_1"
     tb, tg = entity(s, "trig_bridge"), entity(s, "trig_goal")
-    assert (tb["event"], tb["on"], tb["region"]) == ("BRIDGE_CROSSED", "bridge_1", "far_half")
+    # Owner decision 9 Nov (ADR 0003): anchored to the far side of gap_1, not the bridge.
+    assert (tb["event"], tb["on"], tb["region"]) == ("BRIDGE_CROSSED", "gap_1", "landing")
     assert (tg["event"], tg["on"]) == ("GOAL_TOUCHED", "goal")
     assert s["constraints"]["required_events"] == ["BRIDGE_CROSSED", "GOAL_TOUCHED"]
     assert s["constraints"]["player_physics"] == "locked"
