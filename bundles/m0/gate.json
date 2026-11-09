@@ -1,0 +1,50 @@
+{
+ "after": {
+  "episode": "F1-A-fix",
+  "hits": 3,
+  "n": 3,
+  "outcomes": [
+   "SUCCESS",
+   "SUCCESS",
+   "SUCCESS"
+  ],
+  "pass": true,
+  "readback_ok": true
+ },
+ "before": {
+  "episode": "F1-A",
+  "hits": 3,
+  "n": 3,
+  "outcomes": [
+   "FELL",
+   "FELL",
+   "FELL"
+  ],
+  "pass": true,
+  "readback_ok": true
+ },
+ "config_sha256": "15884b5aed16e4e3074384e59b54a34e5e058fe36c2f0a0d24fc0f67731647c6",
+ "controller_sha256": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+ "declared": {
+  "after": {
+   "expect": "SUCCESS",
+   "k": 3,
+   "n": 3,
+   "order": [
+    "BRIDGE_CROSSED",
+    "GOAL_TOUCHED"
+   ],
+   "scene_hash": "49371fa767666577d2f1c30571231069af8eeaeb2eace76e6e832f38c281a396"
+  },
+  "before": {
+   "area": "gap_1",
+   "expect": "FELL",
+   "k": 3,
+   "n": 3,
+   "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d"
+  }
+ },
+ "result": "PASS",
+ "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+ "schema": "worldsmith.m0gate/0.1"
+}

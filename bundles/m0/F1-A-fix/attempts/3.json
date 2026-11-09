@@ -1,0 +1,151 @@
+{
+ "attempt": 3,
+ "call_index": 9,
+ "cause": "UNCLASSIFIED",
+ "detail": "BRIDGE_CROSSED then GOAL_TOUCHED",
+ "events": [
+  {
+   "event": "LEVER_ACTIVATED",
+   "id": "lever_1",
+   "pos": [
+    -6.26,
+    3.0,
+    23.6
+   ],
+   "t_server": 1794240200.382
+  },
+  {
+   "event": "GATE_OPENED",
+   "id": "gate_1",
+   "pos": null,
+   "t_server": 1794240200.382
+  },
+  {
+   "event": "BRIDGE_CROSSED",
+   "id": "trig_bridge",
+   "pos": [
+    0.0,
+    3.0,
+    48.26
+   ],
+   "t_server": 1794240204.114
+  },
+  {
+   "event": "GOAL_TOUCHED",
+   "id": "trig_goal",
+   "pos": [
+    0.0,
+    2.99,
+    56.91
+   ],
+   "t_server": 1794240204.898
+  }
+ ],
+ "events_agree": true,
+ "fell_in_area": null,
+ "nonce": "95a962c44e1352c5",
+ "outcome": "SUCCESS",
+ "raw_file": "attempts/3.raw.txt",
+ "raw_sha256": "472b6a96c34d94627f1b76bbe51fc28b8fec65dda71dd868fd01c1587904399f",
+ "relay_elapsed_s": 61.595,
+ "report": {
+  "characters_added": 1,
+  "detail": "goal event seen",
+  "died": false,
+  "events_dropped": 0,
+  "jumps": 0,
+  "last_supported": "0.00,3.65,58.99",
+  "pos_died": "na",
+  "removed": false,
+  "scene_hash": "49371fa767666577d2f1c30571231069af8eeaeb2eace76e6e832f38c281a396",
+  "start_pos": "0.00,3.19,6.00",
+  "status": "route_done",
+  "t_died": -1,
+  "t_end": 8.250260791741312,
+  "t_route_start": 1.16678366670385,
+  "ticks": 123,
+  "waypoints": [
+   {
+    "died": false,
+    "i": 1,
+    "name": "corridor",
+    "pos": "0.00,3.00,19.24",
+    "reached": true,
+    "t": 2.400325541617349
+   },
+   {
+    "died": false,
+    "i": 2,
+    "name": "ledge_entry",
+    "pos": "-5.45,3.00,23.57",
+    "reached": true,
+    "t": 3.2009321667719632
+   },
+   {
+    "died": false,
+    "i": 3,
+    "name": "lever_zone",
+    "pos": "-12.37,3.00,23.96",
+    "reached": true,
+    "t": 3.9006608750205487
+   },
+   {
+    "died": false,
+    "i": 4,
+    "name": "corridor_mid",
+    "pos": "-0.83,3.00,24.00",
+    "reached": true,
+    "t": 4.900442583253607
+   },
+   {
+    "died": false,
+    "i": 5,
+    "name": "before_gate",
+    "pos": "-0.08,3.00,30.38",
+    "reached": true,
+    "t": 5.56664775009267
+   },
+   {
+    "died": false,
+    "i": 6,
+    "name": "past_gate",
+    "pos": "-0.01,3.00,34.84",
+    "reached": true,
+    "t": 6.050170291680843
+   },
+   {
+    "died": false,
+    "i": 7,
+    "name": "bridge",
+    "pos": "-0.00,3.00,39.20",
+    "reached": true,
+    "t": 6.534240958280861
+   },
+   {
+    "died": false,
+    "i": 8,
+    "name": "landing",
+    "pos": "0.00,3.00,54.38",
+    "reached": true,
+    "t": 7.716493374900892
+   },
+   {
+    "died": false,
+    "i": 9,
+    "name": "goal",
+    "pos": "0.00,3.90,59.25",
+    "reached": true,
+    "t": 8.25024237507023
+   }
+  ]
+ },
+ "t_wall": "2026-11-09T16:03:47.542857Z",
+ "tags": [
+  "SUCCESS"
+ ],
+ "tool": {
+  "duration_s": 8.250508291646838,
+  "error": "nil",
+  "is_timeout": false
+ }
+}

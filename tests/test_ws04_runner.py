@@ -505,3 +505,40 @@ def test_relay_detects_a_changed_request(cfg, tmp_path):
 def test_runner_template_is_package_data():
     import importlib.resources
     assert importlib.resources.files("worldsmith.runner").joinpath("templates", "p0_controller.luau").is_file()
+
+
+# --- the recorded live M0 run (bundles/m0, committed evidence) ----------------------------
+
+M0_DIR = REPO_ROOT / "bundles" / "m0"
+
+
+@pytest.mark.skipif(not (M0_DIR / "gate.json").exists(), reason="no recorded M0 bundles")
+def test_recorded_m0_bundles_validate_and_reproduce_the_gate(cfg):
+    for ep in ("F1-A", "F1-A-fix", "smoke-F1-E", "smoke2-F1-E"):
+        assert attempts.validate_bundle(M0_DIR / ep) == [], ep
+    recorded = json.loads((M0_DIR / "gate.json").read_text())
+    again = attempts.evaluate_gate(cfg, M0_DIR / "F1-A", M0_DIR / "F1-A-fix")
+    assert again == recorded
+    doc = (REPO_ROOT / "docs" / "M0.md").read_text()
+    assert f"**Result: {recorded['result']}**" in doc
+    assert recorded["controller_sha256"] in doc and recorded["config_sha256"] in doc
+
+
+@pytest.mark.skipif(not (M0_DIR / "gate.json").exists(), reason="no recorded M0 bundles")
+def test_recorded_m0_replays_from_raw_answers(cfg, tmp_path):
+    # Re-run both episodes from their stored raw answers: the same summaries come out.
+    for ep in ("F1-A", "F1-A-fix"):
+        d = tmp_path / ep
+        shutil.copytree(M0_DIR / ep, d)
+        for f in ("summary.json", "trace.jsonl", "calls.json"):
+            (d / f).unlink()
+        s = attempts.run_episode(attempts.RelayClient(d / "calls"), cfg, d)
+        assert s == json.loads((M0_DIR / ep / "summary.json").read_text())
+
+
+@pytest.mark.skipif(not (M0_DIR / "manifest.json").exists(), reason="no recorded M0 bundles")
+def test_recorded_m0_manifest_hashes(cfg):
+    import hashlib
+    m = json.loads((M0_DIR / "manifest.json").read_text())
+    for rel, sha in m["files"].items():
+        assert hashlib.sha256((M0_DIR / rel).read_bytes()).hexdigest() == sha, rel
