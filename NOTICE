@@ -1,0 +1,8 @@
+Worldsmith
+Copyright 2026 Jehanzeb Ali
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Worldsmith uses Autopilot (https://github.com/ramenvr/autopilot, Apache-2.0)
+as an external dependency; no Autopilot code is included in this repository.
+See deps.md for the pinned commit and other dependencies.
