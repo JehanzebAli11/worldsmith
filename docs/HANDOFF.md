@@ -206,3 +206,83 @@ One entry per session, newest last: **Done** · **Verified** · **Next** · **Op
 9. `run_script_in_play_mode` adds a temporary Script to `ServerScriptService` (removed after).
    Acceptable on his place?
 10. Keep the small live evidence (`bundles/ws03/`, 96 KB) in git? It is committed now.
+
+## 2026-11-09 21:05 PKT · WS-04 / M0
+
+**Done**
+- Owner decisions of 9 Nov 20:29 applied: SPEC §9's P0 row now reads "server-scripted
+  `Humanoid:MoveTo` waypoints … never jumps" with the claim limit kept (`ecbf8e4`); ADR 0004
+  accepted (option A) with the decisions recorded.
+- Place made deterministic by `run_code` in Edit mode: `StarterPlayer.LoadCharacterAppearance =
+  false`, `Players.CharacterAutoLoads = true` (`bundles/m0/character/place_settings.txt`). The open
+  place is now `worldsmith-lab.rbxl` (the owner saved it to `places/` at 20:31 PKT, **before**
+  this change). Character re-measured once with `scripts/luau/measure_character.luau` (same
+  method as WS-03). `places/README.md` lists the required settings; `places/*.rbxl` and Studio's
+  `*.rbxl.lock` are git-ignored.
+- `runner/p0.py` + `runner/templates/p0_controller.luau`: the P0 controller as a fixed template
+  filled only with the frozen route's validated numbers (`config/p0_route_F1.json`), the declared
+  timing and a per-attempt nonce. It waits for the auto-loaded character, resets once at
+  `Worldsmith.spawn`, then only calls `MoveTo`; it watches death itself (`Died`, Health,
+  character removed), counts jumps, enforces `T_attempt` server-side, captures its own run's
+  event lines from `LogService`, and prints its report in `WSP|<nonce>|RESULT|i|n|<json>` chunks.
+  Controller hash = SHA-256 of the rendered text with the nonce slot unfilled.
+- `config/m0.yaml` (+ `runner/config.py`): `T_attempt` 60 s, N = 3, k = 3 (both pinned), origin,
+  gap-area margin 4 studs, P0 driver and claim text, route/controller/scene hashes re-derived and
+  checked on load, tool timeouts (play 90 s > `T_attempt`). Committed in `f4160e7` before any
+  comparison run.
+- `runner/classify.py`: report parsing (chunks, nonce, params echo), SPEC §10 subset (SUCCESS,
+  FELL, TIMEOUT + LEVER_NOT_ACTIVATED / GATE_NOT_OPENED, HARNESS_ERROR, CONNECTOR_ERROR,
+  UNCLASSIFIED; BUILD_FAILED in the runner), gap-area test from the gap footprint + margin. No
+  hypothesis tags.
+- `runner/attempts.py` + `scripts/m0.py`: episode init (nonces fixed up front, bundles never
+  overwritten), `run_episode` (stop check → build → read-back compare → N × [stop check, one
+  play call] → stop check), `RelayClient` (file-based request/answer under `calls/`, replay
+  checks requests), bundle writer (`episode.json`, `scene.json`, `controller.luau`,
+  `readback.compare.txt`, `attempts/<n>.json|.raw.txt`, `calls.json`, `trace.jsonl` per SPEC §11,
+  `summary.json`), `validate_bundle`, `evaluate_gate` (refuses different controller/config/route
+  hashes, wrong scenes, wrong N, swapped roles).
+- `docs/ADR/0005-results-from-play-tool.md`: results come from the play tool's result, not
+  console polling (WS-03 evidence + WS-04: the tool result has no `value`/`success` field).
+- Tests first (`4f0bd54`, `tests/test_ws04_runner.py`, `tests/_m0fake.py`); at that commit, run
+  against the editable install, 34 failed + 47 errors.
+- Live: 2 smoke runs on F1-E (not gate runs), then the M0 gate: F1-A × 3, F1-A fix × 3.
+  `docs/M0.md` written from the bundles.
+
+**Verified**
+- **M0: PASS** (`bundles/m0/gate.json`). Config `15884b5a…f1a2`, controller `3743d998…c034`,
+  route `b9514a4b…b36a`, same for both scenes. F1-A (`92f86609…`): read-back 26/26, 0 differences;
+  FELL 3/3, `KILL_FLOOR_TOUCHED` at z 49.31 / 48.52 / 48.35, all in the gap_1 area. Fix
+  (`49371fa7…`): read-back 0 differences; SUCCESS 3/3 (LEVER_ACTIVATED, GATE_OPENED,
+  BRIDGE_CROSSED, GOAL_TOUCHED). 0 jumps, 0 timeouts, `events_agree` true in all 6; longest
+  controller run 9.61 s of 60. Bundles: `bundles/m0/F1-A/`, `bundles/m0/F1-A-fix/`.
+- Character with `LoadCharacterAppearance = false` (`bundles/m0/character/measure.json`, n = 1):
+  R15, 16 parts, 0 accessories; HRP 2 × 2 × 1; HipHeight 2; bounding box 4.00 × 5.19 × 1.20; HRP
+  centre 3.00 above the floor; WalkSpeed 16; JumpHeight 7.2 (`UseJumpPower` false); MaxSlope 89;
+  Gravity 196.2; HRP owned by the client. 60-stud MoveTo walk: command → finished 3.90 s
+  (`reached` true; it stopped 59.19 studs out). One server `Humanoid.Jump` at 16 studs/s: 8.75
+  studs horizontal, 0.549 s airborne, apex +7.30 (reference only; P0 never jumps).
+- Smoke: `smoke-F1-E` (controller `6d2e299c…`) UNCLASSIFIED (character replaced before the
+  route); fixed; `smoke2-F1-E` (frozen controller) SUCCESS.
+- CPU: `VENV=… ./scripts/test.sh -q` → `852 passed` (working tree). Fresh `git clone` + fresh
+  venv, `make test` → `852 passed in 5.40s` (at `6e3aa9d`, before this HANDOFF/README/TICKETS
+  commit). The tests replay both recorded episodes from their raw answers and re-derive
+  `gate.json`.
+- Not verified: Python 3.12, macOS `make test`; route (b); `run_code` / `get_studio_mode`
+  timeouts (no timeout argument on this MCP; recorded, not enforced in relay mode).
+
+**Next**
+- Owner: save the place (below). Then WS-05 (patch apply + base-hash check), separate session.
+
+**Open questions** (yes/no for the owner)
+1. **Save the place now** with File → Save to File as `~/lab/worldsmith/places/worldsmith-lab.rbxl`
+   (overwrite): the copy saved at 20:31 PKT predates `LoadCharacterAppearance = false`. The open
+   place also holds the last M0 build (F1-A fix) in `Workspace.Worldsmith`; that is fine, every
+   episode rebuilds it.
+2. Keep `bundles/m0/` (333 KB, 129 files with `manifest.json`) in git as M0 evidence? Committed now.
+3. `run_code` / `get_studio_mode` have no client timeout in relay mode (ADR 0005 §7). Accept for M0,
+   and revisit with route (b) or a direct MCP client in WS-11?
+4. `BRIDGE_SHORT_HYPOTHESIS`: SPEC §10's three conditions now look satisfied for F1-A (FELL near the
+   bridge 3/3, geometry 6 < 16, the bridge-length-only fix 3/3 SUCCESS under the same player). WS-04
+   does not assign it; leave it to WS-08's classifier? Recommended: yes.
+5. The F1-E smoke runs and the first-smoke controller (`6d2e299c…`) are kept in `bundles/m0/` as
+   history. Fine?

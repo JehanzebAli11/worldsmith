@@ -10,7 +10,7 @@ HANDOFF entry; stop.
 | WS-01 | Skeleton, licence notes, pin the Autopilot staging commit | — | Tests run. `deps.md` records the commit and licences. | done |
 | WS-02 | Complete F1 scene schema, bounds, canonical hash, valid F1-A/F1-E files | 01 | Round-trip and hash-stability tests. Unknown keys are rejected. The fixtures validate. | done |
 | WS-03 | Template compiler + Edit-mode rebuild + read-back + event templates | 02 | Luau snapshot tests. **Live:** F1-A builds and read-back matches. | done (live read-back 0 differences, 9 Nov; HANDOFF) |
-| WS-04 | P0 controller (route frozen per family) + attempt runner + bounded polling | 03 | **Live:** the M0 gate in §14 (3/3 each, same controller hash). Polling and timeouts are logged. | todo |
+| WS-04 | P0 controller (route frozen per family) + attempt runner + bounded polling | 03 | **Live:** the M0 gate in §14 (3/3 each, same controller hash). Polling and timeouts are logged. | done (M0 PASS, 9 Nov: F1-A 3/3 FELL in gap_1, fix 3/3 SUCCESS, controller `3743d998…`; docs/M0.md) |
 | WS-05 | Automated patch apply (same bridge-only restriction as M0) + base-hash check | 02 | A stale base is rejected. Any other op is rejected in M0. | todo |
 | WS-06 | Validator: schema, protection, locked gap, difficulty, structure | 05 | The §16 abuse suite is all rejected and legit patches pass | todo |
 | WS-07 | Navigation approximation (`GRAPH_CONNECTED/DISCONNECTED`) | 06 | Fixture tests. Documented as an approximation, never a proof. | todo |
