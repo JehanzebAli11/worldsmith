@@ -8,6 +8,9 @@ built in Studio or played.
   `FELL` near the bridge in this room is expected, and a later diagnosis of it must say so.
 - `fix.json`: the paired hand-authored fix (baseline B1). It is identical to `scene.json` except
   `bridge_1.length` = 16 (SPEC §6); `tests/test_scene_fixtures.py` proves that one-field diff.
+- `patches/m0_fix.json`: the same fix as a `worldsmith.patch/0.1` patch on `scene.json` (WS-05).
+  Applied with `worldsmith.validator.patch.apply_patch(..., stage="M0")` it gives `fix.json` with
+  `version` 2 (ADR 0006); `tests/test_ws05_patch.py` proves it.
 
 Layout (studs, Y up, path along +Z; values are design choices, `[ESTIMATE]` until M0 measures the
 character): spawn on `plat_a` → `corridor` with walls → side opening to `ledge_1`, where `lever_1`

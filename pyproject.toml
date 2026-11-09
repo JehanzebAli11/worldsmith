@@ -42,7 +42,7 @@ packages = [
 
 # Data files a subpackage reads at runtime (ADR 0001). Loaded with importlib.resources.
 [tool.setuptools.package-data]
-"worldsmith.grammar" = ["schema.json", "bounds.yaml", "templates/*.luau", "templates/events/*.luau"]
+"worldsmith.grammar" = ["schema.json", "patch_schema.json", "bounds.yaml", "templates/*.luau", "templates/events/*.luau"]
 "worldsmith.runner" = ["templates/*.luau"]
 
 [tool.pytest.ini_options]

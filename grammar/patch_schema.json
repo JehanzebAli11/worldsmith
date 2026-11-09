@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/JehanzebAli11/worldsmith/grammar/patch_schema.json",
+  "title": "worldsmith.patch/0.1",
+  "description": "One bounded scene patch. Closed: unknown keys and ops are rejected; strings are IDs or a hex hash; values are numbers. Which (id, field) pairs a stage allows: worldsmith.validator.patch.STAGES. Value ranges: grammar/bounds.yaml. See docs/ADR/0006-patch-versioning.md.",
+  "type": "object",
+  "required": [
+    "schema",
+    "base_hash",
+    "ops"
+  ],
+  "properties": {
+    "schema": {
+      "const": "worldsmith.patch/0.1"
+    },
+    "base_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "ops": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/$defs/set_op"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,31}$"
+    },
+    "set_op": {
+      "type": "object",
+      "required": [
+        "op",
+        "id",
+        "field",
+        "value"
+      ],
+      "properties": {
+        "op": {
+          "const": "set"
+        },
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "field": {
+          "$ref": "#/$defs/id"
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

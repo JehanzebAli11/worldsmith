@@ -327,7 +327,7 @@ def test_missing_op_key_is_rejected(missing):
     _rejected(_patch(op), layer="schema")
 
 
-@pytest.mark.parametrize("field", ["length2", "Length", "len", "length_m", "lengths"])
+@pytest.mark.parametrize("field", ["length2", "len", "length_m", "lengths", "max_length"])
 def test_unknown_field_is_rejected(field):
     _rejected(_patch(_op(field=field)), layer="stage")
 
