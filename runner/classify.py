@@ -3,8 +3,14 @@
 Tags used here: SUCCESS, FELL, TIMEOUT (with LEVER_NOT_ACTIVATED / GATE_NOT_OPENED as extra
 tags), HARNESS_ERROR, CONNECTOR_ERROR, UNCLASSIFIED. BUILD_FAILED is decided by the attempt
 runner before any attempt. No hypothesis tag (BRIDGE_SHORT_HYPOTHESIS) is assigned here: SPEC
-section 10 needs a geometry check and a 3/3 retry, which is WS-08's classifier, so every FELL
-has cause UNCLASSIFIED.
+section 10 needs a geometry check and a 3/3 retry on another episode, so every FELL has cause
+UNCLASSIFIED here; `runner/taxonomy.py` (WS-08) adds STUCK, the episode-level system tags and
+the hypothesis rule on top of this function, over recorded bundles.
+
+WS-08 tightened two rules (neither changes a recorded M0 outcome): a death without a
+KILL_FLOOR_TOUCHED event is UNCLASSIFIED even if a GOAL_TOUCHED line follows (death-then-goal is
+never SUCCESS), and a script error reported by the play tool (`error` other than nil) beside a
+valid report is HARNESS_ERROR.
 
 Sources (ADR 0005): the events are the run_script_in_play_mode result's log lines, parsed by
 exact prefix and nonce (`console.parse_events`). The controller's own report is printed in
@@ -157,6 +163,8 @@ def classify_attempt(tool_result, nonce: str, expected_params: dict, area: dict,
         return done("HARNESS_ERROR", str(report.get("detail")))
     if report.get("jumps") != 0:
         return done("HARNESS_ERROR", f"P0 contract broken: {report.get('jumps')!r} jumps")
+    if tool_result.get("error") not in (None, "", "nil"):
+        return done("HARNESS_ERROR", f"the play tool reported a script error: {tool_result.get('error')!r}")
 
     names = [e.event for e in events]
 
@@ -171,8 +179,9 @@ def classify_attempt(tool_result, nonce: str, expected_params: dict, area: dict,
         return done("FELL", f"KILL_FLOOR_TOUCHED at {list(ev.pos) if ev.pos else 'na'}, {where} the {area['gap']} area")
     if report.get("removed") is True and goal is None:
         return done("HARNESS_ERROR", "the character was removed without dying (replaced or respawned)")
-    if report.get("died") is True and goal is None:
-        return done("UNCLASSIFIED", "the character died without a KILL_FLOOR_TOUCHED event")
+    if report.get("died") is True and kill is None:
+        return done("UNCLASSIFIED", "the character died without a KILL_FLOOR_TOUCHED event"
+                    + ("; a GOAL_TOUCHED line does not make it a SUCCESS" if goal is not None else ""))
     if goal is not None:
         if bridge is not None and bridge < goal and events[bridge].t <= events[goal].t:
             return done("SUCCESS", "BRIDGE_CROSSED then GOAL_TOUCHED")

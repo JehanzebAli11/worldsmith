@@ -386,7 +386,8 @@ def test_bridge_short_hypothesis_holds_for_each_recorded_f1a_fall(cfg, m0):
         for rel, sha in ev["files"].items():
             assert manifest[f"F1-A-fix/{rel}"] == sha, rel
         rejected = {r["bundle"]: r["reasons"] for r in c["paired_fix"]["rejected"]}
-        assert set(rejected) == {"bundles/m0/smoke-F1-E", "bundles/m0/smoke2-F1-E"}
+        assert set(rejected) == {"bundles/m0/F1-A", "bundles/m0/smoke-F1-E", "bundles/m0/smoke2-F1-E"}
+        assert rejected["bundles/m0/F1-A"][0] == "the same episode as the fall"
         assert any("3/3" in r for r in rejected["bundles/m0/smoke2-F1-E"])
         assert any("bridge" in r for r in rejected["bundles/m0/smoke2-F1-E"])
 

@@ -1,0 +1,598 @@
+{
+ "candidates": [
+  "bundles/m0/F1-A",
+  "bundles/m0/F1-A-fix",
+  "bundles/m0/smoke-F1-E",
+  "bundles/m0/smoke2-F1-E"
+ ],
+ "classifier": {
+  "config_file": "config/classifier.yaml",
+  "config_sha256": "cb884ae43587edf41a278520db40c126f184062794dc920cc86d6c7a53454cee",
+  "m0_config_sha256": "15884b5aed16e4e3074384e59b54a34e5e058fe36c2f0a0d24fc0f67731647c6",
+  "module": "worldsmith/runner/taxonomy.py",
+  "stuck": {
+   "epsilon_studs": 2.0,
+   "max_sample_gap_s": 1.0,
+   "window_s": 10
+  }
+ },
+ "counts": {
+  "BRIDGE_SHORT_HYPOTHESIS": 3,
+  "FELL": 3,
+  "SUCCESS": 3
+ },
+ "disclosure": "The M0 fixture's defect (a 6-stud bridge over a 16-stud gap) is known by construction, and P0 is a server-scripted MoveTo walker that never jumps, so its fall is expected. BRIDGE_SHORT_HYPOTHESIS records that SPEC section 10's three conditions hold on recorded bundles: functional evidence under one frozen controller, not a causal diagnosis of an arbitrary room, and not an Autopilot or agent result.",
+ "episodes": [
+  {
+   "attempts": [
+    {
+     "attempt": 1,
+     "cause": "BRIDGE_SHORT_HYPOTHESIS",
+     "detail": "KILL_FLOOR_TOUCHED at [0.0, -14.29, 49.31], in the gap_1 area",
+     "events": [
+      "LEVER_ACTIVATED",
+      "GATE_OPENED",
+      "KILL_FLOOR_TOUCHED"
+     ],
+     "fell_in_area": true,
+     "hypothesis": {
+      "cause": "BRIDGE_SHORT_HYPOTHESIS",
+      "conditions": {
+       "fell_in_gap_area": {
+        "area": {
+         "gap": "gap_1",
+         "margin": 4,
+         "x": [
+          -12.0,
+          12.0
+         ],
+         "z": [
+          32.0,
+          56.0
+         ]
+        },
+        "kill_floor_pos": [
+         0.0,
+         -14.29,
+         49.31
+        ],
+        "ok": true,
+        "source": "KILL_FLOOR_TOUCHED position (server, lags 2-3.5 studs) in the gap footprint + gap_area_margin_studs (config/m0.yaml, ADR 0005 section 6)"
+       },
+       "geometry": {
+        "bridge": "bridge_1",
+        "bridge_length": 6,
+        "gap": "gap_1",
+        "gap_width_declared": 16,
+        "gap_width_measured": 16,
+        "ok": true,
+        "reason": "bridge 6 < gap 16 (measured 16); 10 studs uncovered",
+        "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+        "source": "bundles/m0/F1-A/scene.json (scene hash 92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d)",
+        "uncovered_studs": 10
+       },
+       "paired_fix": {
+        "evidence": [
+         {
+          "bundle": "bundles/m0/F1-A-fix",
+          "config_sha256": "15884b5aed16e4e3074384e59b54a34e5e058fe36c2f0a0d24fc0f67731647c6",
+          "controller_sha256": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+          "episode": "F1-A-fix",
+          "files": {
+           "attempts/1.raw.txt": "af0e500b3506317b10920b3f883481d5d101ee4b7c18f94c3cfcf5ec3d8a549b",
+           "attempts/2.raw.txt": "8ba69d78c2e4fed7f98ce5fa3ba7996fcb2cd8c4a068e929f5a1929403537f29",
+           "attempts/3.raw.txt": "472b6a96c34d94627f1b76bbe51fc28b8fec65dda71dd868fd01c1587904399f",
+           "calls.json": "b8dabaeebdc22a9ed1f9dbb21b495ebf6ff49fafbce875503f3ca5b30d6247bf",
+           "controller.luau": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+           "episode.json": "aa8bcc204c2d1fa0f9c0291141497788ca3465f5b18665057d97553bf281d487",
+           "scene.json": "2f359c89fa054b9a9c879bd5d7e09b834408d78f519dede86e6ed2755ecec643",
+           "summary.json": "c92cfb8a66912895a1caa72d8f0e22567209e29cc0dc0a3c92e9cedf619a192e",
+           "trace.jsonl": "eeade3a8254d04f79e79471b18266809c53f4b6be5c37a0725b3b476b009546d"
+          },
+          "fix_covers_gap": true,
+          "k": 3,
+          "n": 3,
+          "nonces": [
+           "9ac4bb6206fb6da4",
+           "9e57f58e16236982",
+           "95a962c44e1352c5"
+          ],
+          "outcomes": [
+           "SUCCESS",
+           "SUCCESS",
+           "SUCCESS"
+          ],
+          "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+          "run_id": "m0-2026-11-09T155836",
+          "scene_change": [
+           {
+            "after": 16,
+            "before": 6,
+            "entity": "bridge_1",
+            "field": "length"
+           }
+          ],
+          "scene_hash": "49371fa767666577d2f1c30571231069af8eeaeb2eace76e6e832f38c281a396"
+         }
+        ],
+        "ok": true,
+        "rejected": [
+         {
+          "bundle": "bundles/m0/F1-A",
+          "reasons": [
+           "the same episode as the fall",
+           "not 3/3 SUCCESS: 0/3 (3 attempts)",
+           "scene change is not bridge_1.length only: []"
+          ]
+         },
+         {
+          "bundle": "bundles/m0/smoke-F1-E",
+          "reasons": [
+           "bundle problems: ['ran under config f09dd8728e5d\u2026, not 15884b5aed16\u2026; not re-classified']",
+           "controller 6d2e299cb6ca\u2026 != 3743d998e900\u2026 (not the same frozen player)",
+           "different config hash",
+           "not 3/3 SUCCESS: 0/1 (0 attempts)",
+           "scene change is not bridge_1.length only: [(None, 'scene_id'), ('bridge_1', 'length'), ('bridge_1', 'width'), ('decor_1', 'palette')]"
+          ]
+         },
+         {
+          "bundle": "bundles/m0/smoke2-F1-E",
+          "reasons": [
+           "not 3/3 SUCCESS: 1/1 (1 attempts)",
+           "scene change is not bridge_1.length only: [(None, 'scene_id'), ('bridge_1', 'length'), ('bridge_1', 'width'), ('decor_1', 'palette')]"
+          ]
+         }
+        ]
+       }
+      },
+      "tag": "BRIDGE_SHORT_HYPOTHESIS"
+     },
+     "nonce": "248a34ad064958bb",
+     "outcome": "FELL",
+     "raw_file": "attempts/1.raw.txt",
+     "raw_sha256": "78ca6071554a4f6a24eb6211d72af69d2b31b0b347c09a8393165b8f46322fe3",
+     "stuck": {
+      "epsilon_studs": 2.0,
+      "max_gap_s": null,
+      "max_sample_gap_s": 1.0,
+      "n_samples": 8,
+      "reason": "route phase 5.95 s is shorter than the window (10 s): no window fits",
+      "result": "NOT_STUCK",
+      "route_phase_s": 5.951,
+      "window": null,
+      "window_s": 10
+     },
+     "tags": [
+      "FELL",
+      "BRIDGE_SHORT_HYPOTHESIS"
+     ]
+    },
+    {
+     "attempt": 2,
+     "cause": "BRIDGE_SHORT_HYPOTHESIS",
+     "detail": "KILL_FLOOR_TOUCHED at [0.0, -11.06, 48.52], in the gap_1 area",
+     "events": [
+      "LEVER_ACTIVATED",
+      "GATE_OPENED",
+      "KILL_FLOOR_TOUCHED"
+     ],
+     "fell_in_area": true,
+     "hypothesis": {
+      "cause": "BRIDGE_SHORT_HYPOTHESIS",
+      "conditions": {
+       "fell_in_gap_area": {
+        "area": {
+         "gap": "gap_1",
+         "margin": 4,
+         "x": [
+          -12.0,
+          12.0
+         ],
+         "z": [
+          32.0,
+          56.0
+         ]
+        },
+        "kill_floor_pos": [
+         0.0,
+         -11.06,
+         48.52
+        ],
+        "ok": true,
+        "source": "KILL_FLOOR_TOUCHED position (server, lags 2-3.5 studs) in the gap footprint + gap_area_margin_studs (config/m0.yaml, ADR 0005 section 6)"
+       },
+       "geometry": {
+        "bridge": "bridge_1",
+        "bridge_length": 6,
+        "gap": "gap_1",
+        "gap_width_declared": 16,
+        "gap_width_measured": 16,
+        "ok": true,
+        "reason": "bridge 6 < gap 16 (measured 16); 10 studs uncovered",
+        "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+        "source": "bundles/m0/F1-A/scene.json (scene hash 92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d)",
+        "uncovered_studs": 10
+       },
+       "paired_fix": {
+        "evidence": [
+         {
+          "bundle": "bundles/m0/F1-A-fix",
+          "config_sha256": "15884b5aed16e4e3074384e59b54a34e5e058fe36c2f0a0d24fc0f67731647c6",
+          "controller_sha256": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+          "episode": "F1-A-fix",
+          "files": {
+           "attempts/1.raw.txt": "af0e500b3506317b10920b3f883481d5d101ee4b7c18f94c3cfcf5ec3d8a549b",
+           "attempts/2.raw.txt": "8ba69d78c2e4fed7f98ce5fa3ba7996fcb2cd8c4a068e929f5a1929403537f29",
+           "attempts/3.raw.txt": "472b6a96c34d94627f1b76bbe51fc28b8fec65dda71dd868fd01c1587904399f",
+           "calls.json": "b8dabaeebdc22a9ed1f9dbb21b495ebf6ff49fafbce875503f3ca5b30d6247bf",
+           "controller.luau": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+           "episode.json": "aa8bcc204c2d1fa0f9c0291141497788ca3465f5b18665057d97553bf281d487",
+           "scene.json": "2f359c89fa054b9a9c879bd5d7e09b834408d78f519dede86e6ed2755ecec643",
+           "summary.json": "c92cfb8a66912895a1caa72d8f0e22567209e29cc0dc0a3c92e9cedf619a192e",
+           "trace.jsonl": "eeade3a8254d04f79e79471b18266809c53f4b6be5c37a0725b3b476b009546d"
+          },
+          "fix_covers_gap": true,
+          "k": 3,
+          "n": 3,
+          "nonces": [
+           "9ac4bb6206fb6da4",
+           "9e57f58e16236982",
+           "95a962c44e1352c5"
+          ],
+          "outcomes": [
+           "SUCCESS",
+           "SUCCESS",
+           "SUCCESS"
+          ],
+          "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+          "run_id": "m0-2026-11-09T155836",
+          "scene_change": [
+           {
+            "after": 16,
+            "before": 6,
+            "entity": "bridge_1",
+            "field": "length"
+           }
+          ],
+          "scene_hash": "49371fa767666577d2f1c30571231069af8eeaeb2eace76e6e832f38c281a396"
+         }
+        ],
+        "ok": true,
+        "rejected": [
+         {
+          "bundle": "bundles/m0/F1-A",
+          "reasons": [
+           "the same episode as the fall",
+           "not 3/3 SUCCESS: 0/3 (3 attempts)",
+           "scene change is not bridge_1.length only: []"
+          ]
+         },
+         {
+          "bundle": "bundles/m0/smoke-F1-E",
+          "reasons": [
+           "bundle problems: ['ran under config f09dd8728e5d\u2026, not 15884b5aed16\u2026; not re-classified']",
+           "controller 6d2e299cb6ca\u2026 != 3743d998e900\u2026 (not the same frozen player)",
+           "different config hash",
+           "not 3/3 SUCCESS: 0/1 (0 attempts)",
+           "scene change is not bridge_1.length only: [(None, 'scene_id'), ('bridge_1', 'length'), ('bridge_1', 'width'), ('decor_1', 'palette')]"
+          ]
+         },
+         {
+          "bundle": "bundles/m0/smoke2-F1-E",
+          "reasons": [
+           "not 3/3 SUCCESS: 1/1 (1 attempts)",
+           "scene change is not bridge_1.length only: [(None, 'scene_id'), ('bridge_1', 'length'), ('bridge_1', 'width'), ('decor_1', 'palette')]"
+          ]
+         }
+        ]
+       }
+      },
+      "tag": "BRIDGE_SHORT_HYPOTHESIS"
+     },
+     "nonce": "ab5831e807f3ed7f",
+     "outcome": "FELL",
+     "raw_file": "attempts/2.raw.txt",
+     "raw_sha256": "7449c3d5b4379b94b506e517b2ea9a7bde3c654ac16a0ae4c71bbc47fe4c7569",
+     "stuck": {
+      "epsilon_studs": 2.0,
+      "max_gap_s": null,
+      "max_sample_gap_s": 1.0,
+      "n_samples": 8,
+      "reason": "route phase 5.78 s is shorter than the window (10 s): no window fits",
+      "result": "NOT_STUCK",
+      "route_phase_s": 5.785,
+      "window": null,
+      "window_s": 10
+     },
+     "tags": [
+      "FELL",
+      "BRIDGE_SHORT_HYPOTHESIS"
+     ]
+    },
+    {
+     "attempt": 3,
+     "cause": "BRIDGE_SHORT_HYPOTHESIS",
+     "detail": "KILL_FLOOR_TOUCHED at [0.0, -10.27, 48.35], in the gap_1 area",
+     "events": [
+      "LEVER_ACTIVATED",
+      "GATE_OPENED",
+      "KILL_FLOOR_TOUCHED"
+     ],
+     "fell_in_area": true,
+     "hypothesis": {
+      "cause": "BRIDGE_SHORT_HYPOTHESIS",
+      "conditions": {
+       "fell_in_gap_area": {
+        "area": {
+         "gap": "gap_1",
+         "margin": 4,
+         "x": [
+          -12.0,
+          12.0
+         ],
+         "z": [
+          32.0,
+          56.0
+         ]
+        },
+        "kill_floor_pos": [
+         0.0,
+         -10.27,
+         48.35
+        ],
+        "ok": true,
+        "source": "KILL_FLOOR_TOUCHED position (server, lags 2-3.5 studs) in the gap footprint + gap_area_margin_studs (config/m0.yaml, ADR 0005 section 6)"
+       },
+       "geometry": {
+        "bridge": "bridge_1",
+        "bridge_length": 6,
+        "gap": "gap_1",
+        "gap_width_declared": 16,
+        "gap_width_measured": 16,
+        "ok": true,
+        "reason": "bridge 6 < gap 16 (measured 16); 10 studs uncovered",
+        "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+        "source": "bundles/m0/F1-A/scene.json (scene hash 92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d)",
+        "uncovered_studs": 10
+       },
+       "paired_fix": {
+        "evidence": [
+         {
+          "bundle": "bundles/m0/F1-A-fix",
+          "config_sha256": "15884b5aed16e4e3074384e59b54a34e5e058fe36c2f0a0d24fc0f67731647c6",
+          "controller_sha256": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+          "episode": "F1-A-fix",
+          "files": {
+           "attempts/1.raw.txt": "af0e500b3506317b10920b3f883481d5d101ee4b7c18f94c3cfcf5ec3d8a549b",
+           "attempts/2.raw.txt": "8ba69d78c2e4fed7f98ce5fa3ba7996fcb2cd8c4a068e929f5a1929403537f29",
+           "attempts/3.raw.txt": "472b6a96c34d94627f1b76bbe51fc28b8fec65dda71dd868fd01c1587904399f",
+           "calls.json": "b8dabaeebdc22a9ed1f9dbb21b495ebf6ff49fafbce875503f3ca5b30d6247bf",
+           "controller.luau": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+           "episode.json": "aa8bcc204c2d1fa0f9c0291141497788ca3465f5b18665057d97553bf281d487",
+           "scene.json": "2f359c89fa054b9a9c879bd5d7e09b834408d78f519dede86e6ed2755ecec643",
+           "summary.json": "c92cfb8a66912895a1caa72d8f0e22567209e29cc0dc0a3c92e9cedf619a192e",
+           "trace.jsonl": "eeade3a8254d04f79e79471b18266809c53f4b6be5c37a0725b3b476b009546d"
+          },
+          "fix_covers_gap": true,
+          "k": 3,
+          "n": 3,
+          "nonces": [
+           "9ac4bb6206fb6da4",
+           "9e57f58e16236982",
+           "95a962c44e1352c5"
+          ],
+          "outcomes": [
+           "SUCCESS",
+           "SUCCESS",
+           "SUCCESS"
+          ],
+          "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+          "run_id": "m0-2026-11-09T155836",
+          "scene_change": [
+           {
+            "after": 16,
+            "before": 6,
+            "entity": "bridge_1",
+            "field": "length"
+           }
+          ],
+          "scene_hash": "49371fa767666577d2f1c30571231069af8eeaeb2eace76e6e832f38c281a396"
+         }
+        ],
+        "ok": true,
+        "rejected": [
+         {
+          "bundle": "bundles/m0/F1-A",
+          "reasons": [
+           "the same episode as the fall",
+           "not 3/3 SUCCESS: 0/3 (3 attempts)",
+           "scene change is not bridge_1.length only: []"
+          ]
+         },
+         {
+          "bundle": "bundles/m0/smoke-F1-E",
+          "reasons": [
+           "bundle problems: ['ran under config f09dd8728e5d\u2026, not 15884b5aed16\u2026; not re-classified']",
+           "controller 6d2e299cb6ca\u2026 != 3743d998e900\u2026 (not the same frozen player)",
+           "different config hash",
+           "not 3/3 SUCCESS: 0/1 (0 attempts)",
+           "scene change is not bridge_1.length only: [(None, 'scene_id'), ('bridge_1', 'length'), ('bridge_1', 'width'), ('decor_1', 'palette')]"
+          ]
+         },
+         {
+          "bundle": "bundles/m0/smoke2-F1-E",
+          "reasons": [
+           "not 3/3 SUCCESS: 1/1 (1 attempts)",
+           "scene change is not bridge_1.length only: [(None, 'scene_id'), ('bridge_1', 'length'), ('bridge_1', 'width'), ('decor_1', 'palette')]"
+          ]
+         }
+        ]
+       }
+      },
+      "tag": "BRIDGE_SHORT_HYPOTHESIS"
+     },
+     "nonce": "665a4a8665dd553b",
+     "outcome": "FELL",
+     "raw_file": "attempts/3.raw.txt",
+     "raw_sha256": "a0ef0aa094ff34e4b4bcc31f513738750d8aeb7a5cf8f81a55b9dfee4d5785fe",
+     "stuck": {
+      "epsilon_studs": 2.0,
+      "max_gap_s": null,
+      "max_sample_gap_s": 1.0,
+      "n_samples": 8,
+      "reason": "route phase 5.99 s is shorter than the window (10 s): no window fits",
+      "result": "NOT_STUCK",
+      "route_phase_s": 5.985,
+      "window": null,
+      "window_s": 10
+     },
+     "tags": [
+      "FELL",
+      "BRIDGE_SHORT_HYPOTHESIS"
+     ]
+    }
+   ],
+   "bundle": "bundles/m0/F1-A",
+   "config_sha256": "15884b5aed16e4e3074384e59b54a34e5e058fe36c2f0a0d24fc0f67731647c6",
+   "controller_sha256": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+   "episode": "F1-A",
+   "episode_tags": [],
+   "files": {
+    "attempts/1.raw.txt": "78ca6071554a4f6a24eb6211d72af69d2b31b0b347c09a8393165b8f46322fe3",
+    "attempts/2.raw.txt": "7449c3d5b4379b94b506e517b2ea9a7bde3c654ac16a0ae4c71bbc47fe4c7569",
+    "attempts/3.raw.txt": "a0ef0aa094ff34e4b4bcc31f513738750d8aeb7a5cf8f81a55b9dfee4d5785fe",
+    "calls.json": "8336ee55b69765e3a5fc3b47a2ad1165e1005aac40006061ac4aae1980320393",
+    "controller.luau": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+    "episode.json": "b71861385868d0f1733eb2c0b53493a68f89ea53303397319a4ff20ef5348a45",
+    "scene.json": "a2b9d0aaa66505f5a3de3abbff5a88f8ef1973e14714aba6352374e279ecaab9",
+    "summary.json": "3de544ca36ae9c336de487630c082274fab5bb5fdb011aaf85ae6764c3926db2",
+    "trace.jsonl": "169a264673e218eb62269b3cfd93231293673b929621d0eca103219d2e757fa5"
+   },
+   "problems": [],
+   "role": "before",
+   "run_id": "m0-2026-11-09T155306",
+   "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+   "status": "complete"
+  },
+  {
+   "attempts": [
+    {
+     "attempt": 1,
+     "cause": null,
+     "detail": "BRIDGE_CROSSED then GOAL_TOUCHED",
+     "events": [
+      "LEVER_ACTIVATED",
+      "GATE_OPENED",
+      "BRIDGE_CROSSED",
+      "GOAL_TOUCHED"
+     ],
+     "fell_in_area": null,
+     "hypothesis": null,
+     "nonce": "9ac4bb6206fb6da4",
+     "outcome": "SUCCESS",
+     "raw_file": "attempts/1.raw.txt",
+     "raw_sha256": "af0e500b3506317b10920b3f883481d5d101ee4b7c18f94c3cfcf5ec3d8a549b",
+     "stuck": {
+      "epsilon_studs": 2.0,
+      "max_gap_s": null,
+      "max_sample_gap_s": 1.0,
+      "n_samples": 10,
+      "reason": "route phase 6.80 s is shorter than the window (10 s): no window fits",
+      "result": "NOT_STUCK",
+      "route_phase_s": 6.8,
+      "window": null,
+      "window_s": 10
+     },
+     "tags": [
+      "SUCCESS"
+     ]
+    },
+    {
+     "attempt": 2,
+     "cause": null,
+     "detail": "BRIDGE_CROSSED then GOAL_TOUCHED",
+     "events": [
+      "LEVER_ACTIVATED",
+      "GATE_OPENED",
+      "BRIDGE_CROSSED",
+      "GOAL_TOUCHED"
+     ],
+     "fell_in_area": null,
+     "hypothesis": null,
+     "nonce": "9e57f58e16236982",
+     "outcome": "SUCCESS",
+     "raw_file": "attempts/2.raw.txt",
+     "raw_sha256": "8ba69d78c2e4fed7f98ce5fa3ba7996fcb2cd8c4a068e929f5a1929403537f29",
+     "stuck": {
+      "epsilon_studs": 2.0,
+      "max_gap_s": null,
+      "max_sample_gap_s": 1.0,
+      "n_samples": 10,
+      "reason": "route phase 6.77 s is shorter than the window (10 s): no window fits",
+      "result": "NOT_STUCK",
+      "route_phase_s": 6.767,
+      "window": null,
+      "window_s": 10
+     },
+     "tags": [
+      "SUCCESS"
+     ]
+    },
+    {
+     "attempt": 3,
+     "cause": null,
+     "detail": "BRIDGE_CROSSED then GOAL_TOUCHED",
+     "events": [
+      "LEVER_ACTIVATED",
+      "GATE_OPENED",
+      "BRIDGE_CROSSED",
+      "GOAL_TOUCHED"
+     ],
+     "fell_in_area": null,
+     "hypothesis": null,
+     "nonce": "95a962c44e1352c5",
+     "outcome": "SUCCESS",
+     "raw_file": "attempts/3.raw.txt",
+     "raw_sha256": "472b6a96c34d94627f1b76bbe51fc28b8fec65dda71dd868fd01c1587904399f",
+     "stuck": {
+      "epsilon_studs": 2.0,
+      "max_gap_s": null,
+      "max_sample_gap_s": 1.0,
+      "n_samples": 10,
+      "reason": "route phase 7.08 s is shorter than the window (10 s): no window fits",
+      "result": "NOT_STUCK",
+      "route_phase_s": 7.083,
+      "window": null,
+      "window_s": 10
+     },
+     "tags": [
+      "SUCCESS"
+     ]
+    }
+   ],
+   "bundle": "bundles/m0/F1-A-fix",
+   "config_sha256": "15884b5aed16e4e3074384e59b54a34e5e058fe36c2f0a0d24fc0f67731647c6",
+   "controller_sha256": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+   "episode": "F1-A-fix",
+   "episode_tags": [],
+   "files": {
+    "attempts/1.raw.txt": "af0e500b3506317b10920b3f883481d5d101ee4b7c18f94c3cfcf5ec3d8a549b",
+    "attempts/2.raw.txt": "8ba69d78c2e4fed7f98ce5fa3ba7996fcb2cd8c4a068e929f5a1929403537f29",
+    "attempts/3.raw.txt": "472b6a96c34d94627f1b76bbe51fc28b8fec65dda71dd868fd01c1587904399f",
+    "calls.json": "b8dabaeebdc22a9ed1f9dbb21b495ebf6ff49fafbce875503f3ca5b30d6247bf",
+    "controller.luau": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+    "episode.json": "aa8bcc204c2d1fa0f9c0291141497788ca3465f5b18665057d97553bf281d487",
+    "scene.json": "2f359c89fa054b9a9c879bd5d7e09b834408d78f519dede86e6ed2755ecec643",
+    "summary.json": "c92cfb8a66912895a1caa72d8f0e22567209e29cc0dc0a3c92e9cedf619a192e",
+    "trace.jsonl": "eeade3a8254d04f79e79471b18266809c53f4b6be5c37a0725b3b476b009546d"
+   },
+   "problems": [],
+   "role": "after",
+   "run_id": "m0-2026-11-09T155836",
+   "scene_hash": "49371fa767666577d2f1c30571231069af8eeaeb2eace76e6e832f38c281a396",
+   "status": "complete"
+  }
+ ],
+ "schema": "worldsmith.classification/0.1",
+ "taxonomy": "SPEC section 10 (v0)"
+}

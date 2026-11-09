@@ -1,0 +1,19 @@
+# WS-08 classifier configuration (SPEC section 10, failure taxonomy v0). Declared before it is
+# used on any comparison; its SHA-256 (of these bytes) is written into every classification.
+# config/m0.yaml is NOT edited (it is frozen with the M0 gate); the gap-area margin, N and k
+# used by the hypothesis rule are read from there.
+schema: worldsmith.classifierconfig/0.1
+
+# STUCK: displacement < epsilon over a window. Judged only on the controller's own position
+# samples (route start, then each waypoint's end; controller clock), only while alive, and only
+# over the route phase. If the samples are too sparse to judge, the answer is NOT_EVALUABLE,
+# never a guess. See runner/taxonomy.py evaluate_stuck for the exact rule.
+stuck:
+  epsilon_studs: 2.0
+  window_s: 10
+  max_sample_gap_s: 1.0
+
+sources:
+  epsilon_studs: "bundles/m0/character/measure.json hrp_size[0] = 2 studs: moved less than its own root part's width"
+  window_s: "config/m0.yaml timing.t_waypoint = 10 s: the P0 controller's own limit for reaching one waypoint"
+  max_sample_gap_s: "[ESTIMATE] WS-08, not measured: at WalkSpeed 16 studs/s (measure.json) a 1 s gap can hide 16 studs of motion; revise only before a comparison, by ADR"
