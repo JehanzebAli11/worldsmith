@@ -171,8 +171,9 @@ One entry per session, newest last: **Done** · **Verified** · **Next** · **Op
   `get_console_output` (Edit buffer, reset at play start, first 10 000 chars kept) returned none
   of the `WS|` lines when called alongside the F1-E run; server prints came back only in
   `run_script_in_play_mode`'s result after play stopped.
-- Not verified: a fresh-clone test run for this session's last commits (done below if listed),
-  Python 3.12, macOS `make test`; the Ramp (WedgePart) orientation (never built live); the lever's
+- Fresh `git clone` at `beb0f9e` + fresh venv, `make test` → `771 passed in 4.46s` (includes the
+  live F1-A read-back comparison from `bundles/ws03/`).
+- Not verified: Python 3.12, macOS `make test`; the Ramp (WedgePart) orientation (never built live); the lever's
   ProximityPrompt path (P0 uses the touch zone); route (b) (not installed here).
 
 **Next**
