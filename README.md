@@ -17,8 +17,12 @@ the M0 stage allows only `set bridge_1.length` (ADR 0006). **WS-06:** an indepen
 (`worldsmith.validator.validate`) checks schema and bounds, protection, the locked gap, difficulty
 and structure, with stable violation codes ([`docs/VALIDATOR.md`](docs/VALIDATOR.md)); all 69
 abuse cases in `tests/abuse/reject/` are rejected with their expected codes and the 13 legit cases
-pass (CPU tests, not Studio runs). An M1 stage widens the patch ops (ADR 0007). No architect or
-navigation check exists yet (WS-07+). Ticket status is in [`docs/TICKETS.md`](docs/TICKETS.md).
+pass (CPU tests, not Studio runs). An M1 stage widens the patch ops (ADR 0007). **WS-07:** a
+coarse walk/jump graph over the built geometry reports CONNECTED/DISCONNECTED as a warning only,
+an approximation and never a proof (ADR 0008). **WS-08:** a failure classifier implements the
+SPEC §10 taxonomy; the M0 attempts are labelled in `bundles/m0/classification.json`
+([`docs/CLASSIFIER.md`](docs/CLASSIFIER.md)). No architect exists yet (WS-09+). Ticket status is
+in [`docs/TICKETS.md`](docs/TICKETS.md).
 
 ## Honest limits
 
