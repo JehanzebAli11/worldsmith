@@ -12,7 +12,9 @@ the owner's local place, with one frozen P0 controller (server-scripted `Humanoi
 waypoints that never jump; a substrate probe, not an Autopilot or agent result): F1-A (bridge
 too short by construction) ended FELL in the gap 3/3, and its one-field fix ended BRIDGE_CROSSED
 then GOAL_TOUCHED 3/3; read-back matched before each scene. N = 3 is functional-repeatability
-evidence only. No architect, validator or patch engine exists yet (WS-05+). Ticket status is in [`docs/TICKETS.md`](docs/TICKETS.md).
+evidence only. **WS-05:** patches (`worldsmith.patch/0.1`) apply on CPU with a base-hash check;
+the M0 stage allows only `set bridge_1.length` (ADR 0006). No architect or full validator exists yet
+(WS-06+). Ticket status is in [`docs/TICKETS.md`](docs/TICKETS.md).
 
 ## Honest limits
 

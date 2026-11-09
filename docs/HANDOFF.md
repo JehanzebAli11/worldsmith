@@ -286,3 +286,69 @@ One entry per session, newest last: **Done** · **Verified** · **Next** · **Op
    does not assign it; leave it to WS-08's classifier? Recommended: yes.
 5. The F1-E smoke runs and the first-smoke controller (`6d2e299c…`) are kept in `bundles/m0/` as
    history. Fine?
+
+## 2026-11-09 21:20 PKT · WS-05
+
+**Done**
+- `grammar/patch_schema.json` (JSON Schema draft 2020-12, `worldsmith.patch/0.1`): top level
+  `schema`, `base_hash` (64 lower-case hex), `ops` (1 to 3); release 0.1 has one op, `set`
+  (`op`, `id`, `field`, `value`: a number). Every object is closed. Shipped as
+  `worldsmith.grammar` package data (`pyproject.toml`).
+- `validator/patch.py` (`worldsmith.validator.patch`): `parse_patch_text` / `load_patch` (strict
+  JSON: duplicate keys, NaN, ±Infinity, `1e999`, non-objects rejected), `check_shape`,
+  `check_patch(patch, stage=)`, `patch_hash`, `apply_patch(scene, patch, stage=)` →
+  frozen `AppliedPatch(scene, stage, base_hash, scene_hash, patch_hash, version)`. Layers, each a
+  message prefix: `json`, `schema`, `string` (anchored re-check of hash, id, field), `number`
+  (finite), `stage`, `conflict` (one op per target), `bounds` (`bounds.yaml`, raw value),
+  `base` (current scene must validate), `stale` (`StalePatch`, carries `expected`/`actual`),
+  `apply` (target exists, is the stage's type, field is a number), `scene` (patched scene
+  re-validated with the WS-02 checks). Stage is declared by the caller, never by the patch;
+  `STAGES = {"M0": (set, Bridge, bridge_1, length)}`; an unknown stage is a plain `ValueError`.
+  Apply is pure (deep copy; inputs untouched, also on rejection), stores the value at canonical
+  precision, bumps `version` by 1 and recomputes the canonical hash.
+- `docs/ADR/0006-patch-versioning.md`: version + 1 per applied patch (answers WS-02 open
+  question 4), why (a replayed patch is always stale), layout (code in `validator/`, schema in
+  `grammar/`), what is left to WS-06.
+- `scenes/F1-A/patches/m0_fix.json`: the M0 fix as a patch; `scenes/F1-A/README.md` notes it.
+- Tests first: `tests/test_ws05_patch.py` (174 tests) committed at `4323b0f`, where it failed at
+  collection (`cannot import name 'patch'`). One expectation was wrong and was corrected in the
+  feat commit: field `Length` is rejected by the schema layer, not the stage layer (still covered
+  by the bad-field test).
+
+**Verified** (Linux VM on the Mac bridge, Python 3.10.12, venvs outside the repo)
+- Applying `{"op":"set","id":"bridge_1","field":"length","value":16}` to F1-A
+  (`92f86609…cddb1d`) gives a scene whose only differing leaf from `scenes/F1-A/fix.json` is
+  `version` (1 → 2). Patched hash `297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535`;
+  with `version` set back to 1 it equals `fix.json`'s `49371fa7…a396`. Patch hash
+  `d89a74ca6a76c777f23c9939c619630487b919321e22c3f3b025dcf3eb3686c5`. Identical across three
+  processes with different `PYTHONHASHSEED`.
+- Rejected (tests): stale base (F1-A fix, F1-E, zeros, the patched hash; any scene edit; a
+  version change; the same patch applied twice); 20 non-`bridge_1.length` targets in M0; ops
+  `move`/`add`/`remove`/`delete`/`replace`/`SET`; 0, 4, 5, 10 ops; two ops on one target;
+  unknown top-level and op keys; missing keys; unknown fields; out-of-bounds values (0, 0.5,
+  0.9996, −16, 64.001, 65, 1e6, ±10^400); string, list, object, null and boolean values; Luau,
+  URL and newline payloads in `id`/`field`/`base_hash`; NaN/±Infinity in text and in objects;
+  duplicate keys; an invalid base scene; `version` past its bound. Accepted: 1, 64, 12.5, 63.999;
+  F1-E with its own base; entity/protected reordering (hash is order-free).
+- `VENV=… ./scripts/test.sh -q` → `1026 passed in 7.04s` (working tree, 852 before + 174).
+  Fresh `git clone` at `5206f5c` + fresh venv, `make test` → `1026 passed in 6.82s` (before this
+  HANDOFF/README/TICKETS commit). The built wheel contains `worldsmith/grammar/patch_schema.json`
+  and `worldsmith/validator/patch.py`.
+- Not verified: Python 3.12, macOS `make test`. Nothing ran in Studio (CPU-only ticket); the
+  patched scene (`297b23c8…`) has not been built or played.
+
+**Next**
+- WS-06 (separate session): the validator (schema, protection against the base scene, locked
+  gap, difficulty, structure) and the §16 abuse suite. It should call `check_patch` /
+  `apply_patch` and then judge the patched scene against the base; rejected patches count against
+  the revision budget (SPEC §7).
+
+**Open questions** (yes/no for the owner)
+1. ADR 0006: bump `version` by 1 per applied patch (so the patched M0 scene hashes `297b23c8…`,
+   not `fix.json`'s `49371fa7…`)? Recommended: yes.
+2. A `set` to the value a field already has is accepted today (it still bumps `version` and the
+   hash). Reject such no-op patches in WS-06 as a wasted revision? Recommended: yes, in WS-06.
+3. When a patch is both malformed and stale, it is reported as malformed (`PatchError`), not
+   `StalePatch`: patch checks run before the base-hash check. Fine? Recommended: yes.
+4. Keep the patch JSON Schema in `grammar/` and the code in `validator/` (ADR 0006), rather than
+   a new top-level `patch/` package? Recommended: yes (no new SPEC §11 folder).
