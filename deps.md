@@ -28,7 +28,19 @@ Worldsmith freezes the player and changes the world; it does not use or extend `
 
 ## Python runtime dependencies
 
-None at WS-01.
+Added in WS-02 (9 Nov 2026) for the scene schema and bounds (`worldsmith.grammar.scene`).
+Direct dependencies are pinned in `pyproject.toml`; the rest are what pip resolved on
+9 Nov 2026 (Python 3.10.12). Licences are as declared in each package's metadata.
+
+| Package | Version | Licence | Why |
+| --- | --- | --- | --- |
+| jsonschema | 4.26.0 (pinned) | MIT | Validates scenes against `grammar/schema.json` (draft 2020-12) |
+| PyYAML | 6.0.3 (pinned) | MIT | Reads `grammar/bounds.yaml` (`yaml.safe_load` only) |
+| attrs | 26.1.0 | MIT | jsonschema dependency |
+| jsonschema-specifications | 2025.9.1 | MIT | jsonschema dependency (bundled meta-schemas) |
+| referencing | 0.37.0 | MIT | jsonschema dependency (`$ref` resolution) |
+| rpds-py | 0.30.0 | MIT | referencing dependency (compiled wheel) |
+| typing_extensions | 4.16.0 | PSF-2.0 | referencing dependency |
 
 ## Python development dependencies (CPU tests)
 
