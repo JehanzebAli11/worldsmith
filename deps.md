@@ -15,8 +15,9 @@ Recorded for WS-01 on 9 Nov 2026 (PKT).
 | Licence | Apache-2.0 |
 | How Worldsmith uses it | As an **external dependency**: the Roblox Studio MCP connector and the player. It is **not vendored**, and **no Autopilot code is copied** into this repository. |
 
-Context only (earlier merges into the same `staging` branch; not separately pinned, and their
-ancestry relative to the pinned commit was not re-checked in WS-01):
+Context only: earlier merges into the same `staging` branch, both contributed by JehanzebAli11.
+Not separately pinned; both are ancestors of the pinned commit (`git merge-base --is-ancestor`,
+checked 2026-11-09 against upstream staging), so the pin includes them.
 
 | PR | Name | Commit | Merged into `staging` |
 | --- | --- | --- | --- |
