@@ -1,0 +1,711 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/JehanzebAli11/worldsmith/grammar/schema.json",
+  "title": "worldsmith.scene/0.1",
+  "description": "One owned F1 room. Closed: unknown keys and types are rejected; strings are enums or IDs. Numeric ranges: grammar/bounds.yaml. Referential checks: worldsmith.grammar.scene. Protection, difficulty and structure: the WS-06 validator. See docs/ADR/0002-scene-schema.md.",
+  "type": "object",
+  "required": [
+    "schema",
+    "scene_id",
+    "family",
+    "version",
+    "units",
+    "up",
+    "bounds",
+    "protected",
+    "constraints",
+    "entities"
+  ],
+  "properties": {
+    "schema": {
+      "const": "worldsmith.scene/0.1"
+    },
+    "scene_id": {
+      "$ref": "#/$defs/id"
+    },
+    "family": {
+      "enum": [
+        "F1"
+      ]
+    },
+    "version": {
+      "type": "integer"
+    },
+    "units": {
+      "const": "stud"
+    },
+    "up": {
+      "const": "+Y"
+    },
+    "bounds": {
+      "$ref": "#/$defs/room_bounds"
+    },
+    "protected": {
+      "description": "Entity IDs, or the reserved name bounds (the room box).",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/id"
+      },
+      "uniqueItems": true,
+      "maxItems": 64
+    },
+    "constraints": {
+      "$ref": "#/$defs/constraints"
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entity"
+      },
+      "minItems": 1,
+      "maxItems": 64
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "description": "Entity ID: lowercase ASCII, digits and underscore; also used for every reference. Never free text.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,31}$"
+    },
+    "num": {
+      "description": "A finite number. Ranges live in grammar/bounds.yaml, not here.",
+      "type": "number"
+    },
+    "vec3": {
+      "description": "[x, y, z] in studs, Y up.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/num"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "axis": {
+      "description": "A signed world axis.",
+      "enum": [
+        "+X",
+        "-X",
+        "+Z",
+        "-Z"
+      ]
+    },
+    "entity_type": {
+      "description": "The closed entity-type set (SPEC section 6).",
+      "enum": [
+        "Spawn",
+        "Platform",
+        "Gap",
+        "Bridge",
+        "Ramp",
+        "Wall",
+        "Lever",
+        "Gate",
+        "Goal",
+        "KillFloor",
+        "Trigger",
+        "Decor"
+      ]
+    },
+    "room_bounds": {
+      "description": "Axis-aligned room box. Everything must stay inside it (WS-06).",
+      "type": "object",
+      "required": [
+        "min",
+        "max"
+      ],
+      "properties": {
+        "min": {
+          "$ref": "#/$defs/vec3"
+        },
+        "max": {
+          "$ref": "#/$defs/vec3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "constraints": {
+      "type": "object",
+      "required": [
+        "min_gap",
+        "min_lever_detour",
+        "player_physics",
+        "required_events"
+      ],
+      "properties": {
+        "min_gap": {
+          "$ref": "#/$defs/num"
+        },
+        "min_lever_detour": {
+          "$ref": "#/$defs/num"
+        },
+        "player_physics": {
+          "const": "locked"
+        },
+        "required_events": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "BRIDGE_CROSSED",
+              "GOAL_TOUCHED"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "Spawn": {
+      "description": "Player spawn, placed at the top centre of its platform.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "on"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Spawn"
+        },
+        "on": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Platform": {
+      "description": "Solid walkable box. pos is the centre.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "pos",
+        "size"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Platform"
+        },
+        "pos": {
+          "$ref": "#/$defs/vec3"
+        },
+        "size": {
+          "$ref": "#/$defs/vec3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Gap": {
+      "description": "The empty span between two platforms, along axis, from the from-platform's far face. Not built; it is the locked difficulty.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "from",
+        "to",
+        "axis",
+        "width"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Gap"
+        },
+        "from": {
+          "$ref": "#/$defs/id"
+        },
+        "to": {
+          "$ref": "#/$defs/id"
+        },
+        "axis": {
+          "$ref": "#/$defs/axis"
+        },
+        "width": {
+          "$ref": "#/$defs/num"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Bridge": {
+      "description": "Box anchored at the gap's from edge, extending length along the gap axis; top flush with the from-platform top; lateral_offset shifts it sideways from the from-platform centreline.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "spans",
+        "length",
+        "width",
+        "thickness",
+        "lateral_offset"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Bridge"
+        },
+        "spans": {
+          "$ref": "#/$defs/id"
+        },
+        "length": {
+          "$ref": "#/$defs/num"
+        },
+        "width": {
+          "$ref": "#/$defs/num"
+        },
+        "thickness": {
+          "$ref": "#/$defs/num"
+        },
+        "lateral_offset": {
+          "$ref": "#/$defs/num"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Ramp": {
+      "description": "Wedge rising towards rises_towards. Not allowed in F1 patches (WS-06).",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "pos",
+        "size",
+        "rises_towards"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Ramp"
+        },
+        "pos": {
+          "$ref": "#/$defs/vec3"
+        },
+        "size": {
+          "$ref": "#/$defs/vec3"
+        },
+        "rises_towards": {
+          "$ref": "#/$defs/axis"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Wall": {
+      "description": "Solid box.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "pos",
+        "size"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Wall"
+        },
+        "pos": {
+          "$ref": "#/$defs/vec3"
+        },
+        "size": {
+          "$ref": "#/$defs/vec3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Lever": {
+      "description": "Lever standing at pos (base) on its platform; activating it drives the gate it controls.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "on",
+        "pos",
+        "controls"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Lever"
+        },
+        "on": {
+          "$ref": "#/$defs/id"
+        },
+        "pos": {
+          "$ref": "#/$defs/vec3"
+        },
+        "controls": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Gate": {
+      "description": "Solid box that opens while its lever is active.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "pos",
+        "size",
+        "opens_on"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Gate"
+        },
+        "pos": {
+          "$ref": "#/$defs/vec3"
+        },
+        "size": {
+          "$ref": "#/$defs/vec3"
+        },
+        "opens_on": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Goal": {
+      "description": "Goal pad, placed at the top centre of its platform.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "on",
+        "size"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Goal"
+        },
+        "on": {
+          "$ref": "#/$defs/id"
+        },
+        "size": {
+          "$ref": "#/$defs/vec3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KillFloor": {
+      "description": "Touching it ends the attempt (KILL_FLOOR_TOUCHED).",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "pos",
+        "size"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "KillFloor"
+        },
+        "pos": {
+          "$ref": "#/$defs/vec3"
+        },
+        "size": {
+          "$ref": "#/$defs/vec3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Trigger": {
+      "description": "Event volume derived from its host's geometry: region of the host footprint, from the host top up by height.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "event",
+        "on",
+        "region",
+        "height"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Trigger"
+        },
+        "event": {
+          "enum": [
+            "BRIDGE_CROSSED",
+            "GOAL_TOUCHED"
+          ]
+        },
+        "on": {
+          "$ref": "#/$defs/id"
+        },
+        "region": {
+          "enum": [
+            "far_half",
+            "whole"
+          ]
+        },
+        "height": {
+          "$ref": "#/$defs/num"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Decor": {
+      "description": "Non-gameplay prop from a fixed palette. No free text, no assets by URL.",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "palette",
+        "pos",
+        "size"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "const": "Decor"
+        },
+        "palette": {
+          "enum": [
+            "crate",
+            "pillar",
+            "lamp",
+            "plant",
+            "banner"
+          ]
+        },
+        "pos": {
+          "$ref": "#/$defs/vec3"
+        },
+        "size": {
+          "$ref": "#/$defs/vec3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "entity": {
+      "description": "Dispatch on type to one closed definition. unevaluatedProperties closes this level too.",
+      "type": "object",
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "$ref": "#/$defs/entity_type"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Spawn"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/Spawn"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Platform"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/Platform"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Gap"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/Gap"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Bridge"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/Bridge"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Ramp"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/Ramp"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Wall"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/Wall"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Lever"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/Lever"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Gate"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/Gate"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Goal"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/Goal"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "KillFloor"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/KillFloor"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Trigger"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/Trigger"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "Decor"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/Decor"
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

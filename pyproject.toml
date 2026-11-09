@@ -11,7 +11,11 @@ license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
 authors = [{ name = "Jehanzeb Ali" }]
 requires-python = ">=3.10"
-dependencies = []
+# Pinned; versions and licences (with their own dependencies) are recorded in deps.md.
+dependencies = [
+    "jsonschema==4.26.0",
+    "PyYAML==6.0.3",
+]
 
 [project.optional-dependencies]
 # Pinned; versions and licences are recorded in deps.md.
@@ -35,6 +39,10 @@ packages = [
 
 [tool.setuptools.package-dir]
 "worldsmith" = "."
+
+# Data files a subpackage reads at runtime (ADR 0001). Loaded with importlib.resources.
+[tool.setuptools.package-data]
+"worldsmith.grammar" = ["schema.json", "bounds.yaml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

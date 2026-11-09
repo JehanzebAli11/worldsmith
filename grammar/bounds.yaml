@@ -1,0 +1,37 @@
+# [ESTIMATE] until M0 measures the character (SPEC §3: 1 stud = 0.28 m is a units convention, not a character scale).
+# Hard numeric bounds for worldsmith.scene/0.1. Every number in a scene must fall in [min, max]
+# (inclusive) for its field; a numeric field with no entry here is rejected (fail closed).
+# These are design choices for the F1 room, not measurements. M0 (WS-03/WS-04) measures the
+# character (step height, jump reach, capsule) and these values are revised then, by an ADR.
+# Keys: `scene.<dotted path>` for top-level fields, `<EntityType>.<field>` for entity fields.
+# A vector field ([x, y, z]) applies its bound to each component. Units: studs, Y up.
+schema: worldsmith.scene/0.1
+bounds:
+  # top level
+  scene.version:                  {min: 1, max: 1000}
+  scene.bounds.min:               {min: -512, max: 512}
+  scene.bounds.max:               {min: -512, max: 512}
+  scene.constraints.min_gap:      {min: 4, max: 64}
+  scene.constraints.min_lever_detour: {min: 0, max: 128}
+
+  # entities: positions are box centres (Lever: its base), sizes are full extents
+  Platform.pos:                   {min: -256, max: 256}
+  Platform.size:                  {min: 0.5, max: 128}
+  Gap.width:                      {min: 4, max: 64}
+  Bridge.length:                  {min: 1, max: 64}
+  Bridge.width:                   {min: 2, max: 16}
+  Bridge.thickness:               {min: 0.5, max: 4}
+  Bridge.lateral_offset:          {min: -32, max: 32}
+  Ramp.pos:                       {min: -256, max: 256}
+  Ramp.size:                      {min: 0.5, max: 64}
+  Wall.pos:                       {min: -256, max: 256}
+  Wall.size:                      {min: 0.2, max: 128}
+  Lever.pos:                      {min: -256, max: 256}
+  Gate.pos:                       {min: -256, max: 256}
+  Gate.size:                      {min: 0.2, max: 32}
+  Goal.size:                      {min: 1, max: 16}
+  KillFloor.pos:                  {min: -256, max: 256}
+  KillFloor.size:                 {min: 1, max: 256}
+  Trigger.height:                 {min: 1, max: 32}
+  Decor.pos:                      {min: -256, max: 256}
+  Decor.size:                     {min: 0.2, max: 16}
