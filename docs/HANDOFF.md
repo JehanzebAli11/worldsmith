@@ -428,3 +428,63 @@ One entry per session, newest last: **Done** · **Verified** · **Next** · **Op
    walkway). Keep it conservative? Recommended: yes.
 6. One no-op op rejects the whole patch even beside a real change (`noop_one_of_two`). Keep that
    strict reading of the 9 Nov default? Recommended: yes.
+
+## 2026-11-09 21:58 PKT · WS-08
+
+**Done**
+- `runner/taxonomy.py`: SPEC §10 v0 over recorded bundles, on top of WS-04's `classify_attempt`
+  (extended, not duplicated). Observed: SUCCESS, FELL, TIMEOUT (+ LEVER_NOT_ACTIVATED /
+  GATE_NOT_OPENED), STUCK. System: HARNESS_ERROR, CONNECTOR_ERROR (attempt or episode),
+  BUILD_FAILED (episode). Hypothesis: BRIDGE_SHORT_HYPOTHESIS only when (1) the kill-floor
+  position is in the gap_1 area (footprint + 4-stud margin, ADR 0005 §6), (2) the bundle's
+  `scene.json` shows bridge length < gap width, declared width = platform edge distance, and
+  the built bridge stops short, and (3) another recorded bundle, same controller/config/route
+  hashes, clean build, re-derived 3/3 SUCCESS, on a scene whose only change is a lengthened
+  `bridge_1.length` (evidence linked by path, run id, scene hash, nonces and per-file SHA-256).
+  Otherwise cause UNCLASSIFIED, with each condition's reason and each rejected candidate.
+- STUCK (`config/classifier.yaml`, new; `config/m0.yaml` untouched): ε 2 studs (HRP width,
+  `measure.json`), window 10 s (`t_waypoint`), max sample gap 1 s **[ESTIMATE]**. Uses only the
+  controller's own position samples while alive; returns NOT_EVALUABLE when they are too sparse
+  (always the case for a long blocked P0 attempt: one sample per ~8 s MoveTo give-up).
+- `runner/classify.py`, two tighter rules (no recorded M0 outcome changes): a death without
+  KILL_FLOOR_TOUCHED is UNCLASSIFIED even if GOAL_TOUCHED follows; a play-tool script error
+  (`error` ≠ `nil`) beside a valid report is HARNESS_ERROR.
+- `bundles/m0/classification.json` (new; no existing bundle file changed) via
+  `scripts/ws_classify.py` (`--check` verifies). `docs/CLASSIFIER.md` documents every rule.
+- Tests first (`42f2eef`, `tests/test_ws08_classifier.py` + `tests/_ws08fake.py`: collection
+  failed, no `taxonomy` module); feat `80d629e`.
+
+**Verified** (Linux VM, Python 3.10.12, venvs outside the repo)
+- The six M0 attempts, re-classified from their raw answers: F1-A #1–#3 (nonces `248a34ad…`,
+  `ab5831e8…`, `665a4a86…`) FELL in the gap_1 area, kill at z 49.31 / 48.52 / 48.35, cause
+  **BRIDGE_SHORT_HYPOTHESIS**: geometry 6 < 16 (measured 16, 10 studs uncovered); evidence
+  `bundles/m0/F1-A-fix` (run `m0-2026-11-09T155836`, scene `49371fa7…`, controller `3743d998…`,
+  3/3 SUCCESS, change `bridge_1.length` 6 → 16; file hashes equal `manifest.json`). Fix #1–#3
+  SUCCESS, cause none. All six NOT_STUCK (route phases 5.785–7.083 s < 10 s). Rejected as
+  evidence: F1-A itself, `smoke-F1-E` (other controller/config), `smoke2-F1-E` (1/1, scene
+  differs in scene_id, bridge width/length, decor).
+- Synthetic fixtures for every other tag, wrong-nonce and foreign/malformed lines, GOAL before
+  BRIDGE (also by server time), death-then-goal (with and without a kill-floor event), STUCK
+  dense/sparse/short/after-death, and strict evidence (2/3, other controller/config, extra
+  field, shorter bridge, bundle problems, not clean); FakeStudio bundles for BUILD_FAILED,
+  CONNECTOR_ERROR and an end-to-end before/after pair.
+- Clean clone of `dcf444b` + `42f2eef` + `80d629e`, fresh venv, `make test` → `1275 passed`
+  (1212 + 63). WS-04's tests unchanged and passing (M0 replays and `gate.json` reproduce).
+  `ws_classify.py --check` identical under PYTHONHASHSEED 1, 2, 3. In the shared working tree
+  WS-07's tests-first commit (`143eca7`) fails until its feat lands (not WS-08's).
+- Not verified: Python 3.12, macOS `make test`. Nothing ran in Studio.
+
+**Next**
+- WS-09 (sampler); WS-10/WS-11 should call `taxonomy.load_episode` / `classify_episodes` after
+  each scene version and pass the architect the tags and causes (SPEC §7 item 6).
+
+**Open questions** (yes/no for the owner)
+1. STUCK constants ε 2 studs, window 10 s, max sample gap 1 s ([ESTIMATE]) as v0? Recommended: yes.
+2. P0 traces make STUCK NOT_EVALUABLE on long blocked runs. Add a periodic position sample to
+   the controller before M1 (new controller hash, so it is a separate, labelled player version)?
+   Recommended: yes, before any M1 comparison, never mid-comparison.
+3. A death without a kill-floor event followed by a goal line is UNCLASSIFIED (the clocks of
+   death time and event time differ, so the order cannot be proved). Keep that strict rule?
+   Recommended: yes.
+4. Allow a `version` bump in the paired fix's scene (a WS-05 patch bumps it; the M0 fix did
+   not)? Recommended: yes.
