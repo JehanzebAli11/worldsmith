@@ -13,8 +13,12 @@ waypoints that never jump; a substrate probe, not an Autopilot or agent result):
 too short by construction) ended FELL in the gap 3/3, and its one-field fix ended BRIDGE_CROSSED
 then GOAL_TOUCHED 3/3; read-back matched before each scene. N = 3 is functional-repeatability
 evidence only. **WS-05:** patches (`worldsmith.patch/0.1`) apply on CPU with a base-hash check;
-the M0 stage allows only `set bridge_1.length` (ADR 0006). No architect or full validator exists yet
-(WS-06+). Ticket status is in [`docs/TICKETS.md`](docs/TICKETS.md).
+the M0 stage allows only `set bridge_1.length` (ADR 0006). **WS-06:** an independent validator
+(`worldsmith.validator.validate`) checks schema and bounds, protection, the locked gap, difficulty
+and structure, with stable violation codes ([`docs/VALIDATOR.md`](docs/VALIDATOR.md)); all 69
+abuse cases in `tests/abuse/reject/` are rejected with their expected codes and the 13 legit cases
+pass (CPU tests, not Studio runs). An M1 stage widens the patch ops (ADR 0007). No architect or
+navigation check exists yet (WS-07+). Ticket status is in [`docs/TICKETS.md`](docs/TICKETS.md).
 
 ## Honest limits
 

@@ -352,3 +352,79 @@ One entry per session, newest last: **Done** · **Verified** · **Next** · **Op
    `StalePatch`: patch checks run before the base-hash check. Fine? Recommended: yes.
 4. Keep the patch JSON Schema in `grammar/` and the code in `validator/` (ADR 0006), rather than
    a new top-level `patch/` package? Recommended: yes (no new SPEC §11 folder).
+
+## 2026-11-09 21:45 PKT · WS-06
+
+**Done**
+- `validator/validate.py` (`worldsmith.validator.validate`): `validate(base, candidate, *, stage)`
+  takes a patch object, patch text or a whole patched scene and returns `Result` with
+  `to_dict()` = `{ok, violations[{code, message, ref}], warnings[], graph}` (`graph` is `None`,
+  reserved for WS-07). 28 stable violation codes (`CODES`) and 1 warning (`BRIDGE_SHORT`),
+  documented in `docs/VALIDATOR.md`. Every op is simulated on a copy of the base whatever the
+  stage allows, so a forbidden op is also named for what it would do (`set gap_1.width 10` in M0
+  → `STAGE_OP_FORBIDDEN`, `PROTECTED_CHANGED`, `GAP_CHANGED`, `GAP_BELOW_MIN`). Patched-scene
+  input is diffed against the base (version ignored) and each change counts as an op. Geometry
+  uses `compiler/geometry.py`'s part boxes; it runs only on a candidate inside the grammar.
+  Base invalid or stage unknown → `ValueError` (caller bug, not a verdict).
+- `validator/patch.py`: `STAGES["M1"]` (set `bridge_1.length/width/lateral_offset`, move
+  `lever_1`/`gate_1`, add Wall or Decor), `STAGE_SCHEMAS` (M0: patch/0.1 only; M1: 0.1 and 0.2),
+  `check_ops` (tolerant stage/conflict/bounds), `op_target`, `stage_rules`; `apply_patch` applies
+  `move` and `add`. **M0 is unchanged**: same rule, same schema, same error layers (all 174 WS-05
+  tests pass; two of their lines changed because M0 is no longer the only stage: `"M0" in
+  STAGES`, and the unknown-stage example is now `M9`).
+- `grammar/patch_schema_0.2.json` (`worldsmith.patch/0.2`: set with number/ID/vector, move, add,
+  remove; closed except the added entity, which the scene schema checks), shipped as package data.
+  `patch_schema.json` (0.1) untouched.
+- `docs/ADR/0007-validator-and-m1-stage.md`: the M1 widening and every rule: walkway strip and
+  lever-ledge columns (`CLEARANCE` 6 studs, from the M0 character's 5.19-stud bbox), gap column,
+  floor-like box (`FLOOR_BAND` 1, `FLOOR_MIN_SPAN` 1), allowed bridge join (`JOIN_MAX` 1 stud into
+  the gap's `to` platform only), lateral lever detour, lever support, gate slot, gap distance,
+  layout, teleport and physics name lists, payload charset, `EPS` 0.001. Decor counts as solid.
+- Abuse suite: `tests/abuse/reject/` (69 concrete cases: patch objects with the real base hash,
+  patch text, or scene edits; every SPEC §16 bullet and every ticket extra covered),
+  `tests/abuse/accept/` (13), `tests/test_ws06_validator.py` (186 tests). Tests first at
+  `736feff` (collection failed: `cannot import name 'validate'`). One fixture correction in the
+  feat commit: four F1-A accept cases keep the 6-stud bridge, so they also expect the
+  `BRIDGE_SHORT` warning.
+
+**Verified** (Linux VM on the Mac bridge, Python 3.10.12, venvs outside the repo)
+- Every reject case is rejected and carries its expected codes; the 21 cases marked `exact`
+  carry exactly those (e.g. `bridge_beyond_join`, length 19 in M0 → only `PENETRATION`;
+  `gate_moved_away`, an M1-allowed move → only `GATE_BYPASSED`; `wall_blocks_corridor` → only
+  `PATH_BLOCKED`; `decor_as_floor` → only `NEW_FLOOR`; `four_ops` → only `TOO_MANY_OPS`;
+  `noop_m0` → only `NOOP_PATCH`). Every one of the 28 codes is produced by some case (test).
+- Legit cases pass: the M0 fix patch (validator's scene hashes `297b23c8…`, same as WS-05),
+  `fix.json` as a scene in M0, the M0 fix in M1, bridge length 17 (the 1-stud join), F1-E width
+  8→7 and lateral offset 1, F1-A width 6→7 (warning only), a plant and a low wall off the
+  walkway, lever_1 moved within its ledge, gate_1 nudged 0.25 studs, a 3-op M1 patch.
+- For every patch case: if `apply_patch` rejects, the validator rejects; if the validator
+  accepts, `apply_patch` gives the same scene hash. Fixtures F1-A, fix and F1-E have no solid
+  overlaps and nothing outside the room. Output identical across 3 processes with different
+  `PYTHONHASHSEED`; inputs never mutated; entity order does not change the result.
+- `VENV=… ./scripts/test.sh -q` → `1212 passed` (1026 before + 186). Fresh `git clone` at
+  `9a33d74` + fresh venv, `make test` → `1212 passed in 12.33s` (before this HANDOFF/README/
+  TICKETS commit). The built wheel contains `worldsmith/grammar/patch_schema_0.2.json` and
+  `worldsmith/validator/validate.py`.
+- Not verified: Python 3.12, macOS `make test`. Nothing ran in Studio (CPU-only ticket): no M1
+  patch has been built or played, so "legit" means "passes the validator", not "the room still
+  works".
+
+**Next**
+- WS-07 (navigation approximation, fills `graph`) and WS-08 (classifier) are independent; separate
+  sessions. WS-09/WS-10 should call `validate(...)` and count every rejection as a used revision.
+
+**Open questions** (yes/no for the owner)
+1. ADR 0007's constants (`CLEARANCE` 6, `JOIN_MAX` 1, `FLOOR_BAND` 1, `FLOOR_MIN_SPAN` 1 stud) and
+   the lateral lever detour (15 in F1-A, min 10) as the M1 rules? Recommended: yes; they are
+   `[ESTIMATE]`, revisable by ADR.
+2. M1 whitelist: gate_1 may only be *moved*, and only within its slot (`GATE_BYPASSED` otherwise);
+   gate size, `opens_on` re-linking and `bridge_1.thickness` stay out until a family needs them.
+   Recommended: yes.
+3. SPEC §6 lists "support" fields for M1, but the closed type set has no support entity. Leave
+   supports out (a new type would be a schema version + ADR)? Recommended: yes.
+4. The validator simulates stage-forbidden ops to name the cheat, so `worldsmith.patch/0.2` can
+   *say* `remove` and set any field (never *applied*: the stage refuses). Fine? Recommended: yes.
+5. Decor is built CanCollide off, but the validator treats it as solid (penetration, new floors,
+   walkway). Keep it conservative? Recommended: yes.
+6. One no-op op rejects the whole patch even beside a real change (`noop_one_of_two`). Keep that
+   strict reading of the 9 Nov default? Recommended: yes.
