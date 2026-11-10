@@ -388,7 +388,18 @@ def test_smoke_f1e_p0v3_config(smoke3):
     assert smoke3["stage"] == "M0" and smoke3["n_attempts"] == 3 and smoke3["pass_k"] == 3
     assert list(smoke3["_conditions"]) == ["B0"] and smoke3["_conditions"]["B0"]["episodes"] == 2
     assert smoke3["preflight"] == ex.load_experiment(SMOKE2, REPO_ROOT)["preflight"]
-    assert not (REPO_ROOT / "bundles" / "experiments" / "smoke_f1e_p0v3").exists()
+    # it ran once and stopped at its first preflight (place marker missing); closed, re-declared as p0v3b
+    assert (REPO_ROOT / "bundles" / "experiments" / "smoke_f1e_p0v3" / "CLOSED.md").exists()
+
+
+def test_smoke_f1e_p0v3b_redeclares_p0v3_with_only_the_id_changed():
+    a = yaml.safe_load(SMOKE3.read_text())
+    p3b = SMOKE3.with_name("smoke_f1e_p0v3b.yaml")
+    raw = p3b.read_text()
+    assert "declared" in raw.lower() and "before any run" in raw.lower()
+    b = yaml.safe_load(raw)
+    assert b.pop("experiment") == "smoke_f1e_p0v3b" and a.pop("experiment") == "smoke_f1e_p0v3"
+    assert a == b
 
 
 def test_m2_f1a_b3_config_copies_the_pilot_except_player_id_and_conditions(b3, m2):

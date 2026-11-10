@@ -1,0 +1,20 @@
+{
+ "attempted": 0,
+ "attempts": [],
+ "build": {
+  "build_line": null,
+  "descendants": null,
+  "expected_descendants": null,
+  "ok": false,
+  "readback_differences": null
+ },
+ "detail": "preflight failed: place_marker",
+ "episode": "B0/ep0",
+ "n": 3,
+ "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+ "schema": "worldsmith.version_summary/0.1",
+ "status": "HARNESS_ERROR",
+ "successes": 0,
+ "verdict": "HARNESS_ERROR",
+ "version": 1
+}

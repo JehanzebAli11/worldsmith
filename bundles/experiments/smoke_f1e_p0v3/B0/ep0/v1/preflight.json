@@ -1,0 +1,97 @@
+{
+ "checks": [
+  {
+   "check": "studio_mode_stop",
+   "observed": {
+    "get_studio_mode": "stop",
+    "is_running": false
+   },
+   "ok": true,
+   "want": "stop, not running"
+  },
+  {
+   "check": "place_marker",
+   "observed": {
+    "game_name": "worldsmith-lab.rbxl",
+    "ws_place": "<none>"
+   },
+   "ok": false,
+   "want": "ws_place = \"worldsmith-lab\""
+  },
+  {
+   "check": "load_character_appearance_off",
+   "observed": false,
+   "ok": true,
+   "want": false
+  },
+  {
+   "check": "character_auto_loads_on",
+   "observed": true,
+   "ok": true,
+   "want": true
+  },
+  {
+   "check": "no_starter_character",
+   "observed": false,
+   "ok": true,
+   "want": false
+  },
+  {
+   "check": "one_spawn_outside_worldsmith",
+   "observed": {
+    "count": 1,
+    "inside_worldsmith": 1,
+    "spawns": [
+     {
+      "enabled": true,
+      "neutral": true,
+      "path": "Workspace.SpawnLocation",
+      "pos": "0.00,0.50,0.00"
+     }
+    ]
+   },
+   "ok": true,
+   "want": 1
+  },
+  {
+   "check": "no_foreign_scripts",
+   "observed": {
+    "count": 0,
+    "scripts": [],
+    "worldsmith_owned": 0
+   },
+   "ok": true,
+   "want": 0
+  }
+ ],
+ "detail": "preflight failed: place_marker",
+ "ok": false,
+ "probe": {
+  "character_auto_loads": true,
+  "foreign_scripts": 0,
+  "foreign_scripts_list": [],
+  "game_name": "worldsmith-lab.rbxl",
+  "is_running": false,
+  "load_character_appearance": false,
+  "owned_scripts": 0,
+  "place_id": 0,
+  "schema": "worldsmith.preflight_probe/0.1",
+  "spawns_inside": 1,
+  "spawns_outside": 1,
+  "spawns_outside_list": [
+   {
+    "enabled": true,
+    "neutral": true,
+    "path": "Workspace.SpawnLocation",
+    "pos": "0.00,0.50,0.00"
+   }
+  ],
+  "starter_character": false,
+  "ws_place": "<none>"
+ },
+ "probe_raw": "[OUTPUT] WS_PREFLIGHT|{\"owned_scripts\":0,\"load_character_appearance\":false,\"starter_character\":false,\"character_auto_loads\":true,\"spawns_inside\":1,\"spawns_outside_list\":[{\"neutral\":true,\"path\":\"Workspace.SpawnLocation\",\"enabled\":true,\"pos\":\"0.00,0.50,0.00\"}],\"spawns_outside\":1,\"place_id\":0,\"is_running\":false,\"foreign_scripts\":0,\"foreign_scripts_list\":[],\"game_name\":\"worldsmith-lab.rbxl\",\"schema\":\"worldsmith.preflight_probe/0.1\",\"ws_place\":\"<none>\"}",
+ "schema": "worldsmith.preflight/0.1",
+ "script_sha256": "29ffe3d7d717a08910e831054040bcd24098d90a540dc6b7e359627023fdbd6c",
+ "status": "HARNESS_ERROR",
+ "studio_mode": "stop"
+}

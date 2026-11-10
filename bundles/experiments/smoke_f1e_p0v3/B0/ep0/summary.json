@@ -1,0 +1,76 @@
+{
+ "architect_calls": 0,
+ "attempts_used": 0,
+ "canonical": [
+  {
+   "n": 3,
+   "outcomes": [],
+   "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+   "successes": 0,
+   "version": 1
+  }
+ ],
+ "caps": {
+  "architect_calls_per_episode": 3,
+  "attempts_per_episode": 12,
+  "max_revisions": 0
+ },
+ "condition": "B0",
+ "config_sha256": "807c55e0b148c50da5b9ea299a13abecb628944256c78ec4d1fbe630f0d4475e",
+ "cost_usd_reported": null,
+ "detail": "preflight failed: place_marker",
+ "disclosure": "P0 player p0.v3: Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result.",
+ "dry_run": false,
+ "episode": "B0/ep0",
+ "experiment": "smoke_f1e_p0v3",
+ "final": {
+  "n": 3,
+  "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+  "successes": 0,
+  "verdict": "HARNESS_ERROR",
+  "version": 1
+ },
+ "model_calls": 0,
+ "n": 3,
+ "pass_k": 3,
+ "passed_final": false,
+ "passed_original": false,
+ "player": {
+  "controller_sha256": "cd9a7a0a21ccd32ea7e14990f17b7bba58083f1bfeb2a81e77cf2e122a2d0f8c",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "freeze_manifest_sha": null,
+  "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+  "t_attempt_s": 60,
+  "tier": "P0",
+  "version": "p0.v3"
+ },
+ "proposer": "none",
+ "repaired": false,
+ "revisions": {
+  "accepted": 0,
+  "errors": 0,
+  "malformed": 0,
+  "max": 0,
+  "rejected": 0,
+  "used": 0,
+  "verdicts": []
+ },
+ "role": null,
+ "schema": "worldsmith.episode_summary/0.1",
+ "seed": null,
+ "stage": "M0",
+ "status": "HARNESS_ERROR",
+ "versions": [
+  {
+   "attempted": 0,
+   "n": 3,
+   "outcomes": [],
+   "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+   "status": "HARNESS_ERROR",
+   "successes": 0,
+   "tags": [],
+   "verdict": "HARNESS_ERROR",
+   "version": 1
+  }
+ ]
+}

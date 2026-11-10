@@ -1,0 +1,18 @@
+[
+ {
+  "elapsed_s": 4.429,
+  "error": null,
+  "index": 1,
+  "t_wall": "2026-11-10T15:54:26.387654Z",
+  "timeout_s": 15,
+  "tool": "get_studio_mode"
+ },
+ {
+  "elapsed_s": 33.174,
+  "error": null,
+  "index": 2,
+  "t_wall": "2026-11-10T15:54:59.715847Z",
+  "timeout_s": 30,
+  "tool": "run_code"
+ }
+]
