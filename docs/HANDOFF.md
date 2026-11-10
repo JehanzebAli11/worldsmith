@@ -762,3 +762,90 @@ no key, no network)
 **Open questions**
 - Commit `results/usage.csv` (written by jzapi) with the bundle? Recommended: yes, it is the cost
   record SPEND.md rolls up.
+
+## 2026-11-10 13:20 PKT · WS-11
+
+**Done**
+- `runner/episode.py`: one episode = scene v1 → build + read-back → N = 3 attempts → classify →
+  while 0/3 and slots left: propose on the last ACCEPTED scene (B1 hand fix, B2 via
+  `make_b2_proposer`, B3 via one WS-10 `loop.revise` per proposal with one `RevisionBudget(3)`)
+  → validator → accepted: rebuild + 3 attempts; rejected/malformed: counted, same scene. Stops
+  without a proposal on INCONSISTENT (0 < successes < 3), SYSTEM_ERROR (any HARNESS/CONNECTOR
+  attempt), BUILD_FAILED; an architect provider error uses its slot and ends CONNECTOR_ERROR.
+  `EpisodeCaps` refuses the 13th play call, 4th architect call or 4th proposal before sending.
+  `CachingArchitect` stores every reply (and provider error) by request hash before use.
+  Bundle: `episode.json` (all nonces up front), `v<k>/` (scene, patch, read-back, raw answers,
+  attempt rows with WS-08 tags + STUCK + hypothesis conditions a/b), `proposals.json`,
+  `architect/calls.jsonl` + `replies/`, `calls.json`, `trace.jsonl`, `summary.json` (repaired,
+  final successes/N, revisions, attempts, calls, cost, `canonical`). Files are written once.
+- `runner/players.py` + `runner/templates/p0_controller_v1.luau`: **p0.v1** = p0.v0 plus position
+  samples while alive (first tick ≥ sample_every − 2·tick after the last; ≤ 128), controller
+  `dbc1f325ce64bda8b046bc4f08a18050cced76a123b843af5937b85b65754c6d`. p0.v0 untouched (renders
+  through `runner.p0`, `3743d998…`). `taxonomy.position_samples` and `classify_attempt` read
+  `samples` only when present.
+- `runner/experiment.py`: `load_experiment` (re-derives scene, route, controller, classifier,
+  ladder, prompt and hand-patch hashes; N = k = 3; caps = N × (1 + R) ≤ 12 and R ≤ 3; seeds one
+  per episode, distinct; baseline prompt only; P2 refused), `Experiment` (lock + config copy on
+  the first episode, refuses a changed config or mixed player/dry-live folders, runs episodes in
+  declared order, skips finished ones after `validate_episode_bundle`, `pending.json`,
+  `results.json`), `worst_case` (whole and remaining), `check_headroom`.
+- `runner/freeze.py`: P2 manifest schema `worldsmith.p2freeze/0.1` and 10 refusal codes
+  (MANIFEST_HASH_MISMATCH, EVOLVE_ENABLED, MEMORY_SNAPSHOT_MISSING, …); a P2 experiment is
+  refused, with `P2_NOT_IMPLEMENTED` when the manifest passes. No Autopilot run.
+- `runner/dryrun.py` (`FakeOperator`: shape, not physics) and `scripts/run_experiment.py`
+  (`--dry-run`, `plan`, `step`, `respond`, `status`; exits 0/3 pending/4 refused/2/1).
+- `config/experiments/m2_f1a.yaml` (`m2_f1a_pilot`, config sha256 `71395f33…`): F1-A at M0, p0.v1,
+  N 3, T_attempt 60 s, max_revisions 3, B0, B1 (`m0_fix.json`), B2 seed 0, B3-haiku/sonnet/opus,
+  1 episode each, prompt_bytes_cap 24000. `.gitignore`: `!bundles/experiments/`.
+- Docs: ADR 0010, `docs/EXPERIMENTS.md` (owner commands), CLASSIFIER.md note, TICKETS row, README.
+- Commits: tests first `9865110` (collection fails: no `runner.players`), feat `4f86010` (p0.v1),
+  `6dd1f9d` (freeze), `4d160e7` (orchestrator, CLI, config), docs `b2ce291`.
+
+**Verified** (Linux VM, Python 3.10.12, venvs outside the repo; no Studio, no network, no key)
+- Dry run of the pilot (fake operator + fixtures; **not a result**): B0 0/3 FAIL, 3 attempts;
+  B1 ACCEPTED → 3/3; B2 seed 0 REJECTED (OUTSIDE_ROOM, PENETRATION), REJECTED (PENETRATION),
+  ACCEPTED → 0/3 under the stand-in rule, 6 attempts; B3-haiku (`f1a_m0_fix`) ACCEPTED → 3/3;
+  B3-sonnet (`reject_then_fix`) MALFORMED, REJECTED, ACCEPTED → 3/3; B3-opus (`exhausted`)
+  REJECTED, REJECTED, MALFORMED, 3 attempts, 3 calls. First B3 request hash = `57f00338…` (the
+  live smoke call's request). Largest request bound 12 994 < cap 24 000. Results identical across
+  two processes with different PYTHONHASHSEED; a test blocks sockets during the CLI dry run.
+- Worst case at jzapi prices (checked 2026-11-09): $0.007 / $0.22 / $0.76 per haiku / sonnet /
+  opus call; pilot **$2.961000**. `plan` on this VM read both switches ON and headroom
+  $89.999358 (cap $90 − the smoke call); no `step` was run here.
+- Resume: interrupted inside B3-sonnet after 75 relay answers, restarted with a new Experiment:
+  7 architect calls for 7 stored replies, no stored relay file changed, results equal the
+  uninterrupted run. Ctrl-C inside an architect call leaves no reply and a resumable episode.
+- Caps: stubborn architect → 4 versions, 12 attempts, 3 calls, each patch's base hash = the
+  previous version's scene; a proposer ignoring its budget stops at the cap.
+- `VENV=… ./scripts/test.sh -q` → `1526 passed, 1 skipped` (1448 + 78). Fresh clone at `b2ce291`
+  beside JzLab + fresh venv → `1526 passed, 1 skipped`. Without JzLab beside it: the 5 jzapi
+  WS-11 tests skip, and 4 `test_architect_smoke.py` tests fail; they fail the same way at
+  `bed435e` (before WS-11), so that is the smoke script's, not WS-11's. `ws_classify.py --check`
+  up to date; `bundles/m0/gate.json` still reproduces (WS-04 tests).
+- Not verified: anything live (Studio relay of an orchestrated episode, a real model through the
+  orchestrator); p0.v1 in Roblox (its sampling cadence and report size are untested in play);
+  Python 3.12; macOS `make test`.
+
+**Next**
+- Owner: `docs/EXPERIMENTS.md` steps 1–2 (dry run, plan, then the relay pilot in a Mac session
+  with Studio + MCP); first a short p0.v1 check would be prudent (see question 1).
+- WS-12 viewer: render a dry-run bundle (`scripts/run_experiment.py --dry-run --out …`), clearly
+  labelled as simulated.
+
+**Open questions** (yes/no for the owner)
+1. Before the pilot, one p0.v1 smoke episode on F1-E (passing control) to check the samples and
+   report size live, outside the experiment? Recommended: yes (new controller hash, never run).
+2. INCONSISTENT (0 < successes < 3) stops the episode with no further proposal and no rerun?
+   Recommended: yes (SPEC §9).
+3. Any HARNESS_ERROR/CONNECTOR_ERROR attempt stops the episode (SYSTEM_ERROR) instead of
+   spending a proposal? Recommended: yes.
+4. A transient API error (e.g. 529) ends that B3 episode as CONNECTOR_ERROR with no retry (as
+   WS-10)? Recommended: yes for the pilot; revisit before larger runs.
+5. `step` refuses while any B3 episode remains unless both switches are ON, even during B0–B2?
+   Recommended: yes (simpler, nothing paid by B0–B2 anyway).
+6. Keep `prompt_bytes_cap` 24 000 (largest dry-run request 12 994; caps the worst case at $2.961)?
+   Recommended: yes.
+7. p0.v1 samples at the first tick ≥ 0.9 s after the last, so gaps stay under the classifier's
+   1.0 s `max_sample_gap_s` under normal pacing; a slower frame still gives NOT_EVALUABLE.
+   Recommended: yes (no classifier constant changed).
+8. Pilot order B0, B1, B2, B3-haiku, B3-sonnet, B3-opus with one episode each? Recommended: yes.
