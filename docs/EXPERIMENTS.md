@@ -1,11 +1,52 @@
-# Experiments (WS-11): how to run the M2 pilot on F1-A
+# Experiments (WS-11): how to run the M2 experiments on F1-A
 
 The orchestrator (`scripts/run_experiment.py`, ADR 0010) runs a **declared** experiment: one
 config file fixes the scene, the stage, one player version, N = 3, k = 3, the revision budget,
 the caps and the conditions with their episode counts, before any run. After the first episode
 bundle exists the runner refuses a changed config (a change is a new experiment id).
 
-## The pilot: `config/experiments/m2_f1a.yaml` (experiment `m2_f1a_pilot`)
+## Now: `smoke_f1e_p0v3`, then `m2_f1a_b3` (ADR 0012)
+
+**The pilot `m2_f1a_pilot` is closed** (10 Nov 2026, owner decision A;
+`bundles/experiments/m2_f1a_pilot/CLOSED.md`). B0, B1 and B2 are its valid results; B3-haiku and
+B3-sonnet ended SYSTEM_ERROR because p0.v2's wall-clock spawn check failed in slow play starts
+(5 to 6 controller ticks in 1.33 to 2.40 s); B3-opus was not run. `step`, `respond` and
+`architect` refuse a closed experiment (exit 4, nothing sent), so its pending call 010 stays
+unanswered. Do not answer it.
+
+Run, in this order, with the same owner commands as below (only the `--config` path changes):
+
+1. `config/experiments/smoke_f1e_p0v3.yaml` (`smoke_f1e_p0v3`): F1-E passing control, B0,
+   player **p0.v3** (spawn check counts physics steps: warm-up, grounded, settle; ADR 0012),
+   preflight on, 2 episodes = 6 attempts. **6/6 SUCCESS expected.** Any HARNESS_ERROR
+   (`not_warm`, `not_grounded`, `moved_before_route`) means stop and debug; nothing paid.
+2. `config/experiments/m2_f1a_b3.yaml` (`m2_f1a_b3`): F1-A, M0, p0.v3, preflight on, B3-haiku,
+   B3-sonnet, B3-opus, one episode each; every other field as the pilot (ladder, baseline prompt
+   `df1b7a12…`, caps, N 3, k 3, max_revisions 3, job `architect_ladder`). Worst case
+   **$2.961000** (9 calls, the pilot's table below). Only after step 1 passed.
+
+```bash
+cd ~/lab/worldsmith
+.venv/bin/python scripts/run_experiment.py --config config/experiments/smoke_f1e_p0v3.yaml --dry-run
+.venv/bin/python scripts/run_experiment.py --config config/experiments/smoke_f1e_p0v3.yaml step
+# ... step / respond as in section 2 below; then the same with m2_f1a_b3.yaml
+```
+
+Studio for these runs (in addition to the owner checklist below):
+
+- **One Studio driver.** Only this relay session drives Studio: no Autopilot bench run, no other
+  plugin play session, no second Claude session with the Studio MCP.
+- **Studio restarted fresh, in the foreground.** Quit Roblox Studio, reopen
+  `places/worldsmith-lab.rbxl`, stay in Edit mode, and keep the Studio window visible and in the
+  foreground for the whole run (not minimised, not behind a full-screen app, display awake).
+  macOS throttles background apps, which slows play sessions (the pilot's flake was a slow start).
+- **Tip: Prevent App Nap.** In Finder → Applications → Roblox Studio → Get Info (⌘I), tick
+  "Prevent App Nap" if the box is shown; and keep the Mac awake during a run (e.g. `caffeinate -d`
+  in a Terminal, or Energy settings).
+
+p0.v3 results are not pooled with the pilot's p0.v2 results.
+
+## The pilot (CLOSED): `config/experiments/m2_f1a.yaml` (experiment `m2_f1a_pilot`)
 
 | Item | Value |
 | --- | --- |
@@ -62,11 +103,17 @@ StarterCharacterScripts / StarterGui, and Studio mode `stop`. A failure is recor
 experiment starts, now or later. Fix the place (or stop the other driver) and declare a new
 experiment id.
 
-Run `config/experiments/smoke_f1e_p0v2.yaml` (F1-E, B0, N = 3, p0.v2, preflight on) before the
-pilot: the same `step` / `respond` loop as below with that config. 3/3 SUCCESS is expected on the
-passing control; anything else means stop and debug.
+`config/experiments/smoke_f1e_p0v2.yaml` (F1-E, B0, N = 3, p0.v2, preflight on) ran before the
+pilot. For p0.v3 the smoke is `smoke_f1e_p0v3.yaml` (6 attempts, 6/6 SUCCESS expected; see "Now"
+above): the same `step` / `respond` loop as below with that config; anything else means stop and
+debug.
 
 ## Owner commands
+
+The commands are unchanged for every experiment; the examples use the pilot's
+`config/experiments/m2_f1a.yaml`. For the current runs put `config/experiments/smoke_f1e_p0v3.yaml`,
+then `config/experiments/m2_f1a_b3.yaml`, in its place. (On the closed pilot, `step`, `respond` and
+`architect` now exit 4.)
 
 ### 1. On the Mac, Terminal (no Studio, nothing paid)
 

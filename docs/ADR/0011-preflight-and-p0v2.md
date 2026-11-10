@@ -1,7 +1,8 @@
 # ADR 0011: One driver, the right place: preflight, player p0.v2, start_pos rule, null answers
 
 - **Status:** accepted for the harness (10 Nov 2026), after the smoke_f1e_p0v1 debug
-  (`docs/notes/smoke_f1e_p0v1_debug.md`). CPU only: no Studio call and no paid call was made to
+  (`docs/notes/smoke_f1e_p0v1_debug.md`). Followed by ADR 0012 (player p0.v3: the spawn check
+  counts physics steps; p0.v2 is unchanged; the m2_f1a pilot is closed). CPU only: no Studio call and no paid call was made to
   write it. The owner confirms in the HANDOFF open questions.
 - **Context:** the first live p0.v1 smoke built into the Autopilot test place (`testplace.rbxl`:
   foreign server scripts, a second neutral SpawnLocation, `LoadCharacterAppearance` true) while

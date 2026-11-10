@@ -956,3 +956,75 @@ pending; **5 architect call pending**; 4 refused; 2 setup (jzapi missing); 1 oth
    from worldsmith-lab.rbxl first. Recommended: keep one (matches the saved place and M0).
 2. Tell the Autopilot side that `noise/run-03/F` (and run-04 if `Workspace.Worldsmith` was still in
    testplace.rbxl) ran with a foreign course and a second spawn? Recommended: yes.
+
+## 2026-11-10 20:50 PKT · Pilot closed; player p0.v3 (physics-counted spawn check); smoke_f1e_p0v3 and m2_f1a_b3 declared (ADR 0012)
+
+**Done** (CPU only: no Studio call, no paid call, nothing pushed)
+- **Closed `m2_f1a_pilot`** (owner decision A): `bundles/experiments/m2_f1a_pilot/CLOSED.md`, the
+  only file added there. Valid: B0 complete (FELL, FELL, FELL; not repaired), B1 complete (v2
+  SUCCESS ×3; repaired), B2 seed 0 complete (REJECTED, REJECTED, ACCEPTED; v2 SUCCESS ×3;
+  repaired). Not valid: B3-haiku SYSTEM_ERROR (v2 SUCCESS, HARNESS_ERROR, HARNESS_ERROR),
+  B3-sonnet SYSTEM_ERROR by the runner's rule (v1 FELL, HARNESS_ERROR; no summary.json; call 010
+  stays unanswered), B3-opus not run. Flake numbers re-read from the raw files: 5 ticks in 1.54 s,
+  6 in 2.40 s, 6 in 1.33 s, versus 115 to 148 ticks in 7.97 to 10.04 s in the 20 attempts that ran
+  their route. Architect spend: $0.001562 (n = 2 haiku calls, sum of the replies' `cost_usd`).
+- **Closed experiments are honoured:** `CLOSED.md` in an experiment's bundle folder →
+  `Experiment.run` raises `ExperimentClosed` before anything is read or sent; CLI `step`, `respond`,
+  `architect` exit **4** naming the file, writing nothing; `status` / `plan` print "closed".
+- **Player p0.v3** (`runner/templates/p0_controller_v3.luau`): p0.v2 with only the spawn check
+  changed. Heartbeat warm-up (10 consecutive steps with dt ≤ 0.1 s, ≤ 10 s wall, else
+  `not_warm` with the dts), grounded within 120 steps by `FloorMaterial` ~= Air or a downward ray
+  from the HRP (character excluded) within HipHeight + 1.5 studs (else `not_grounded`), a 30-step
+  settle with p0.v2's 1-stud XZ checks (`moved_before_route`), grounded again at the end. New
+  report fields: `warm_frames`, `warm_wall_s`, `max_dt_warm`, `warm_dts`, `ground_steps`,
+  `ground_test`, `ray_dist`, `settle_steps`, `ground_test_end` (kept by the classifier).
+  Template SHA-256 **`58ca4bce6abd0a4315194a05544bfea05fad9575449fb0c7d254f7d3540c66d6`**;
+  controller **`cd9a7a0a21ccd32ea7e14990f17b7bba58083f1bfeb2a81e77cf2e122a2d0f8c`**. Every template
+  file hash (p0.v0 to p0.v3) is now pinned in `runner/players.py`; `load_template` refuses a
+  changed file and `load_experiment` reports it.
+- **Configs declared before any run:** `config/experiments/smoke_f1e_p0v3.yaml` (`807c55e0…`;
+  F1-E, B0, p0.v3, preflight, 2 episodes = 6 attempts, 6/6 SUCCESS expected) and
+  `config/experiments/m2_f1a_b3.yaml` (`6be98c23…`; F1-A, M0, B3-haiku/sonnet/opus one episode
+  each, p0.v3; every other field equal to `m2_f1a.yaml`, tested).
+- Docs: ADR 0012, `docs/EXPERIMENTS.md` ("Now" section: pilot closed, order, one Studio driver,
+  Studio restarted fresh and in the foreground, Prevent App Nap tip; owner commands unchanged),
+  ADR 0011 status line. `results/usage.csv`: the pilot's two haiku rows (were uncommitted).
+- Two stale config tests (`smoke_f1e_p0v2` and the pilot "never ran") now check the locks and the
+  pilot's CLOSED.md instead.
+
+**Verified** (bridge VM, `$HOME/venv-ctl`; the Mac's `.venv` untouched)
+- Test suite in three parts (one run over the whole suite exceeds the 180 s shell limit here):
+  `tests/test_ws11_p0v3.py tests/test_ws11_harness_guard.py tests/test_ws11_two_machine.py` → 90
+  passed; `tests/test_ws11_orchestrator.py` → 79 passed; the rest → 1448 passed, 1 skipped.
+  Total **1617 passed, 1 skipped** (1581 before + 36 in `tests/test_ws11_p0v3.py`).
+- The CLI refusals were tested on a COPY of the pilot bundle in tmp (byte-identical before and
+  after, exit 4 for `step`, `step --architect-elsewhere`, `architect`, `respond 10`). On the real
+  pilot only `status` was run (prints "closed"; pending call 010 still listed, unanswered).
+- Dry runs (simulated, not results):
+  - `smoke_f1e_p0v3 --dry-run`: B0/ep0 complete 3/3, B0/ep1 complete 3/3; worst case $0.000000.
+  - `m2_f1a_b3 --dry-run`: worst case haiku $0.007000 × 3 = $0.021000, sonnet $0.220000 × 3 =
+    $0.660000, opus $0.760000 × 3 = $2.280000, **experiment $2.961000**; B3-haiku complete v2 3/3
+    repaired [ACCEPTED], B3-sonnet complete v2 3/3 repaired [MALFORMED, REJECTED, ACCEPTED],
+    B3-opus complete v1 0/3 [REJECTED, REJECTED, MALFORMED] (the pilot's B3 dry-run outcomes,
+    tested equal).
+  - `m2_f1a_b3 --dry-run --architect-elsewhere`: 7 hand-offs, same outcomes, `results.json`
+    byte-identical to the single-machine dry run.
+- Not verified: p0.v3 in Roblox (the Luau was never compiled or run here; only a block-balance
+  check and the line-for-line equality with p0.v2 outside the spawn check); whether the warm-up
+  threshold, 120 ground steps and the 3.5-stud ray suit the live rig; the 0.083 s/tick health
+  probe (reported by the control thread, not a file in this repo).
+
+**Next**
+1. Owner/relay: Studio restarted fresh on `places/worldsmith-lab.rbxl`, in the foreground, one
+   driver; run `smoke_f1e_p0v3` (6/6 SUCCESS expected; any HARNESS_ERROR → stop and debug).
+2. If 6/6: `m2_f1a_b3` (worst case $2.961000; switches and headroom as before).
+
+**Open questions** (yes/no for the owner)
+1. Keep HARNESS_ERROR stopping the episode under p0.v3 (no in-episode retry)? Recommended: yes
+   (ADR 0012 §3: retries would make play calls depend on the harness and break the caps).
+2. Warm-up 10 steps at dt ≤ 0.1 s within 10 s, 120 ground steps, ray HipHeight + 1.5 studs,
+   30-step settle: accept as declared for the smoke? Recommended: yes; change only via a new player.
+3. Report the pilot's B0/B1/B2 (p0.v2) next to m2_f1a_b3's B3 (p0.v3) with the player named, never
+   pooled? Recommended: yes.
+4. Commit of `results/usage.csv` (the pilot's two haiku rows, previously uncommitted) as its own
+   commit: keep it? Recommended: yes.
