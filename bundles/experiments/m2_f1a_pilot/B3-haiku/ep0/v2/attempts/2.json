@@ -1,0 +1,60 @@
+{
+ "attempt": 2,
+ "call_index": 21,
+ "cause": "UNCLASSIFIED",
+ "detail": "moved_before_route: spawn_offset=0.00 settle_drift=0.00 settle_max_offset=0.00 grounded=false",
+ "events": [],
+ "events_agree": true,
+ "events_detail": [],
+ "fell_in_area": null,
+ "hypothesis": null,
+ "nonce": "5bdd8b866af279e5",
+ "outcome": "HARNESS_ERROR",
+ "raw_file": "attempts/2.raw.txt",
+ "raw_sha256": "3a1087839be2b524ca936b30a28f896545ccb98306a25231c317c091410ea222",
+ "relay_elapsed_s": 58.199,
+ "report": {
+  "characters_added": 1,
+  "detail": "moved_before_route: spawn_offset=0.00 settle_drift=0.00 settle_max_offset=0.00 grounded=false",
+  "died": false,
+  "events_dropped": 0,
+  "jumps": 0,
+  "last_supported": "0.00,3.11,6.00",
+  "pos_died": "na",
+  "removed": false,
+  "samples": [],
+  "samples_dropped": 0,
+  "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+  "settle_drift": 0,
+  "settle_max_offset": 0,
+  "spawn_offset": 0,
+  "spawn_pos": "0.00,0.10,6.00",
+  "start_pos": "0.00,3.11,6.00",
+  "status": "harness_error",
+  "t_died": -1,
+  "t_end": 1.5433507082052529,
+  "t_route_start": -1,
+  "ticks": 5,
+  "waypoints": []
+ },
+ "stuck": {
+  "epsilon_studs": 2.0,
+  "max_gap_s": null,
+  "max_sample_gap_s": 1.0,
+  "n_samples": 0,
+  "reason": "no route phase (route never started or no end time)",
+  "result": "NOT_EVALUABLE",
+  "route_phase_s": null,
+  "window": null,
+  "window_s": 10
+ },
+ "t_wall": "2026-11-10T14:41:59.256955Z",
+ "tags": [
+  "HARNESS_ERROR"
+ ],
+ "tool": {
+  "duration_s": 1.5435679166112095,
+  "error": "nil",
+  "is_timeout": false
+ }
+}
