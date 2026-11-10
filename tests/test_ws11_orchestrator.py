@@ -397,8 +397,9 @@ def test_a_hung_play_call_stops_the_episode_without_a_proposal(cfg, tmp_path):
     op = ScriptedOperator(cfg, outcomes={1: ["FELL", "CALL_TIMEOUT", "FELL"]})
     arch = SeqArchitect([set_len(16)])
     s, d, _ = run_direct(cfg, "B3-haiku", tmp_path, op=op, architect=arch)
-    assert s["status"] == "SYSTEM_ERROR" and arch.calls == 0
-    assert s["versions"][0]["outcomes"] == ["FELL", "CONNECTOR_ERROR", "FELL"]
+    # a CONNECTOR_ERROR attempt stops the episode at once (ADR 0011): no third attempt
+    assert s["status"] == "CONNECTOR_ERROR" and arch.calls == 0
+    assert s["versions"][0]["outcomes"] == ["FELL", "CONNECTOR_ERROR"] and s["attempts_used"] == 2
 
 
 def test_build_failure_ends_the_episode(cfg, tmp_path):
