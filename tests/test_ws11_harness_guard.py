@@ -499,13 +499,17 @@ def test_smoke_f1e_p0v2_config(smoke2):
     assert smoke2["n_attempts"] == 3 and smoke2["pass_k"] == 3
     assert smoke2["preflight"] == {"script": "runner/templates/preflight_v1.luau",
                                    "sha256": p0.sha256_text(PREFLIGHT_TPL.read_text(encoding="utf-8"))}
-    assert not (REPO_ROOT / "bundles" / "experiments" / "smoke_f1e_p0v2").exists()
+    # it has run since (bundles/experiments/smoke_f1e_p0v2): its lock holds this config's hash
+    lock = json.loads((REPO_ROOT / "bundles" / "experiments" / "smoke_f1e_p0v2" / "experiment.lock.json").read_text())
+    assert lock["config_sha256"] == smoke2["_sha256"]
 
 
-def test_m2_pilot_uses_p0v2_and_the_preflight_and_never_ran(m2):
+def test_m2_pilot_uses_p0v2_and_the_preflight_ran_and_is_closed(m2):
     assert m2["experiment"] == "m2_f1a_pilot" and m2["preflight"]["script"] == "runner/templates/preflight_v1.luau"
     assert m2["player"]["version"] == "p0.v2"
-    assert not (REPO_ROOT / "bundles" / "experiments" / "m2_f1a_pilot" / "experiment.lock.json").exists()
+    pilot = REPO_ROOT / "bundles" / "experiments" / "m2_f1a_pilot"
+    assert json.loads((pilot / "experiment.lock.json").read_text())["config_sha256"] == m2["_sha256"]
+    assert (pilot / "CLOSED.md").is_file()           # closed on 10 Nov 2026 (ADR 0012)
 
 
 def test_smoke_p0v1_config_still_matches_its_lock(smoke1):
