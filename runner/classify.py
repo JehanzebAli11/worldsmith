@@ -12,6 +12,13 @@ KILL_FLOOR_TOUCHED event is UNCLASSIFIED even if a GOAL_TOUCHED line follows (de
 never SUCCESS), and a script error reported by the play tool (`error` other than nil) beside a
 valid report is HARNESS_ERROR.
 
+ADR 0011 (after the smoke_f1e_p0v1 debug) adds one rule for every player version: an attempt
+whose recorded `start_pos` (the HRP at the route start, before the first MoveTo) is more than
+START_POS_MAX_STUDS (2) studs in XZ from the spawn centre is HARNESS_ERROR ("moved_before_route"),
+never FELL or SUCCESS: something other than the controller moved the character, so the attempt
+says nothing about the scene. Every recorded M0 attempt started at x 0.00, z 6.00 (the spawn
+centre), so no M0 outcome changes. Callers pass the spawn centre (`spawn_centre(scene)`).
+
 Sources (ADR 0005): the events are the run_script_in_play_mode result's log lines, parsed by
 exact prefix and nonce (`console.parse_events`). The controller's own report is printed in
 chunks (`WSP|<nonce>|RESULT|i|n|<json>`) and read from the same logs (or from `value` if the
@@ -25,7 +32,10 @@ import json
 import math
 import re
 
+from worldsmith.compiler import geometry as _geo
 from worldsmith.runner.console import NONCE_RE, Event, parse_events
+
+START_POS_MAX_STUDS = 2      # ADR 0011: XZ distance from the spawn centre above which an attempt is void
 
 _RESULT_RE = re.compile(r"^\s*(?:\[OUTPUT\]\s+)?WSP\|(?P<nonce>[0-9a-f]{8,32})\|RESULT\|(?P<i>\d+)\|(?P<n>\d+)\|(?P<chunk>.*?)\s*$")
 
@@ -110,6 +120,26 @@ def gap_area(scene: dict, gap_id: str, margin: float) -> dict:
     return box
 
 
+def spawn_centre(scene: dict) -> tuple[float, float]:
+    """XZ centre of the scene's spawn pad (scene frame, as the controller's `start_pos`)."""
+    by_id = {e["id"]: e for e in scene["entities"]}
+    spawns = [e for e in scene["entities"] if e.get("type") == "Spawn"]
+    if len(spawns) != 1:
+        raise ValueError(f"the scene has {len(spawns)} spawns; the start_pos rule needs exactly one")
+    part = _geo.entity_parts(spawns[0], by_id)[0]
+    return (float(part["pos"][0]), float(part["pos"][2]))
+
+
+def _xz(text):
+    if not isinstance(text, str) or text == "na":
+        return None
+    try:
+        v = [float(c) for c in text.split(",")]
+    except ValueError:
+        return None
+    return (v[0], v[2]) if len(v) == 3 and all(math.isfinite(c) for c in v) else None
+
+
 def in_area(pos, area: dict) -> bool:
     if pos is None:
         return False
@@ -122,8 +152,9 @@ def _ev_dict(e: Event) -> dict:
 
 
 def classify_attempt(tool_result, nonce: str, expected_params: dict, area: dict,
-                     *, call_error: str | None = None) -> dict:
-    """The canonical outcome of one attempt (a dict with `outcome`, `tags`, `cause`, ...)."""
+                     *, call_error: str | None = None, spawn_xz=None) -> dict:
+    """The canonical outcome of one attempt (a dict with `outcome`, `tags`, `cause`, ...).
+    `spawn_xz` (the scene's spawn centre) turns on the ADR 0011 start_pos rule."""
     out = {"outcome": "UNCLASSIFIED", "tags": [], "cause": "UNCLASSIFIED", "detail": "",
            "events": [], "events_agree": None, "fell_in_area": None, "report": None,
            "tool": {"duration_s": None, "is_timeout": None, "error": None}}
@@ -155,7 +186,8 @@ def classify_attempt(tool_result, nonce: str, expected_params: dict, area: dict,
                                                  "ticks", "t_end", "t_route_start", "start_pos",
                                                  "last_supported", "scene_hash", "waypoints",
                                                  "events_dropped")}
-    for k in ("samples", "samples_dropped"):      # p0.v1 position samples (WS-11); absent in p0.v0
+    for k in ("samples", "samples_dropped",       # p0.v1 position samples (WS-11); absent in p0.v0
+              "spawn_pos", "spawn_offset", "settle_drift", "settle_max_offset"):   # p0.v2 (ADR 0011)
         if k in report:
             out["report"][k] = report[k]
     if not _same(report.get("params"), expected_params):
@@ -164,6 +196,13 @@ def classify_attempt(tool_result, nonce: str, expected_params: dict, area: dict,
     out["events_agree"] = [tuple(e) for e in captured] == [tuple(e) for e in events]
     if report.get("status") == "harness_error":
         return done("HARNESS_ERROR", str(report.get("detail")))
+    start = _xz(report.get("start_pos"))
+    if spawn_xz is not None and start is not None:
+        off = math.hypot(start[0] - spawn_xz[0], start[1] - spawn_xz[1])
+        if off > START_POS_MAX_STUDS:
+            return done("HARNESS_ERROR", f"moved_before_route: start_pos {report.get('start_pos')} is {off:.2f} studs "
+                                         f"(XZ) from the spawn centre {list(spawn_xz)} (> {START_POS_MAX_STUDS}); "
+                                         "the attempt says nothing about the scene")
     if report.get("jumps") != 0:
         return done("HARNESS_ERROR", f"P0 contract broken: {report.get('jumps')!r} jumps")
     if tool_result.get("error") not in (None, "", "nil"):

@@ -30,7 +30,7 @@ from typing import Protocol
 from worldsmith.compiler import build, geometry
 from worldsmith.grammar.scene import canonical_hash, load_scene
 from worldsmith.runner import p0
-from worldsmith.runner.classify import classify_attempt, gap_area
+from worldsmith.runner.classify import classify_attempt, gap_area, spawn_centre
 from worldsmith.runner.console import NONCE_RE, new_nonce
 
 EPISODE_SCHEMA = "worldsmith.m0episode/0.1"
@@ -273,6 +273,7 @@ def run_episode(client: StudioClient, cfg: dict, episode_dir) -> dict:
             build_info["ok"] = True
     if status == "complete":
         area = gap_area(scene, "gap_1", cfg["gap_area_margin_studs"])
+        spawn = spawn_centre(scene)
         params = p0.expected_params(cfg["_route"], cfg["timing"])
         for i, nonce in enumerate(ep["nonces"], start=1):
             ok, why = _ensure_stopped(call, tt)
@@ -290,7 +291,7 @@ def run_episode(client: StudioClient, cfg: dict, episode_dir) -> dict:
                     tool_result = json.loads(r.text)
                 except json.JSONDecodeError:
                     err = "the play tool's answer is not JSON"
-            res = classify_attempt(tool_result, nonce, params, area, call_error=err)
+            res = classify_attempt(tool_result, nonce, params, area, call_error=err, spawn_xz=spawn)
             (d / "attempts").mkdir(exist_ok=True)
             (d / "attempts" / f"{i}.raw.txt").write_text(r.text or "", encoding="utf-8")
             attempts.append({"attempt": i, "nonce": nonce, "call_index": len(calls), "t_wall": r.t_wall,

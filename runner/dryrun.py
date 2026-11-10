@@ -108,7 +108,7 @@ class FakeOperator:
                   "events": lines, "waypoints": [], "died": died, "removed": False, "characters_added": 1, "jumps": 0,
                   "ticks": 160, "scene_hash": sc.canonical_hash(scene), "t_died": 8.4 if died else -1,
                   "pos_died": M0_FALLS[(i - 1) % 3] if died else "na", "last_supported": "0.00,3.00,41.70",
-                  "start_pos": "0.00,3.00,8.00", "t_route_start": 1.0, "events_dropped": 0, "t_end": t_end,
+                  "start_pos": "0.00,3.00,6.00", "t_route_start": 1.0, "events_dropped": 0, "t_end": t_end,
                   "samples": samples, "samples_dropped": 0}
         s = json.dumps(report)
         n = -(-len(s) // 800)

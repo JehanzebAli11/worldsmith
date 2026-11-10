@@ -45,7 +45,7 @@ from worldsmith.compiler import build, geometry
 from worldsmith.grammar import scene as sc
 from worldsmith.runner import attempts as at
 from worldsmith.runner import p0, players, taxonomy
-from worldsmith.runner.classify import gap_area
+from worldsmith.runner.classify import gap_area, spawn_centre
 from worldsmith.runner.console import NONCE_RE, new_nonce
 from worldsmith.validator.validate import validate
 
@@ -514,6 +514,7 @@ def run_version(call, cfg: dict, scene: dict, nonces: list, k: int) -> dict:
             build_info["ok"] = True
     if status == "complete":
         area = gap_area(scene, GAP_ID, cfg["gap_area_margin_studs"])
+        spawn = spawn_centre(scene)
         params, ctl = cfg["_params"], cfg["_controller_text"]
         for i, nonce in enumerate(nonces, start=1):
             ok, why = at._ensure_stopped(call, tt)
@@ -531,9 +532,15 @@ def run_version(call, cfg: dict, scene: dict, nonces: list, k: int) -> dict:
                     tool_result = json.loads(r.text)
                 except json.JSONDecodeError:
                     err = "the play tool's answer is not JSON"
-            res = taxonomy.classify_result(tool_result, nonce, params, area, cfg["_stuck"], call_error=err)
+            res = taxonomy.classify_result(tool_result, nonce, params, area, cfg["_stuck"], call_error=err,
+                                           spawn_xz=spawn)
             raws[i] = r.text or ""
             rows.append(_row(i, nonce, r, len(call.calls), raws[i], res, scene, area))
+            if res["outcome"] == "CONNECTOR_ERROR":
+                # ADR 0011: the play tool gave no usable answer (an error, a timeout, a bare `null`);
+                # Studio's state is unknown, so the episode stops here: no more attempts.
+                status, detail = "CONNECTOR_ERROR", f"attempt {i}: {res['detail']}"
+                break
         if status == "complete":
             ok, why = at._ensure_stopped(call, tt)
             if not ok:

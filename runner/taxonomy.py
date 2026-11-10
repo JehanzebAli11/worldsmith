@@ -51,7 +51,7 @@ from worldsmith.compiler import geometry as _geo
 from worldsmith.grammar.scene import canonical_hash, load_scene, normalize_scene
 from worldsmith.runner import attempts as _attempts
 from worldsmith.runner import p0
-from worldsmith.runner.classify import classify_attempt, gap_area, in_area
+from worldsmith.runner.classify import classify_attempt, gap_area, in_area, spawn_centre
 
 CLASSIFIER_CONFIG_SCHEMA = "worldsmith.classifierconfig/0.1"
 CLASSIFICATION_SCHEMA = "worldsmith.classification/0.1"
@@ -195,10 +195,11 @@ def evaluate_stuck(report, stuck_cfg: dict) -> dict:
 # --- observed tags for one recorded attempt ------------------------------------------------
 
 def classify_result(tool_result, nonce: str, params: dict, area: dict, stuck_cfg: dict,
-                    *, call_error: str | None = None) -> dict:
+                    *, call_error: str | None = None, spawn_xz=None) -> dict:
     """WS-04's observed outcome plus STUCK, and the default cause. No hypothesis here: that
-    needs the episode and other bundles (`bridge_short_hypothesis`)."""
-    base = classify_attempt(tool_result, nonce, params, area, call_error=call_error)
+    needs the episode and other bundles (`bridge_short_hypothesis`). `spawn_xz`: ADR 0011's
+    start_pos rule (`classify.spawn_centre`)."""
+    base = classify_attempt(tool_result, nonce, params, area, call_error=call_error, spawn_xz=spawn_xz)
     rep = None
     if base["report"] is not None and isinstance(tool_result, dict):
         rep = base["report"]
@@ -278,6 +279,7 @@ def load_episode(episode_dir, cfg: dict, ccfg: dict, root) -> EpisodeRecord:
     else:
         params = p0.expected_params(cfg["_route"], cfg["timing"])
         area = gap_area(scene, GAP_ID, cfg["gap_area_margin_studs"])
+        spawn = spawn_centre(scene)
         calls = json.loads((d / "calls.json").read_text(encoding="utf-8")) if (d / "calls.json").is_file() else []
         for i, summ in enumerate(s.get("attempts") or [], start=1):
             af = d / "attempts" / f"{i}.json"
@@ -303,7 +305,8 @@ def load_episode(episode_dir, cfg: dict, ccfg: dict, root) -> EpisodeRecord:
                 elif call_error is None:
                     problems.append(f"attempt {i}: raw tool result missing")
                     continue
-            res = classify_result(tool_result, nonce, params, area, ccfg["stuck"], call_error=call_error)
+            res = classify_result(tool_result, nonce, params, area, ccfg["stuck"], call_error=call_error,
+                                  spawn_xz=spawn)
             if res["outcome"] != summ["outcome"] and not (res["outcome"] == "STUCK" and summ["outcome"] == UNCLASSIFIED):
                 problems.append(f"attempt {i}: re-classified {res['outcome']}, summary says {summ['outcome']}")
             out_attempts.append({"attempt": i, "nonce": nonce, "raw_file": raw_rel if ci is not None else None,
