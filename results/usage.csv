@@ -2,3 +2,6 @@ timestamp_utc,job,repo,model_id,mode,request_id,input_tokens,cache_creation_inpu
 2026-11-10T07:50:18Z,architect_ladder,worldsmith,claude-haiku-5-5,sync,req_011Cgtt6hrm579DhaeCneA2y,3742,787,0,338,0.000642,worldsmith architect haiku 57f003382a7e
 2026-11-10T14:20:20Z,architect_ladder,worldsmith,claude-haiku-5-5,sync,req_011CguPqfLH65CpeuKDyfZJX,3742,787,0,442,0.000694,worldsmith architect haiku be21ad774f15
 2026-11-10T14:36:29Z,architect_ladder,worldsmith,claude-haiku-5-5,sync,req_011CguR55r9X2B2WLn8FeTQ2,3973,787,0,746,0.000869,worldsmith architect haiku 71e856ae9f20
+2026-11-10T16:41:26Z,architect_ladder,worldsmith,claude-haiku-5-5,sync,req_011Cguabt9bdbMu7fLEEB3je,3742,787,0,348,0.000647,worldsmith architect haiku 0b0a5b233d56
+2026-11-10T16:57:58Z,architect_ladder,worldsmith,claude-sonnet-5-5,sync,req_011CgubrnY3deREfqZ5hkX7H,3742,787,0,378,0.013232,worldsmith architect sonnet 168e90d3e856
+2026-11-10T17:22:09Z,architect_ladder,worldsmith,claude-opus-5-5,sync,req_011CgudhsvyFqWiy9eyLFTtV,3742,787,0,235,0.023603,worldsmith architect opus 89e8df6a60c7

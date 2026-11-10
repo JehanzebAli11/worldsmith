@@ -7,6 +7,10 @@ bundle exists the runner refuses a changed config (a change is a new experiment 
 
 ## Now: `smoke_f1e_p0v3`, then `m2_f1a_b3` (ADR 0012)
 
+**Status 10 Nov 2026, 22:45 PKT:** `smoke_f1e_p0v3b` PASS (6/6). `m2_f1a_b3` complete: B3-haiku,
+B3-sonnet and B3-opus each FELL ×3 on v1, proposed `bridge_1.length 16` (1 call, ACCEPTED), and
+v2 passed SUCCESS ×3; $0.037481 in total. Details and caveats in HANDOFF (same date).
+
 **The pilot `m2_f1a_pilot` is closed** (10 Nov 2026, owner decision A;
 `bundles/experiments/m2_f1a_pilot/CLOSED.md`). B0, B1 and B2 are its valid results; B3-haiku and
 B3-sonnet ended SYSTEM_ERROR because p0.v2's wall-clock spawn check failed in slow play starts

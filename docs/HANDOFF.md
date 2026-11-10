@@ -1028,3 +1028,48 @@ pending; **5 architect call pending**; 4 refused; 2 setup (jzapi missing); 1 oth
    pooled? Recommended: yes.
 4. Commit of `results/usage.csv` (the pilot's two haiku rows, previously uncommitted) as its own
    commit: keep it? Recommended: yes.
+
+## 2026-11-10 22:45 PKT · smoke_f1e_p0v3b PASS; m2_f1a_b3 run live (B3-haiku, B3-sonnet, B3-opus)
+
+**Done**
+- `smoke_f1e_p0v3` stopped at its first preflight (place marker missing after a Studio restart),
+  closed, and re-declared unchanged as `smoke_f1e_p0v3b` (0c579ab). `smoke_f1e_p0v3b` passed:
+  F1-E, B0, p0.v3, 2 episodes, 6/6 SUCCESS (e64711a).
+- `m2_f1a_b3` run to completion in Roblox Studio (live MCP, `places/worldsmith-lab.rbxl`, one
+  driver, preflight passed before every build). Architect calls made by the owner on the Mac
+  (`architect`), Studio calls relayed by the control thread (`step --architect-elsewhere` /
+  `respond`). Bundle: `bundles/experiments/m2_f1a_b3/` (results.json, per-episode summary.json,
+  trace.jsonl, calls/).
+
+**Verified** (from `bundles/experiments/m2_f1a_b3/results.json`; player p0.v3, controller
+`cd9a7a0a…`, F1-A at M0, N 3, k 3; one episode per condition, so n = 1 episode each)
+
+| condition | v1 (92f86609) | architect calls | patch | v2 | final |
+|---|---|---|---|---|---|
+| B3-haiku | FELL ×3 | 1 (ACCEPTED), $0.000647 | `set bridge_1.length 16` | 297b23c8, SUCCESS ×3 | PASS, repaired 1/1 |
+| B3-sonnet | FELL ×3 | 1 (ACCEPTED), $0.013232 | `set bridge_1.length 16` | 297b23c8, SUCCESS ×3 | PASS, repaired 1/1 |
+| B3-opus | FELL ×3 | 1 (ACCEPTED), $0.023603 | `set bridge_1.length 16` | 297b23c8, SUCCESS ×3 | PASS, repaired 1/1 |
+
+- No HARNESS_ERROR in any of the 18 attempts; every attempt had ground_test "floor" at 0 ground
+  steps and settle offset 0. p0.v3's warm-up absorbed first-frame dts up to 1.244 s.
+- Spend: 3 calls, $0.037481 by the per-reply cost (`results/usage.csv`: 3 rows, 16:41–17:22 UTC,
+  $0.037482 rounded); worst case declared $2.961000. Job `architect_ladder` total in usage.csv:
+  6 rows, $0.039687.
+- All three models proposed the same one-op patch, and its scene hash (297b23c8) is the same as
+  the pilot's B1 hand fix (`scenes/F1-A/patches/m0_fix.json`).
+- Compared with the pilot (player **p0.v2**, `m2_f1a_pilot`, not pooled): B0 FELL ×3; B1 hand fix
+  FELL ×3 then SUCCESS ×3; B2 random_valid seed 0 needed 3 proposals (REJECTED, REJECTED,
+  ACCEPTED) and its v2 (b50b5baf) also passed SUCCESS ×3.
+
+**What this does and doesn't show**
+- On F1-A every model, Haiku included, found the reference fix first try. F1-A doesn't separate
+  the models; the only difference here is cost per call. One episode each: no rates, no ranking.
+- B2 (random valid patch) also repaired F1-A, in 3 proposals instead of 1. F1-A is too easy to
+  show an architect advantage beyond fewer proposals.
+
+**Next**
+1. Harder scenes (failures where a random valid patch rarely works and the right fix isn't a single
+   number) before any model comparison claim; more episodes per condition.
+2. Commit and push this entry with the bundle and usage.csv.
+
+**Open questions**: none new.

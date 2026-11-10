@@ -1,0 +1,37 @@
+[
+ {
+  "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+  "candidate_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+  "codes": [],
+  "cost_usd": 0.000646575,
+  "detail": {
+   "model_id": "claude-haiku-5-5",
+   "model_role": "haiku",
+   "on_version": 1,
+   "prompt_bytes_bound": 11713,
+   "provider": "jzapi",
+   "stop_reason": "end_turn"
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 1,
+  "malformed": null,
+  "model_calls": 1,
+  "patch": {
+   "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+   "ops": [
+    {
+     "field": "length",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 16
+    }
+   ],
+   "schema": "worldsmith.patch/0.1"
+  },
+  "request_sha": "0b0a5b233d566768b62a78be054c8acc01d324ad18898315314c1f29b4b74170",
+  "source": "architect",
+  "verdict": "ACCEPTED",
+  "warnings": []
+ }
+]

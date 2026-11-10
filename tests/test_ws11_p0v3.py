@@ -418,7 +418,12 @@ def test_m2_f1a_b3_config_copies_the_pilot_except_player_id_and_conditions(b3, m
     assert b3["architect"]["prompt_sha256"].startswith("df1b7a12") and b3["architect"]["job"] == "architect_ladder"
     assert b3["max_revisions"] == 3 and b3["caps"] == {"attempts_per_episode": 12, "architect_calls_per_episode": 3}
     assert b3["preflight"] == m2["preflight"]
-    assert not (REPO_ROOT / "bundles" / "experiments" / "m2_f1a_b3").exists()
+    # Run on 10 Nov 2026 under this exact config: the bundle's lock names the declared file's hash.
+    lock_path = REPO_ROOT / "bundles" / "experiments" / "m2_f1a_b3" / "experiment.lock.json"
+    if lock_path.exists():
+        lock = json.loads(lock_path.read_text())
+        assert lock["config_sha256"] == hashlib.sha256(B3.read_bytes()).hexdigest()
+        assert lock["player"]["version"] == "p0.v3" and lock["dry_run"] is False
 
 
 @needs_jzapi
