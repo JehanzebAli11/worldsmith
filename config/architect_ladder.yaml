@@ -1,0 +1,21 @@
+# B3 architect ladder (SPEC section 12, ROADMAP section 4.3; WS-10, ADR 0009). Committed and
+# checked strictly by worldsmith.architect.client.load_ladder_config. Not an approval: live calls
+# also need JzLab budgets.yaml (job below, approved: true) AND the git-ignored local
+# config/architect.yaml with live: true.
+schema: worldsmith.architect_ladder/0.1
+job: architect_ladder        # JzLab budgets.yaml job, cap $90 (ROADMAP section 9)
+max_revisions: 3             # SPEC sections 6 and 12: every reply counts, rejects included
+cache_system: true           # the system text is fixed per prompt version (prompt caching)
+sampling: api_default        # temperature / top_p / top_k are never sent (API 2026-10-21 rejects them)
+# Thinking: Claude 5.5 models think by default, and thinking tokens count toward max_tokens.
+# Opus 5.5 cannot turn thinking off. No thinking parameter is sent (API default for every role),
+# so max_tokens is mostly thinking headroom: a patch itself is about 100 output tokens.
+# A reply cut at max_tokens (stop_reason max_tokens) is MALFORMED / TRUNCATED and counts as a
+# rejected revision. Its rate is reported per role, so truncation caused by these values stays
+# visible; raise a value (new config hash, declared before a comparison) rather than hide it.
+# Worst case per call at the jzapi price table (output only): haiku 8000 tokens, sonnet 16000
+# x $10/M = $0.16, opus 32000 x $20/M = $0.64. jzapi reserves the worst case before each call.
+roles:
+  haiku:  {model_id: claude-haiku-5-5,  max_tokens: 8000}
+  sonnet: {model_id: claude-sonnet-5-5, max_tokens: 16000}
+  opus:   {model_id: claude-opus-5-5,   max_tokens: 32000}

@@ -11,6 +11,8 @@ dist/
 .env
 .env.*
 !.env.example
+# Per-machine architect switch (WS-10): live calls are an owner decision, never committed
+config/architect.yaml
 
 # Run outputs: bundles are generated, keep only the folder
 bundles/*

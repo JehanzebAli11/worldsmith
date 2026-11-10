@@ -1,0 +1,50 @@
+{
+  "schema": "worldsmith.architect_fixture/0.1",
+  "name": "f1a_m0_reject_then_fix",
+  "provenance": "hand-written for the WS-10 tests (10 Nov 2026); not a model output",
+  "why": "Prose, then the goal cheat, then the fix: two rejected revisions (one malformed), accepted on revision 3.",
+  "scene": "scenes/F1-A/scene.json",
+  "classification": {
+    "file": "bundles/m0/classification.json",
+    "episode": "F1-A"
+  },
+  "stage": "M0",
+  "prompt_mode": "baseline",
+  "max_revisions": 3,
+  "turns": [
+    {
+      "request_sha": "57f003382a7ef366af5e9073fffeea3bd485946880c74bda9032953964cf461d",
+      "response_text": "The player falls into the gap because bridge_1 is only 6 studs long and gap_1 is 16 studs wide. I would set bridge_1.length to 16 so the bridge reaches plat_b.",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "MALFORMED",
+        "malformed_reason": "NOT_JSON"
+      }
+    },
+    {
+      "request_sha": "4fa531a49415768360174ac1b2170b243fbbf8f1ab154f767f69c9c801db9851",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d\", \"ops\": [{\"op\": \"move\", \"id\": \"goal\", \"pos\": [0, 0, 24]}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "REJECTED",
+        "codes": [
+          "STAGE_OP_FORBIDDEN"
+        ]
+      }
+    },
+    {
+      "request_sha": "70a17836f7ac2234736dd93a5870e8a5fdd7d0f92bf0185f5b5771555cf94a30",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.1\", \"base_hash\": \"92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d\", \"ops\": [{\"op\": \"set\", \"id\": \"bridge_1\", \"field\": \"length\", \"value\": 16}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "ACCEPTED"
+      }
+    }
+  ],
+  "expect": {
+    "revisions_used": 3,
+    "rejected": 2,
+    "exhausted": false,
+    "accepted_on": 3
+  }
+}

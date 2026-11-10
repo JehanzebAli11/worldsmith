@@ -1,0 +1,33 @@
+{
+  "schema": "worldsmith.architect_fixture/0.1",
+  "name": "f1a_m0_out_of_bounds",
+  "provenance": "hand-written for the WS-10 tests (10 Nov 2026); not a model output",
+  "why": "bridge_1.length 65, above its bound (64). Rejected; one revision allowed here.",
+  "scene": "scenes/F1-A/scene.json",
+  "classification": {
+    "file": "bundles/m0/classification.json",
+    "episode": "F1-A"
+  },
+  "stage": "M0",
+  "prompt_mode": "baseline",
+  "max_revisions": 1,
+  "turns": [
+    {
+      "request_sha": "a0a8ff8275db8b610da1b40da7c445d4b254c2f61311d6992ede474c40292565",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.1\", \"base_hash\": \"92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d\", \"ops\": [{\"op\": \"set\", \"id\": \"bridge_1\", \"field\": \"length\", \"value\": 65}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "REJECTED",
+        "codes": [
+          "OUT_OF_BOUNDS"
+        ]
+      }
+    }
+  ],
+  "expect": {
+    "revisions_used": 1,
+    "rejected": 1,
+    "exhausted": true,
+    "accepted_on": null
+  }
+}

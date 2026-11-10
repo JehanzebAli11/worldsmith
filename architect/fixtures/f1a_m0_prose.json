@@ -1,0 +1,31 @@
+{
+  "schema": "worldsmith.architect_fixture/0.1",
+  "name": "f1a_m0_prose",
+  "provenance": "hand-written for the WS-10 tests (10 Nov 2026); not a model output",
+  "why": "Prose instead of JSON (a correct idea, but not a patch). Malformed: counts as a rejected revision.",
+  "scene": "scenes/F1-A/scene.json",
+  "classification": {
+    "file": "bundles/m0/classification.json",
+    "episode": "F1-A"
+  },
+  "stage": "M0",
+  "prompt_mode": "baseline",
+  "max_revisions": 1,
+  "turns": [
+    {
+      "request_sha": "a0a8ff8275db8b610da1b40da7c445d4b254c2f61311d6992ede474c40292565",
+      "response_text": "The player falls into the gap because bridge_1 is only 6 studs long and gap_1 is 16 studs wide. I would set bridge_1.length to 16 so the bridge reaches plat_b.",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "MALFORMED",
+        "malformed_reason": "NOT_JSON"
+      }
+    }
+  ],
+  "expect": {
+    "revisions_used": 1,
+    "rejected": 1,
+    "exhausted": true,
+    "accepted_on": null
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "worldsmith.architect_fixture/0.1",
+  "name": "f1a_m0_exhausted",
+  "provenance": "hand-written for the WS-10 tests (10 Nov 2026); not a model output",
+  "why": "Out of bounds, a no-op, then the right patch inside a code fence: three rejected revisions, the episode's architect budget is used up.",
+  "scene": "scenes/F1-A/scene.json",
+  "classification": {
+    "file": "bundles/m0/classification.json",
+    "episode": "F1-A"
+  },
+  "stage": "M0",
+  "prompt_mode": "baseline",
+  "max_revisions": 3,
+  "turns": [
+    {
+      "request_sha": "57f003382a7ef366af5e9073fffeea3bd485946880c74bda9032953964cf461d",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.1\", \"base_hash\": \"92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d\", \"ops\": [{\"op\": \"set\", \"id\": \"bridge_1\", \"field\": \"length\", \"value\": 65}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "REJECTED",
+        "codes": [
+          "OUT_OF_BOUNDS"
+        ]
+      }
+    },
+    {
+      "request_sha": "937bb7f639b502b94c2e4d49f89ba7fd626f3150bb960e8b8b4cc58c084dbd6e",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.1\", \"base_hash\": \"92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d\", \"ops\": [{\"op\": \"set\", \"id\": \"bridge_1\", \"field\": \"length\", \"value\": 6}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "REJECTED",
+        "codes": [
+          "NOOP_PATCH"
+        ]
+      }
+    },
+    {
+      "request_sha": "f0421c944a7cc30b42ee05ea79b97ca8abdf6969b3813c3121175ef77b2d440e",
+      "response_text": "```json\n{\"schema\": \"worldsmith.patch/0.1\", \"base_hash\": \"92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d\", \"ops\": [{\"op\": \"set\", \"id\": \"bridge_1\", \"field\": \"length\", \"value\": 16}]}\n```",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "MALFORMED",
+        "malformed_reason": "CODE_FENCE"
+      }
+    }
+  ],
+  "expect": {
+    "revisions_used": 3,
+    "rejected": 3,
+    "exhausted": true,
+    "accepted_on": null
+  }
+}

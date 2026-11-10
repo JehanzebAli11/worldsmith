@@ -1,0 +1,11 @@
+# Template for the per-machine architect config (WS-10, ADR 0009). Copy it to
+# config/architect.yaml (git-ignored) on the MacBook that may make paid calls.
+# live: true is the owner's decision (record it in JzLab state/DECISIONS.md). It is not enough
+# on its own: JzLab budgets.yaml must also have the job architect_ladder approved: true, and
+# jzapi re-checks approval and cap before every request.
+schema: worldsmith.architect_local/0.1
+live: false
+# budgets_file: ~/lab/JzLab/budgets.yaml   # optional; default $JZ_BUDGETS_FILE, else ../JzLab/budgets.yaml
+local:            # B4 (ROADMAP section 4.3): local Gemma 4 31B, OpenAI-compatible endpoint. WS-10 ships
+  endpoint: null  # only the interface; LocalArchitect refuses until both are set.
+  model: null

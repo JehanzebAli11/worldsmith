@@ -43,7 +43,13 @@ def f1a_episode():
     return next(e for e in doc["episodes"] if e["episode"] == "F1-A")
 
 
-def f1a_request(revision=1, previous=(), mode="baseline", stage="M0"):
+def fake_previous(n):
+    return [{"revision": i + 1, "verdict": "MALFORMED", "malformed_reason": "NOT_JSON", "patch": None,
+             "violations": [], "warnings": []} for i in range(n)]
+
+
+def f1a_request(revision=1, previous=None, mode="baseline", stage="M0"):
+    previous = fake_previous(revision - 1) if previous is None else previous
     scene = raw(F1A)
     observed = pr.observed_from_classification(f1a_episode())
     ctx = pr.build_context(scene, observed, stage=stage, revision=revision, max_revisions=3,
@@ -174,6 +180,8 @@ def test_build_context_rejects_bad_revision_numbers():
             pr.build_context(raw(F1A), obs, stage="M0", revision=rev, max_revisions=mx, previous=())
     with pytest.raises(ValueError):
         pr.build_context(raw(F1A), obs, stage="M9", revision=1, max_revisions=3, previous=())
+    with pytest.raises(ValueError):  # revision 2 needs the verdict of revision 1
+        pr.build_context(raw(F1A), obs, stage="M0", revision=2, max_revisions=3, previous=())
 
 
 # --------------------------------------------------------------------------- strict parsing
@@ -287,8 +295,7 @@ def test_previous_verdicts_feed_the_next_request():
     assert [p["verdict"] for p in prev] == ["MALFORMED", "REJECTED"]
     assert prev[0] == {"revision": 1, "verdict": "MALFORMED", "malformed_reason": "NOT_JSON",
                        "patch": None, "violations": [], "warnings": []}
-    assert prev[1]["violations"] == [{"code": "OUT_OF_BOUNDS", "ref": "ops[0]"}] or \
-        [v["code"] for v in prev[1]["violations"]] == ["OUT_OF_BOUNDS"]
+    assert {v["code"] for v in prev[1]["violations"]} == {"OUT_OF_BOUNDS"}
     assert prev[1]["patch"]["ops"][0]["value"] == 65
     assert arch.requests[2].context["revision"] == {"this": 3, "max": 3}
     shas = [r.request_sha for r in arch.requests]
@@ -411,9 +418,15 @@ def test_fixture_replay_is_identical_across_processes():
 
 
 def test_first_turns_share_one_request_hash():
-    shas = {fx.load_fixture(n)["turns"][0]["request_sha"] for n in SINGLE + LOOPS}
-    assert len(shas) == 1
-    assert shas.pop() == f1a_request().request_sha
+    # Same inputs, same hash. The single-reject fixtures allow 1 revision, which the context
+    # states, so their first request differs from the 3-revision ones.
+    by_max = {}
+    for n in SINGLE + LOOPS:
+        doc = fx.load_fixture(n)
+        by_max.setdefault(doc["max_revisions"], set()).add(doc["turns"][0]["request_sha"])
+    assert set(by_max) == {1, 3} and all(len(v) == 1 for v in by_max.values())
+    assert by_max[3] == {f1a_request().request_sha}
+    assert by_max[1] != by_max[3]
 
 
 def test_fixture_architect_misses_loudly_on_an_unknown_request():
@@ -426,7 +439,7 @@ def test_fixture_architect_misses_loudly_on_an_unknown_request():
 
 def test_fixture_architect_refuses_conflicting_fixtures():
     with pytest.raises(cl.FixtureConflict):
-        cl.FixtureArchitect.from_names(["f1a_m0_fix", "f1a_m0_prose"])
+        cl.FixtureArchitect.from_names(["f1a_m0_fix", "f1a_m0_reject_then_fix"])
 
 
 # --------------------------------------------------------------------------- config and guard
