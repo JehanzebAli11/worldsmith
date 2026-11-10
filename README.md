@@ -21,8 +21,20 @@ pass (CPU tests, not Studio runs). An M1 stage widens the patch ops (ADR 0007). 
 coarse walk/jump graph over the built geometry reports CONNECTED/DISCONNECTED as a warning only,
 an approximation and never a proof (ADR 0008). **WS-08:** a failure classifier implements the
 SPEC §10 taxonomy; the M0 attempts are labelled in `bundles/m0/classification.json`
-([`docs/CLASSIFIER.md`](docs/CLASSIFIER.md)). No architect exists yet (WS-09+). Ticket status is
-in [`docs/TICKETS.md`](docs/TICKETS.md).
+([`docs/CLASSIFIER.md`](docs/CLASSIFIER.md)). **WS-09:** baseline B2, a capped random valid
+sampler (at most 3 raw proposals per episode, rejects included, seeded and replayable); its
+offline statistic in `bundles/b2_offline/` is validator/graph only, not a play result.
+**WS-10:** the architect client (versioned prompt, strict one-object JSON, fixture replay, a
+two-switch guard on live calls); one live smoke call (Haiku 5.5 on F1-A at M0, revision 1 of 3)
+was ACCEPTED (`set bridge_1.length 16`, $0.000642; `bundles/architect_smoke/`): a format check,
+not an episode and not a B3 result. **WS-11:** the orchestrator runs declared experiments
+(B0 none, B1 hand fix, B2 random, B3 architect) with per-episode caps of 12 attempts and 3
+architect calls, a new labelled player p0.v1 (the M0 controller plus position samples), a lock
+that refuses config changes after the first episode, resume without repeating answered Studio
+calls or paid architect calls, and P2 freeze-manifest refusal checks (no Autopilot run). The M2
+pilot on F1-A is declared (`config/experiments/m2_f1a.yaml`, worst case $2.961) and has not been
+run ([`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md)). Ticket status is in
+[`docs/TICKETS.md`](docs/TICKETS.md).
 
 ## Honest limits
 

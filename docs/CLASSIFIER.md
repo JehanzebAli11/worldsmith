@@ -46,6 +46,10 @@ There is no live position stream (ADR 0005).
   blocked attempt gives a sample only when `MoveTo` gives up (about every 8 s), so it is
   `NOT_EVALUABLE`; making it evaluable needs denser samples (a controller change, which would
   change the frozen controller hash, or route (b) polling).
+- **Player p0.v1 (WS-11, ADR 0010)** is that change, as a separate, labelled player: the M0
+  controller plus a `samples` list (position about every 1 s while alive). `position_samples`
+  adds those samples when a report has them; p0.v0 reports have none, so every M0 result above
+  is unchanged.
 
 All six M0 gate attempts are `NOT_STUCK` by the first rule (route phases 5.785 to 7.083 s,
 `bundles/m0/classification.json`).
