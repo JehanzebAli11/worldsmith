@@ -18,6 +18,10 @@ Rules (declared in the experiment config, checked here):
   debug, never lower the bar). A version with a system outcome (HARNESS_ERROR, CONNECTOR_ERROR) or
   a build failure stops the episode too: no proposal is spent on a harness problem.
 - An architect provider error uses its slot (WS-10) and ends the episode as CONNECTOR_ERROR.
+- ADR 0011: with `preflight` declared, a read-only probe runs before every build
+  (`runner/preflight.py`; `v<k>/preflight.json`); a failed check ends the episode as
+  HARNESS_ERROR before the build. A CONNECTOR_ERROR attempt (e.g. a bare `null` play answer)
+  ends the version at once: no further attempt is sent.
 
 Studio calls go through any `StudioClient`. With `attempts.RelayClient` every request and answer
 is a file under `calls/`, answered calls are replayed and never re-sent, and the run stops at the
@@ -44,7 +48,7 @@ from worldsmith.baselines import random_valid as b2
 from worldsmith.compiler import build, geometry
 from worldsmith.grammar import scene as sc
 from worldsmith.runner import attempts as at
-from worldsmith.runner import p0, players, taxonomy
+from worldsmith.runner import p0, players, preflight, taxonomy
 from worldsmith.runner.classify import gap_area, spawn_centre
 from worldsmith.runner.console import NONCE_RE, new_nonce
 from worldsmith.validator.validate import validate
@@ -55,7 +59,7 @@ SUMMARY_SCHEMA = "worldsmith.episode_summary/0.1"
 REPLY_SCHEMA = "worldsmith.architect_reply/0.1"
 GAP_ID = "gap_1"
 SYSTEM_OUTCOMES = ("HARNESS_ERROR", "CONNECTOR_ERROR")
-STOP_STATUSES = ("BUILD_FAILED", "CONNECTOR_ERROR", "SYSTEM_ERROR", "INCONSISTENT")
+STOP_STATUSES = ("BUILD_FAILED", "CONNECTOR_ERROR", "HARNESS_ERROR", "SYSTEM_ERROR", "INCONSISTENT")
 PAIRED_FIX_NOTE = ("not evaluated inside an episode: it needs a later N/N SUCCESS on a bridge-length-only "
                    "fix (post-fix evidence, withheld from the architect; ADR 0009)")
 DRY_RUN_NOTE = ("DRY RUN: Studio answers simulated by worldsmith.runner.dryrun.FakeOperator and architect "
@@ -483,10 +487,16 @@ def run_version(call, cfg: dict, scene: dict, nonces: list, k: int) -> dict:
     status, detail = "complete", ""
     build_info = {"ok": False, "build_line": None, "descendants": None, "expected_descendants": None,
                   "readback_differences": None}
-    rows, raws, readback = [], {}, None
-    ok, why = at._ensure_stopped(call, tt)
-    if not ok:
-        status, detail = "CONNECTOR_ERROR", why
+    rows, raws, readback, pre = [], {}, None, None
+    if cfg.get("_preflight"):
+        # ADR 0011: right place, one driver, before every build; read-only, stops nothing
+        pre = preflight.run(call, cfg["_preflight"], tt)
+        if not pre["ok"]:
+            status, detail = pre["status"], pre["detail"]
+    if status == "complete":
+        ok, why = at._ensure_stopped(call, tt)
+        if not ok:
+            status, detail = "CONNECTOR_ERROR", why
     if status == "complete":
         expected = geometry.expected_tree(scene, origin=origin)
         n_exp = geometry.descendant_count(expected)
@@ -559,7 +569,7 @@ def run_version(call, cfg: dict, scene: dict, nonces: list, k: int) -> dict:
         verdict = "FAIL"
     return {"version": k, "scene": scene, "scene_hash": h, "status": status, "detail": detail,
             "verdict": verdict, "build": build_info, "rows": rows, "raws": raws, "readback": readback,
-            "n": n, "attempted": len(rows), "successes": successes}
+            "n": n, "attempted": len(rows), "successes": successes, "preflight": pre}
 
 
 def _row(i, nonce, r, call_index, raw, res, scene, area) -> dict:
@@ -712,6 +722,8 @@ def _trace(cfg, ep, versions) -> list[dict]:
 def _write_bundle(d: Path, cfg, ep, summary, versions, proposals, calls, prop) -> None:
     for v in versions:
         vd = d / f"v{v['version']}"
+        if v.get("preflight") is not None:
+            write_once(vd / "preflight.json", _dumps(v["preflight"]))
         if v["readback"] is not None:
             write_once(vd / "readback.compare.txt", v["readback"])
         for r in v["rows"]:
@@ -768,6 +780,8 @@ def validate_episode_bundle(ep_dir, cfg: dict | None = None) -> list[str]:
             continue
         if sc.canonical_hash(sc.load_scene(vd / "scene.json")) != v["scene_hash"]:
             errs.append(f"v{i}: scene.json hash != summary")
+        if cfg is not None and cfg.get("_preflight") and not (vd / "preflight.json").is_file():
+            errs.append(f"v{i}: missing preflight.json (the experiment declares a preflight)")
         if i > 1:
             patch = _load(vd / "patch.json")
             if patch.get("base_hash") != s["versions"][i - 2]["scene_hash"]:

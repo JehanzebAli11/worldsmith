@@ -8,6 +8,9 @@ version is a fixed, reviewed Luau template plus the declared timing it takes:
   `runner.p0.render_controller` unchanged, so `bundles/m0/gate.json` still reproduces.
 - `p0.v1`: p0.v0 plus periodic position samples while alive (`sample_every`, declared 1 s), so
   STUCK is evaluable (WS-08 open question 2). A new template file and a new controller hash.
+- `p0.v2`: p0.v1 plus a spawn check before the route (ADR 0011): grounded within 1 stud (XZ) of
+  the spawn centre and staying there through the settle, else harness_error "moved_before_route"
+  with `spawn_offset` and `settle_drift` reported. Same timing keys as p0.v1 (samples every 1 s).
 
 The controller hash is the SHA-256 of the rendered text with the nonce slot unfilled (as in
 WS-04). Experiments declare the version, the route and the timing; the experiment loader
@@ -48,6 +51,11 @@ PLAYER_VERSIONS = {
         "p0.v1", "P0", "p0_controller_v1.luau", _V1_KEYS, True,
         "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
         "p0.v0 plus position samples while alive every sample_every s (WS-11, ADR 0010)"),
+    "p0.v2": PlayerVersion(
+        "p0.v2", "P0", "p0_controller_v2.luau", _V1_KEYS, True,
+        "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+        "p0.v1 plus a spawn check before the route: harness_error moved_before_route if the character "
+        "is not grounded within 1 stud (XZ) of the spawn centre through the settle (ADR 0011)"),
 }
 
 

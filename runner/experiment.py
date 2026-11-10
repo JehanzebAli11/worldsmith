@@ -4,7 +4,8 @@ An experiment (`config/experiments/*.yaml`, schema `worldsmith.experiment/0.1`) 
 run: the scene and stage, ONE player (version, route, timing, controller hash), N, k, the revision
 budget and the per-episode caps, the classifier config, the architect prompt and ladder, and the
 conditions in run order with their episode counts (B2 seeds declared up front, one per episode).
-`load_experiment` re-derives every hash it declares and refuses any mismatch.
+`load_experiment` re-derives every hash it declares and refuses any mismatch. Optional:
+`preflight: {script, sha256}` (ADR 0011), the read-only probe run before every build.
 
 Declared before runs: when the first episode bundle of an experiment is created, the runner
 writes `<out>/<experiment>/experiment.lock.json` with the config's SHA-256 (of its bytes) and a
@@ -48,6 +49,7 @@ SPEC_MAX_ATTEMPTS = 12          # SPEC section 12: N x (1 + 3)
 SPEC_MAX_ARCHITECT_CALLS = 3
 _TOP = {"schema", "experiment", "stage", "scene", "player", "n_attempts", "pass_k", "max_revisions", "caps",
         "origin", "gap_area_margin_studs", "tool_timeouts_s", "classifier", "architect", "conditions", "dry_run"}
+_OPTIONAL = {"preflight"}       # ADR 0011: absent in configs declared before it (they run without it)
 _ID = re.compile(r"[a-z0-9][a-z0-9_]{0,47}")
 _COND_ID = re.compile(r"B[0-9]([a-z0-9-]{0,24})?")
 _HEX64 = re.compile(r"[0-9a-f]{64}")
@@ -105,7 +107,7 @@ def load_experiment(path, repo_root=None, *, env=None) -> dict:
     cfg = yaml.safe_load(raw.decode("utf-8"))
     if not isinstance(cfg, dict):
         raise ExperimentError("config is not a mapping")
-    errs = [f"{'unknown' if k in cfg else 'missing'} key {k!r}" for k in sorted(set(cfg) ^ _TOP)]
+    errs = [f"{'unknown' if k in cfg else 'missing'} key {k!r}" for k in sorted((set(cfg) - _OPTIONAL) ^ _TOP)]
     if errs:
         raise ExperimentError("; ".join(errs))
     if cfg["schema"] != EXPERIMENT_SCHEMA:
@@ -201,6 +203,21 @@ def load_experiment(path, repo_root=None, *, env=None) -> dict:
     if cf is not None:
         stuck = taxonomy.load_classifier_config(cf)["stuck"]
 
+    # preflight (ADR 0011): a fixed read-only probe before every build, hash declared
+    preflight_text = None
+    if "preflight" in cfg:
+        pfc = cfg["preflight"]
+        if not (isinstance(pfc, dict) and set(pfc) == {"script", "sha256"}):
+            errs.append("preflight must give exactly script and sha256")
+        else:
+            pf_file = _file_and_sha(root, pfc, "script", "sha256", "preflight", errs)
+            if pf_file is not None:
+                if not pfc["script"].startswith("runner/templates/preflight_"):
+                    errs.append("preflight.script must be a runner/templates/preflight_*.luau template")
+                preflight_text = pf_file.read_text(encoding="utf-8")
+                if not preflight_text.isascii():
+                    errs.append("preflight: the script is not ASCII")
+
     # architect
     a = cfg["architect"]
     ladder = prompt = None
@@ -285,7 +302,7 @@ def load_experiment(path, repo_root=None, *, env=None) -> dict:
     out = dict(cfg)
     out.update(_sha256=hashlib.sha256(raw).hexdigest(), _path=str(path), _root=str(root), _raw=raw.decode("utf-8"),
                _scene=scene, _route=route, _controller_text=text, _params=params, _stuck=stuck, _prompt=prompt,
-               _ladder=ladder, _conditions=conds, _hand_patches=patches)
+               _ladder=ladder, _conditions=conds, _hand_patches=patches, _preflight=preflight_text)
     return out
 
 

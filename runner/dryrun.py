@@ -6,7 +6,8 @@ NOTHING HERE IS A RESULT. `FakeOperator` answers each relay request the way the 
 answers in shape only: a build prints its `WS_BUILD_OK` line, a read-back returns the expected
 tree, and a play call returns a controller report whose outcome is decided by a stand-in rule
 (the bridge reaches the far platform -> BRIDGE_CROSSED then GOAL_TOUCHED; otherwise a fall into
-the gap at the kill positions recorded in the M0 F1-A attempts). It is not physics and not
+the gap at the kill positions recorded in the M0 F1-A attempts), and a preflight probe answers
+as the saved worldsmith-lab place would (`preflight.simulated_probe`). It is not physics and not
 Roblox. Architect replies come from the hand-written WS-10 fixtures named in the config's
 `dry_run.fixtures` (not model outputs). Every bundle it writes says `dry_run: true`.
 """
@@ -23,7 +24,7 @@ from worldsmith.grammar import scene as sc
 from worldsmith.runner import attempts as at
 from worldsmith.runner import episode as epi
 from worldsmith.runner import experiment as ex
-from worldsmith.runner import taxonomy
+from worldsmith.runner import preflight, taxonomy
 
 # The KILL_FLOOR_TOUCHED positions of the three M0 F1-A attempts (bundles/m0/F1-A, docs/M0.md).
 M0_FALLS = ("0.00,-14.29,49.31", "0.00,-11.06,48.52", "0.00,-10.27,48.35")
@@ -72,6 +73,8 @@ class FakeOperator:
             return "stop"
         if tool == "start_stop_play":
             return "stopped"
+        if tool == "run_code" and "WS_PREFLIGHT" in code:
+            return "[OUTPUT] WS_PREFLIGHT|" + json.dumps(preflight.simulated_probe())
         if tool == "run_code" and "WS_BUILD_OK" in code:
             h = _HASH_RE.search(code).group(1)
             scene = self._scene_by_hash(ep_dir, h)
@@ -110,6 +113,8 @@ class FakeOperator:
                   "pos_died": M0_FALLS[(i - 1) % 3] if died else "na", "last_supported": "0.00,3.00,41.70",
                   "start_pos": "0.00,3.00,6.00", "t_route_start": 1.0, "events_dropped": 0, "t_end": t_end,
                   "samples": samples, "samples_dropped": 0}
+        if self.cfg["player"]["version"] == "p0.v2":
+            report.update(spawn_pos="0.00,0.50,6.00", spawn_offset=0, settle_drift=0, settle_max_offset=0)
         s = json.dumps(report)
         n = -(-len(s) // 800)
         out = ["[UI Workflow] dry-run operator", *lines] + \
