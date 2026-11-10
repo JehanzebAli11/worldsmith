@@ -155,6 +155,9 @@ def classify_attempt(tool_result, nonce: str, expected_params: dict, area: dict,
                                                  "ticks", "t_end", "t_route_start", "start_pos",
                                                  "last_supported", "scene_hash", "waypoints",
                                                  "events_dropped")}
+    for k in ("samples", "samples_dropped"):      # p0.v1 position samples (WS-11); absent in p0.v0
+        if k in report:
+            out["report"][k] = report[k]
     if not _same(report.get("params"), expected_params):
         return done("HARNESS_ERROR", "controller params echo does not match the frozen route/timing")
     captured = parse_events("\n".join(x for x in report.get("events") or [] if isinstance(x, str)), nonce)

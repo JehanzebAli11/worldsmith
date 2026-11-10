@@ -23,8 +23,9 @@ hold, which is functional evidence, not a causal diagnosis of an arbitrary room 
 5 and 10).
 
 STUCK rule (config/classifier.yaml; epsilon, window W and the largest usable sample gap G):
-positions are the controller's own samples (route start, each waypoint's end, controller clock;
-ADR 0005: there is no live position stream), used only while the character is alive.
+positions are the controller's own samples (route start, each waypoint's end, and with player
+p0.v1 the periodic `samples`; controller clock; ADR 0005: there is no live position stream), used
+only while the character is alive.
 - route phase = t_route_start .. (t_died if it died, else t_end). Shorter than W: NOT_STUCK,
   because no window fits.
 - STUCK if some samples i < j have t_j - t_i >= W, every sample between them lies within
@@ -129,6 +130,12 @@ def position_samples(report: dict) -> list[tuple[float, tuple]]:
         if not isinstance(w, dict) or w.get("died") is True:
             continue
         t, p = _t(w.get("t")), _pos(w.get("pos"))
+        if t is not None and p is not None:
+            out.append((t, p))
+    for s in report.get("samples") or []:          # p0.v1 periodic samples (WS-11, ADR 0010)
+        if not isinstance(s, dict):
+            continue
+        t, p = _t(s.get("t")), _pos(s.get("pos"))
         if t is not None and p is not None:
             out.append((t, p))
     t_died = _t(report.get("t_died")) if report.get("died") is True else None
