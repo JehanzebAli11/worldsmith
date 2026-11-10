@@ -265,6 +265,9 @@ def main(argv=None) -> int:
     except epi.PromptCapExceeded as exc:
         print(f"refused: {exc}", file=sys.stderr)
         return 4
+    except ex.PreflightFailed as exc:
+        print(f"stopped: preflight failed: {exc}", file=sys.stderr)
+        return 4
     for c in res["conditions"]:
         print(f"  {c['condition']:<10} repaired {c['repaired']['n']}/{c['repaired']['of']}  statuses {c['statuses']}")
     print(f"results: {exp.dir / 'results.json'}")
@@ -304,6 +307,9 @@ def _step_elsewhere(cfg, exp, a, jz) -> int:
     except at.Pending as p:
         _print_pending(p, exp, a.config)
         return 3
+    except ex.PreflightFailed as exc:
+        print(f"stopped: preflight failed: {exc}", file=sys.stderr)
+        return 4
     except epi.ArchitectPending as p:
         pend = exp.pending()
         print(f"ARCHITECT PENDING {pend['episode_dir']} request {p.request_sha} role {p.role}")

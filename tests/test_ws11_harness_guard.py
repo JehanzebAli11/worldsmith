@@ -532,3 +532,6 @@ def test_a_failed_preflight_stops_the_experiment_after_that_episode(m2, tmp_path
     s = json.loads((exp.episode_dir("B0", 0) / "summary.json").read_text())
     assert s["status"] == "HARNESS_ERROR" and s["attempts_used"] == 0
     assert op.tools == ["get_studio_mode", "probe"] and not (exp.dir / "results.json").exists()
+    with pytest.raises(ex.PreflightFailed):          # a later step does not start B1 either
+        exp.run(lambda d: Direct(ProbeOp(m2), d))
+    assert {s["condition"]: s["state"] for s in exp.status()}["B1"] == "todo"

@@ -67,6 +67,11 @@ class MixedPlayers(ExperimentError):
     """An episode folder in the experiment was made by another config or player."""
 
 
+class PreflightFailed(RuntimeError):
+    """An episode ended HARNESS_ERROR at its preflight (ADR 0011): wrong place, another driver or
+    wrong settings. Its bundle is written; no further episode is started."""
+
+
 class BudgetRefused(RuntimeError):
     """The job's remaining headroom is below the experiment's worst case."""
 
@@ -357,6 +362,16 @@ def _now() -> str:
     return _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def _stop_on_failed_preflight(d: Path, summ: dict, cid: str, i: int) -> None:
+    """ADR 0011: after an episode that failed its preflight, no further episode of the experiment
+    starts (now or on a later step): the place or the driver was wrong, so the experiment is spent."""
+    pre = d / f"v{summ['final']['version']}" / "preflight.json"
+    if summ["status"] == "HARNESS_ERROR" and pre.is_file() and json.loads(pre.read_text(encoding="utf-8"))["ok"] is False:
+        raise PreflightFailed(f"{cid}/ep{i}: {summ['detail']} (see {pre}); no further episode of this experiment "
+                              "starts. Fix the place (docs/EXPERIMENTS.md owner checklist) and declare a new "
+                              "experiment id")
+
+
 class Experiment:
     """`<out_root>/<experiment>/`: lock, config copy, controller, one folder per episode
     (`<condition>/ep<i>/`), `pending.json` (the relay call waiting for an answer) and
@@ -434,6 +449,7 @@ class Experiment:
                 errs = epi.validate_episode_bundle(d, self.cfg)
                 if errs:
                     raise epi.EpisodeError(f"{d}: finished bundle has problems: {errs}")
+                _stop_on_failed_preflight(d, json.loads((d / "summary.json").read_text(encoding="utf-8")), cid, i)
                 continue
             if not (d / "episode.json").is_file():
                 self._lock()
@@ -442,8 +458,8 @@ class Experiment:
             cond = self.cfg["_conditions"][cid]
             factory = (lambda c=cond: architect_for(c)) if (architect_for and cond["proposer"] == "architect") else None
             try:
-                epi.run_episode(client_for(d), self.cfg, d, architect_factory=factory, architect_mode=architect_mode,
-                                architect_expect=architect_expect)
+                summ = epi.run_episode(client_for(d), self.cfg, d, architect_factory=factory,
+                                       architect_mode=architect_mode, architect_expect=architect_expect)
             except at.Pending as p:
                 epi.write_once_or_replace_pending(self.dir / "pending.json", {
                     "episode_dir": str(d.relative_to(self.dir)), "index": p.index, "tool": p.request["tool"]})
@@ -458,6 +474,7 @@ class Experiment:
                     "episode_dir": None, "index": None, "tool": None,
                     "note": f"architect reply stored for {cid} request {p.request_sha}; run step"})
                 raise
+            _stop_on_failed_preflight(d, summ, cid, i)
         res = self.results()
         epi.write_once_or_replace_pending(self.dir / "pending.json", {"episode_dir": None, "index": None, "tool": None})
         epi.write_once(self.dir / "results.json", epi._dumps(res))
