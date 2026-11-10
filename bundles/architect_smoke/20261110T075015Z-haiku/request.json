@@ -1,0 +1,48 @@
+{
+  "cache_system": true,
+  "context_sha": "89e2b9b33e3fe6cd2c59fae596ecdcb5a49dd2ec74453b443abca232b19d7e63",
+  "created_utc": "20261110T075015Z",
+  "episode": "F1-A",
+  "files": {
+    "context": "context.json",
+    "system": "prompt.system.txt",
+    "user": "prompt.user.txt"
+  },
+  "inputs": {
+    "classification": {
+      "episode": "F1-A",
+      "path": "bundles/m0/classification.json",
+      "sha256": "170121c380000c559bf0e6bde70f0c143b90536cce9d4ca67de04cb3e3752db7"
+    },
+    "scene": {
+      "canonical_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+      "path": "bundles/m0/F1-A/scene.json",
+      "sha256": "a2b9d0aaa66505f5a3de3abbff5a88f8ef1973e14714aba6352374e279ecaab9"
+    }
+  },
+  "job": "architect_ladder",
+  "max_revisions": 3,
+  "max_tokens": 8000,
+  "model_id": "claude-haiku-5-5",
+  "prompt": {
+    "file": "architect/prompt.md",
+    "mode": "baseline",
+    "sha256": "df1b7a125269a66a054f74fbccfd22098b61bd79e3549adb1f4aedb14f5f83bd",
+    "version": "0.1"
+  },
+  "request_sha": "57f003382a7ef366af5e9073fffeea3bd485946880c74bda9032953964cf461d",
+  "revision": 1,
+  "role": "haiku",
+  "sampling": "api_default",
+  "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+  "schema": "worldsmith.architect_smoke/0.1",
+  "stage": "M0",
+  "worst_case": {
+    "max_tokens": 8000,
+    "method": "jzapi.worst_case_usd, prompt tokens <= UTF-8 bytes (token_estimate=bytes), cache-write input rate, max_tokens of output",
+    "price_checked": "2026-11-09",
+    "price_source": "https://platform.claude.com/docs/en/about-claude/pricing",
+    "prompt_tokens_upper_bound": 11715,
+    "usd": 0.005464375
+  }
+}

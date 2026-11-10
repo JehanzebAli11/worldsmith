@@ -1,0 +1,17 @@
+{
+  "malformed": null,
+  "ok": true,
+  "patch": {
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "ops": [
+      {
+        "field": "length",
+        "id": "bridge_1",
+        "op": "set",
+        "value": 16
+      }
+    ],
+    "schema": "worldsmith.patch/0.1"
+  },
+  "strict": "ADR 0009 section 4"
+}

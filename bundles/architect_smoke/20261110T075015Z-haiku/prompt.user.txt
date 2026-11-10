@@ -1,0 +1,431 @@
+Stage: M0
+Revision 1 of at most 3 in this episode.
+
+Current scene (canonical JSON). scene_hash: 92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d
+{
+  "bounds": {
+    "max": [
+      40,
+      40,
+      80
+    ],
+    "min": [
+      -40,
+      -40,
+      -10
+    ]
+  },
+  "constraints": {
+    "min_gap": 12,
+    "min_lever_detour": 10,
+    "player_physics": "locked",
+    "required_events": [
+      "BRIDGE_CROSSED",
+      "GOAL_TOUCHED"
+    ]
+  },
+  "entities": [
+    {
+      "id": "bridge_1",
+      "lateral_offset": 0,
+      "length": 6,
+      "spans": "gap_1",
+      "thickness": 1,
+      "type": "Bridge",
+      "width": 6
+    },
+    {
+      "id": "corridor",
+      "pos": [
+        0,
+        -1,
+        24
+      ],
+      "size": [
+        10,
+        2,
+        24
+      ],
+      "type": "Platform"
+    },
+    {
+      "id": "decor_1",
+      "palette": "lamp",
+      "pos": [
+        6,
+        3,
+        1
+      ],
+      "size": [
+        1,
+        6,
+        1
+      ],
+      "type": "Decor"
+    },
+    {
+      "axis": "+Z",
+      "from": "corridor",
+      "id": "gap_1",
+      "to": "plat_b",
+      "type": "Gap",
+      "width": 16
+    },
+    {
+      "id": "gate_1",
+      "opens_on": "lever_1",
+      "pos": [
+        0,
+        4,
+        33.5
+      ],
+      "size": [
+        8,
+        8,
+        1
+      ],
+      "type": "Gate"
+    },
+    {
+      "id": "goal",
+      "on": "plat_b",
+      "size": [
+        4,
+        1,
+        4
+      ],
+      "type": "Goal"
+    },
+    {
+      "id": "kill_floor",
+      "pos": [
+        0,
+        -30,
+        34
+      ],
+      "size": [
+        64,
+        2,
+        80
+      ],
+      "type": "KillFloor"
+    },
+    {
+      "id": "ledge_1",
+      "pos": [
+        -11,
+        -1,
+        24
+      ],
+      "size": [
+        12,
+        2,
+        8
+      ],
+      "type": "Platform"
+    },
+    {
+      "controls": "gate_1",
+      "id": "lever_1",
+      "on": "ledge_1",
+      "pos": [
+        -15,
+        0,
+        24
+      ],
+      "type": "Lever"
+    },
+    {
+      "id": "plat_a",
+      "pos": [
+        0,
+        -1,
+        6
+      ],
+      "size": [
+        16,
+        2,
+        12
+      ],
+      "type": "Platform"
+    },
+    {
+      "id": "plat_b",
+      "pos": [
+        0,
+        -1,
+        60
+      ],
+      "size": [
+        16,
+        2,
+        16
+      ],
+      "type": "Platform"
+    },
+    {
+      "id": "spawn",
+      "on": "plat_a",
+      "type": "Spawn"
+    },
+    {
+      "event": "BRIDGE_CROSSED",
+      "height": 6,
+      "id": "trig_bridge",
+      "on": "gap_1",
+      "region": "landing",
+      "type": "Trigger"
+    },
+    {
+      "event": "GOAL_TOUCHED",
+      "height": 6,
+      "id": "trig_goal",
+      "on": "goal",
+      "region": "whole",
+      "type": "Trigger"
+    },
+    {
+      "id": "wall_l1",
+      "pos": [
+        -4.5,
+        4,
+        16
+      ],
+      "size": [
+        1,
+        8,
+        8
+      ],
+      "type": "Wall"
+    },
+    {
+      "id": "wall_l2",
+      "pos": [
+        -4.5,
+        4,
+        32
+      ],
+      "size": [
+        1,
+        8,
+        8
+      ],
+      "type": "Wall"
+    },
+    {
+      "id": "wall_r",
+      "pos": [
+        4.5,
+        4,
+        24
+      ],
+      "size": [
+        1,
+        8,
+        24
+      ],
+      "type": "Wall"
+    }
+  ],
+  "family": "F1",
+  "protected": [
+    "bounds",
+    "corridor",
+    "gap_1",
+    "goal",
+    "kill_floor",
+    "ledge_1",
+    "plat_a",
+    "plat_b",
+    "spawn",
+    "trig_bridge",
+    "trig_goal",
+    "wall_l1",
+    "wall_l2",
+    "wall_r"
+  ],
+  "scene_id": "f1_a",
+  "schema": "worldsmith.scene/0.1",
+  "units": "stud",
+  "up": "+Y",
+  "version": 1
+}
+
+Observed event tags, per attempt on this scene version:
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "cause": "UNCLASSIFIED",
+      "detail": "KILL_FLOOR_TOUCHED at [0.0, -14.29, 49.31], in the gap_1 area",
+      "events": [
+        "LEVER_ACTIVATED",
+        "GATE_OPENED",
+        "KILL_FLOOR_TOUCHED"
+      ],
+      "fell_in_area": true,
+      "hypothesis": {
+        "conditions": {
+          "fell_in_gap_area": true,
+          "geometry": true
+        },
+        "status": "unconfirmed",
+        "tag": "BRIDGE_SHORT_HYPOTHESIS"
+      },
+      "outcome": "FELL",
+      "stuck": "NOT_STUCK",
+      "tags": [
+        "FELL"
+      ]
+    },
+    {
+      "attempt": 2,
+      "cause": "UNCLASSIFIED",
+      "detail": "KILL_FLOOR_TOUCHED at [0.0, -11.06, 48.52], in the gap_1 area",
+      "events": [
+        "LEVER_ACTIVATED",
+        "GATE_OPENED",
+        "KILL_FLOOR_TOUCHED"
+      ],
+      "fell_in_area": true,
+      "hypothesis": {
+        "conditions": {
+          "fell_in_gap_area": true,
+          "geometry": true
+        },
+        "status": "unconfirmed",
+        "tag": "BRIDGE_SHORT_HYPOTHESIS"
+      },
+      "outcome": "FELL",
+      "stuck": "NOT_STUCK",
+      "tags": [
+        "FELL"
+      ]
+    },
+    {
+      "attempt": 3,
+      "cause": "UNCLASSIFIED",
+      "detail": "KILL_FLOOR_TOUCHED at [0.0, -10.27, 48.35], in the gap_1 area",
+      "events": [
+        "LEVER_ACTIVATED",
+        "GATE_OPENED",
+        "KILL_FLOOR_TOUCHED"
+      ],
+      "fell_in_area": true,
+      "hypothesis": {
+        "conditions": {
+          "fell_in_gap_area": true,
+          "geometry": true
+        },
+        "status": "unconfirmed",
+        "tag": "BRIDGE_SHORT_HYPOTHESIS"
+      },
+      "outcome": "FELL",
+      "stuck": "NOT_STUCK",
+      "tags": [
+        "FELL"
+      ]
+    }
+  ],
+  "episode_tags": [],
+  "n": 3,
+  "successes": 0
+}
+
+Trace summary:
+- 0/3 SUCCESS on this scene version
+- attempt 1: FELL; cause UNCLASSIFIED; events LEVER_ACTIVATED > GATE_OPENED > KILL_FLOOR_TOUCHED; KILL_FLOOR_TOUCHED at [0.0, -14.29, 49.31], in the gap_1 area
+- attempt 2: FELL; cause UNCLASSIFIED; events LEVER_ACTIVATED > GATE_OPENED > KILL_FLOOR_TOUCHED; KILL_FLOOR_TOUCHED at [0.0, -11.06, 48.52], in the gap_1 area
+- attempt 3: FELL; cause UNCLASSIFIED; events LEVER_ACTIVATED > GATE_OPENED > KILL_FLOOR_TOUCHED; KILL_FLOOR_TOUCHED at [0.0, -10.27, 48.35], in the gap_1 area
+
+Ops this stage allows:
+[
+  {
+    "field": "length",
+    "id": "bridge_1",
+    "op": "set",
+    "type": "Bridge"
+  }
+]
+
+Bounds for the fields those ops set:
+{
+  "Bridge.length": {
+    "max": 64,
+    "min": 1
+  }
+}
+
+Limits:
+{
+  "max_ops": 3
+}
+
+Patch schema(s) this stage accepts:
+{
+  "worldsmith.patch/0.1": {
+    "$defs": {
+      "id": {
+        "pattern": "^[a-z][a-z0-9_]{0,31}$",
+        "type": "string"
+      },
+      "set_op": {
+        "additionalProperties": false,
+        "properties": {
+          "field": {
+            "$ref": "#/$defs/id"
+          },
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "op": {
+            "const": "set"
+          },
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "op",
+          "id",
+          "field",
+          "value"
+        ],
+        "type": "object"
+      }
+    },
+    "$id": "https://github.com/JehanzebAli11/worldsmith/grammar/patch_schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "description": "One bounded scene patch. Closed: unknown keys and ops are rejected; strings are IDs or a hex hash; values are numbers. Which (id, field) pairs a stage allows: worldsmith.validator.patch.STAGES. Value ranges: grammar/bounds.yaml. See docs/ADR/0006-patch-versioning.md.",
+    "properties": {
+      "base_hash": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "ops": {
+        "items": {
+          "$ref": "#/$defs/set_op"
+        },
+        "maxItems": 3,
+        "minItems": 1,
+        "type": "array"
+      },
+      "schema": {
+        "const": "worldsmith.patch/0.1"
+      }
+    },
+    "required": [
+      "schema",
+      "base_hash",
+      "ops"
+    ],
+    "title": "worldsmith.patch/0.1",
+    "type": "object"
+  }
+}
+
+Your previous revisions in this episode and the validator's verdicts:
+[]
+
+Reply with the patch JSON object only.

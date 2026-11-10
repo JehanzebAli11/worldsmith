@@ -1,0 +1,9 @@
+{
+  "latency_s": 3.064919749973342,
+  "model_id": "claude-haiku-5-5",
+  "model_role": "haiku",
+  "provider": "jzapi",
+  "request_id": "req_011Cgtt6hrm579DhaeCneA2y",
+  "response_sha": "a3d32cd6570c1dfce2b10ac2df1864b7c5c44790b1c2667cd9ac589f2a10128f",
+  "stop_reason": "end_turn"
+}

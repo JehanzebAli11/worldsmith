@@ -1,0 +1,13 @@
+{
+  "cost_usd": 0.000641575,
+  "job": "architect_ladder",
+  "usage": {
+    "cache_creation_input_tokens": 787,
+    "cache_read_input_tokens": 0,
+    "cache_write_1h_tokens": 0,
+    "input_tokens": 3742,
+    "output_tokens": 338
+  },
+  "usage_csv": "results/usage.csv (one row, written by jzapi)",
+  "worst_case_usd": 0.005464375
+}

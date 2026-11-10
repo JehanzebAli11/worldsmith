@@ -1,0 +1,13 @@
+{
+  "calls": 1,
+  "cost_usd": 0.000641575,
+  "malformed_reason": null,
+  "model_id": "claude-haiku-5-5",
+  "provenance": "One architect call made by scripts/architect_smoke.py: a smoke test of the WS-10 client and output format on the recorded M0 F1-A bundle. Not an episode (nothing built or played) and not a B3 result. The reply is Claude output: evaluation and inference data only, never training data (ROADMAP 11.3).",
+  "request_sha": "57f003382a7ef366af5e9073fffeea3bd485946880c74bda9032953964cf461d",
+  "response_sha": "a3d32cd6570c1dfce2b10ac2df1864b7c5c44790b1c2667cd9ac589f2a10128f",
+  "schema": "worldsmith.architect_smoke/0.1",
+  "verdict": "ACCEPTED",
+  "violation_codes": [],
+  "warning_codes": []
+}
