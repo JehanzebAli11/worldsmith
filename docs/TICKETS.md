@@ -20,3 +20,12 @@ HANDOFF entry; stop.
 | WS-11 | Orchestrator + bundles + P2 freeze manifest check | 04,08,09,10 | Episode caps enforced (12 attempts, 3 architect calls). P2 refuses to run on a manifest-hash mismatch or with `evolve` enabled. Resumable. | done (CPU, 10 Nov: `runner/episode.py`, `experiment.py`, `freeze.py`, `players.py`, `dryrun.py`, `scripts/run_experiment.py`, ADR 0010, `docs/EXPERIMENTS.md`; caps 12/3 enforced before sending; player p0.v1 (controller `dbc1f325…`, samples every 1 s; p0.v0 untouched); declared-before-runs lock; relay + stored-reply resume; pilot `config/experiments/m2_f1a.yaml` worst case $2.961; P2 manifest refusals, no Autopilot run; no Studio or paid call made; HANDOFF) |
 | WS-12 | Static bundle viewer | 11 | Renders the sample bundle. No secrets. | todo |
 | WS-13 | Release: README, limits card, failure gallery, reproduce script | 11,12 | A clean clone reproduces the CPU tests and the recorded summaries | todo |
+
+**Note (10 Nov 2026, after WS-11; ADR 0011):** the first live p0.v1 smoke (`smoke_f1e_p0v1`) ran in
+the Autopilot test place while an Autopilot bench run drove Studio; its bundle is closed
+(CONNECTOR_ERROR) and marked CONTAMINATED. Harness fixes, CPU only: preflight before every build
+(place marker `ws_place`, character settings, one outside spawn, no foreign scripts, mode stop),
+player p0.v2 (`a7472c9c…`, spawn check before the route), start_pos > 2 studs → HARNESS_ERROR for
+every player, a CONNECTOR_ERROR attempt stops the episode, a failed preflight stops the
+experiment. New smoke `config/experiments/smoke_f1e_p0v2.yaml`; the pilot `m2_f1a.yaml` (never
+ran) moved to p0.v2 + preflight. The re-run needs the owner's one-time place marker first.

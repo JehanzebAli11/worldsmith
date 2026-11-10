@@ -16,6 +16,7 @@ JSON before every episode, so the saved copy of that folder does not matter.
 | `Players.CharacterAutoLoads` | `true` | The P0 controller waits for the auto-loaded character, then resets once at `Worldsmith.spawn`. |
 | `StarterPlayer` `StarterCharacter` | absent | The default rig is the measured one. |
 | Workspace | Baseplate template: `Baseplate`, one `SpawnLocation` at (0, 0.5, 0) | The character measurement walks on the Baseplate. |
+| `Workspace` attribute `ws_place` | `"worldsmith-lab"` | Set once by the owner (ADR 0011): the preflight refuses any place without it. `workspace:SetAttribute("ws_place", "worldsmith-lab")` in Edit mode, then File → Save to File (`scripts/mark_place.py` prints the `run_code` payload). |
 
 Set by `run_code` in Edit mode on 9 Nov 2026 (`bundles/m0/character/place_settings.txt`).
 
@@ -33,3 +34,10 @@ numbers there are for reference only.
 Two plugins print into the same logs (`[UI Workflow]`, and `[robloxstudio-mcp]` failing to reach
 `localhost:58741`), plus an engine warning about `rbxassetid://203785492`. The nonce rule ignores
 them. `run_script_in_play_mode` adds a temporary Script to `ServerScriptService` while it runs.
+
+## Only this place, only one driver (ADR 0011)
+
+Worldsmith runs only in this place, and nothing else drives Studio meanwhile (no Autopilot bench
+run, no other plugin's play session). The preflight before every build checks the marker and the
+settings above, exactly one SpawnLocation outside `Workspace.Worldsmith` (the Baseplate's), and no
+scripts in ServerScriptService, StarterPlayerScripts, StarterCharacterScripts or StarterGui.

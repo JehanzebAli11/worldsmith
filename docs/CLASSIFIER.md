@@ -79,3 +79,13 @@ Disclosure (also in the output): the M0 defect is known by construction, and P0 
 so the tag is functional evidence under one frozen controller, not a causal diagnosis of an
 arbitrary room and not an agent result. A fall near a bridge alone does not separate "bridge
 short" from "missed jump" or player error (SPEC §10).
+
+## ADR 0011: start_pos rule (every player version)
+
+An attempt whose recorded `start_pos` (the HRP at the route start, before any MoveTo) is more than
+2 studs in XZ from the spawn centre (`classify.spawn_centre(scene)`) is **HARNESS_ERROR**
+(`moved_before_route`), never FELL or SUCCESS: something other than the controller moved the
+character. A controller `harness_error` keeps its own detail; `start_pos` `na` leaves the rule out.
+All 8 recorded M0 attempts started at x 0.00, z 6.00, so the M0 classification is unchanged.
+Player p0.v2 checks the same thing itself, tighter (1 stud, through the settle). A CONNECTOR_ERROR
+attempt (e.g. a bare `null` play answer) now ends the episode at once.

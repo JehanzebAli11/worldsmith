@@ -10,7 +10,8 @@ bundle exists the runner refuses a changed config (a change is a new experiment 
 | Item | Value |
 | --- | --- |
 | Scene, stage | F1-A (`92f86609…`), stage M0 (only `set bridge_1.length`) |
-| Player | **p0.v1** (P0, server-scripted MoveTo, never jumps), controller `dbc1f325…`, the M0 route `b9514a4b…`, T_attempt 60 s, samples every 1 s. Not the M0 controller (p0.v0); its results are not compared with M0's. |
+| Player | **p0.v2** (P0, server-scripted MoveTo, never jumps), controller `a7472c9c…`, the M0 route `b9514a4b…`, T_attempt 60 s, samples every 1 s, spawn check before the route (ADR 0011). Not the M0 controller (p0.v0); its results are not compared with M0's. (Moved from p0.v1 before any run.) |
+| Preflight | `runner/templates/preflight_v1.luau` (`29ffe3d7…`) before every build (ADR 0011) |
 | N, k | 3, 3/3; 0 < successes < 3 stops the episode (INCONSISTENT) |
 | Revisions, caps | 3 proposals per episode (rejects count); ≤ 12 attempts and ≤ 3 architect calls per episode |
 | Conditions (run in this order, 1 episode each) | B0 none · B1 hand fix `scenes/F1-A/patches/m0_fix.json` · B2 random valid, seed 0 · B3-haiku · B3-sonnet · B3-opus (baseline prompt `df1b7a12…`) |
@@ -34,6 +35,36 @@ cache write 5m)`, every call billed as if it used all of max_tokens:
 
 A request larger than the cap is refused unsent, so this is a ceiling. The live smoke call cost
 $0.000642 (`bundles/architect_smoke/`); real spend depends on how much each model thinks.
+
+## Owner checklist before ANY live run (ADR 0011)
+
+The first live smoke (`smoke_f1e_p0v1`) ran in the Autopilot test place while an Autopilot bench
+run drove the same Studio; its bundle is CONTAMINATED and not evidence. Before every live run:
+
+1. **One-time:** mark the place. Open `places/worldsmith-lab.rbxl` (File → Open from File), stay in
+   Edit mode, run `workspace:SetAttribute("ws_place", "worldsmith-lab")` in the Command Bar (or
+   send the payload from `python scripts/mark_place.py` with `run_code`), then File → Save to File
+   over `places/worldsmith-lab.rbxl`. Only in that place, never in another.
+2. **Open the right place:** `places/worldsmith-lab.rbxl`, and close any other place (the Autopilot
+   test place in particular). Don't save a Worldsmith build into another place.
+3. **One driver:** no Autopilot bench run, noise check or any other plugin-driven play session
+   while a Worldsmith episode runs. Finish or stop those first; don't start one until `step`
+   exits 0. Optionally disable the Autopilot plugin during Worldsmith runs (it attaches to every
+   play session).
+4. **Edit mode, stopped**, before the first `step`. The preflight never stops a play session it
+   finds; it fails the episode as HARNESS_ERROR instead.
+
+The preflight (before every build) checks the marker, `LoadCharacterAppearance` false,
+`CharacterAutoLoads` true, no StarterCharacter, exactly one SpawnLocation outside
+`Workspace.Worldsmith`, no foreign scripts in ServerScriptService / StarterPlayerScripts /
+StarterCharacterScripts / StarterGui, and Studio mode `stop`. A failure is recorded in
+`v<k>/preflight.json` with what it saw, and `step` stops with exit 4: no further episode of that
+experiment starts, now or later. Fix the place (or stop the other driver) and declare a new
+experiment id.
+
+Run `config/experiments/smoke_f1e_p0v2.yaml` (F1-E, B0, N = 3, p0.v2, preflight on) before the
+pilot: the same `step` / `respond` loop as below with that config. 3/3 SUCCESS is expected on the
+passing control; anything else means stop and debug.
 
 ## Owner commands
 
@@ -82,8 +113,12 @@ cd ~/lab/worldsmith
   first episode. Exit 3 means a Studio call is waiting.
 - Stopping at any point is safe: run `step` again later; answered calls are replayed, not re-sent.
   A Ctrl-C during an architect call may repeat that one call (ADR 0010 §5).
-- At most 57 play calls and about 190 Studio calls in all [count from the caps]; M0's relay took
-  about a minute per play call.
+- At most 57 play calls and about 230 Studio calls in all [count from the caps; the preflight adds
+  2 per scene version, at most 19 versions]; M0's relay took about a minute per play call.
+- The first two calls of every scene version are the preflight (`get_studio_mode`, then a
+  `run_code` whose code file starts `-- Worldsmith preflight probe v1`). Make them like any other
+  call. If Studio is not in `stop`, answer the mode truthfully: the episode ends HARNESS_ERROR
+  and nothing is stopped.
 
 ### 2b. Two machines on the same files (the control thread on the bridge VM, architect calls on the Mac)
 
@@ -129,7 +164,8 @@ and be stored as a provider ERROR that uses a slot. So the VM never calls a mode
   fixtures; same results as the single-machine dry run).
 
 Exit codes of `run_experiment.py`: 0 done / nothing to do / reply stored; 3 a Studio call is
-pending (`respond`); **5 an architect call is pending (`architect` on the Mac)**; 4 refused;
+pending (`respond`); **5 an architect call is pending (`architect` on the Mac)**; 4 refused (or
+stopped by a failed preflight);
 2 setup problem (jzapi missing); 1 other error (for `architect`: provider error stored, or a
 request other than the pending one).
 

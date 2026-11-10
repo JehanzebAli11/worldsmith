@@ -1,7 +1,9 @@
 # ADR 0010: The orchestrator, player p0.v1, declared-before-runs and resume (WS-11)
 
 - **Status:** accepted for WS-11 (10 Nov 2026); the owner confirms in the WS-11 HANDOFF open
-  questions. CPU only: no Studio call, no paid call and no Autopilot run was made in WS-11.
+  questions. Amended by ADR 0011 (10 Nov 2026): a CONNECTOR_ERROR attempt now ends the
+  episode at once (§1), the optional preflight runs before every build, player p0.v2, and the
+  start_pos rule in the classifier. CPU only: no Studio call, no paid call and no Autopilot run was made in WS-11.
 - **Context:** SPEC §9 (frozen players, N = 3, k = 3, P2 freeze manifest), §10 (taxonomy), §11
   (loop, trace, bundles), §12 (B0–B3, caps: ≤ 12 attempts and ≤ 3 architect calls per episode),
   §15 WS-11, §16 (freeze, bounds, cancellation); ADR 0005 (relay mode), 0006 (patches), 0009

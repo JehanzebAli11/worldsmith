@@ -898,3 +898,61 @@ pending; **5 architect call pending**; 4 refused; 2 setup (jzapi missing); 1 oth
    not just the one call? Recommended: yes (stricter, same rule on both machines).
 2. Run only one machine at a time (VM `step` and Mac `architect` never concurrently)? Recommended:
    yes; nothing locks the folder against concurrent runs.
+
+## 2026-11-10 14:20 PKT · Harness guards after the smoke_f1e_p0v1 debug (ADR 0011)
+
+**Done** (CPU only: no Studio call, no paid call)
+- **Closed the partial smoke bundle.** `respond 9` with a file holding exactly `null`, then `step`
+  (replay only) → `bundles/experiments/smoke_f1e_p0v1/B0/ep0/summary.json` status CONNECTOR_ERROR,
+  outcomes [HARNESS_ERROR, SUCCESS, CONNECTOR_ERROR]; config and lock unchanged (`3d8e93f3…`).
+  `CONTAMINATED.md` explains why it is not evidence about p0.v1 (Autopilot test place, concurrent
+  Autopilot bench run `noise/run-03/F`). Call 009's `relay_elapsed_s` (1147.6 s) includes the debug.
+- **Classifier (every player):** `start_pos` > 2 studs (XZ) from the spawn centre → HARNESS_ERROR
+  (`moved_before_route`), never FELL/SUCCESS (`classify.spawn_centre`, `START_POS_MAX_STUDS`); used
+  by the orchestrator, the M0 runner and the WS-08 re-classifier. The 8 recorded M0 attempts all
+  start at x 0.00, z 6.00; `bundles/m0/gate.json` and `classification.json` reproduce.
+- **A CONNECTOR_ERROR attempt (e.g. a bare `null`) ends the episode at once** (no more attempts,
+  status CONNECTOR_ERROR). Fixture `tests/fixtures/play_answer_null.txt`. (Before: the other
+  attempts ran and the episode ended SYSTEM_ERROR; the one WS-11 test that pinned that changed.)
+- **Preflight** (`runner/preflight.py`, `runner/templates/preflight_v1.luau` `29ffe3d7…`, config key
+  `preflight: {script, sha256}`, optional): before every build, `get_studio_mode` (not `stop` →
+  no probe, nothing stopped) then a read-only `run_code` probe; checks `studio_mode_stop`,
+  `place_marker`, `load_character_appearance_off`, `character_auto_loads_on`,
+  `no_starter_character`, `one_spawn_outside_worldsmith`, `no_foreign_scripts`. Failure →
+  HARNESS_ERROR before the build (no attempt, patch or architect call), `v<k>/preflight.json`,
+  and the experiment starts no further episode (`PreflightFailed`, CLI exit 4).
+  `scripts/mark_place.py` prints the owner's one-time marker payload.
+- **Player p0.v2** (`runner/templates/p0_controller_v2.luau`, controller
+  `a7472c9cbbea9096f678be02a663ffb503cb2619eb9ea1fe136fcbf2a7858cac`): grounded within 1 stud (XZ)
+  of the spawn centre through the settle, else `harness_error` `moved_before_route` with
+  `spawn_offset`, `settle_drift`, `settle_max_offset`; keeps p0.v1's 1 s samples. p0.v0 and
+  p0.v1 unchanged.
+- **Configs:** new `config/experiments/smoke_f1e_p0v2.yaml` (`bf8bcdbb…`; F1-E, B0, N = 3, p0.v2,
+  preflight). `m2_f1a.yaml` → p0.v2 + preflight (`4bfa57a5…`); it had never run (no lock).
+- Docs: ADR 0011, `docs/EXPERIMENTS.md` owner checklist, `places/README.md` (marker), CLASSIFIER,
+  TICKETS note, ADR 0010 status line.
+- Commits: `0fa2428` (tests), `68569e1` (fix), `30fe31e` (bundle), `f858d07` (tests), `1aaf13b`
+  (feat), `3ff33aa` (config), `e79af0d` (test), `984eb71` (feat), and this docs commit.
+
+**Verified** (Linux VM, Python 3.10.12, `$HOME/venv-ws11`)
+- `VENV=$HOME/venv-ws11 ./scripts/test.sh -q` → `1581 passed, 1 skipped` (1534 before; +47 in
+  `tests/test_ws11_harness_guard.py`).
+- The partial smoke closes the same way from a temp copy of its relay files (test).
+- `--dry-run` of `smoke_f1e_p0v2` (B0 3/3, preflight passes in the simulator) and of `m2_f1a`
+  (same verdicts as before, worst case $2.961000). Simulated only, not results.
+- Not verified: the preflight probe and p0.v2 in real Studio (the Luau has never run; first live
+  use is the p0.v2 smoke), whether 1 stud is enough margin for the live rig, `game.Name` of the
+  saved place (recorded by the probe, not checked).
+
+**Next**
+1. Owner: mark the place once (`workspace:SetAttribute("ws_place", "worldsmith-lab")` in
+   `places/worldsmith-lab.rbxl`, Edit mode, then File → Save to File), close the Autopilot place,
+   no Autopilot runs during Worldsmith runs.
+2. Live: `smoke_f1e_p0v2` (relay as in `docs/EXPERIMENTS.md`); 3/3 SUCCESS expected; then the pilot.
+
+**Open questions** (yes/no for the owner)
+1. Keep "exactly one SpawnLocation outside `Workspace.Worldsmith`" (the Baseplate's, as saved)?
+   The stricter "no SpawnLocation outside Worldsmith" would need you to delete the Baseplate spawn
+   from worldsmith-lab.rbxl first. Recommended: keep one (matches the saved place and M0).
+2. Tell the Autopilot side that `noise/run-03/F` (and run-04 if `Workspace.Worldsmith` was still in
+   testplace.rbxl) ran with a foreign course and a second spawn? Recommended: yes.
