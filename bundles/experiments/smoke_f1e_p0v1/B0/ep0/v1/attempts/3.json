@@ -1,0 +1,37 @@
+{
+ "attempt": 3,
+ "call_index": 9,
+ "cause": "UNCLASSIFIED",
+ "detail": "tool result is not a run_script_in_play_mode result",
+ "events": [],
+ "events_agree": null,
+ "events_detail": [],
+ "fell_in_area": null,
+ "hypothesis": null,
+ "nonce": "07673cd55789a82a",
+ "outcome": "CONNECTOR_ERROR",
+ "raw_file": "attempts/3.raw.txt",
+ "raw_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+ "relay_elapsed_s": 1147.558,
+ "report": null,
+ "stuck": {
+  "epsilon_studs": 2.0,
+  "max_gap_s": null,
+  "max_sample_gap_s": 1.0,
+  "n_samples": 0,
+  "reason": "no controller report",
+  "result": "NOT_EVALUABLE",
+  "route_phase_s": null,
+  "window": null,
+  "window_s": 10
+ },
+ "t_wall": "2026-11-10T09:00:18.182659Z",
+ "tags": [
+  "CONNECTOR_ERROR"
+ ],
+ "tool": {
+  "duration_s": null,
+  "error": null,
+  "is_timeout": null
+ }
+}

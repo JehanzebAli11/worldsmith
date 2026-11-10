@@ -1,0 +1,61 @@
+{
+ "attempted": 3,
+ "attempts": [
+  {
+   "attempt": 1,
+   "cause": "UNCLASSIFIED",
+   "events": [
+    "KILL_FLOOR_TOUCHED"
+   ],
+   "fell_in_area": null,
+   "outcome": "HARNESS_ERROR",
+   "stuck": "NOT_STUCK",
+   "tags": [
+    "HARNESS_ERROR"
+   ]
+  },
+  {
+   "attempt": 2,
+   "cause": null,
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "BRIDGE_CROSSED",
+    "GOAL_TOUCHED"
+   ],
+   "fell_in_area": null,
+   "outcome": "SUCCESS",
+   "stuck": "NOT_STUCK",
+   "tags": [
+    "SUCCESS"
+   ]
+  },
+  {
+   "attempt": 3,
+   "cause": "UNCLASSIFIED",
+   "events": [],
+   "fell_in_area": null,
+   "outcome": "CONNECTOR_ERROR",
+   "stuck": "NOT_EVALUABLE",
+   "tags": [
+    "CONNECTOR_ERROR"
+   ]
+  }
+ ],
+ "build": {
+  "build_line": "WS_BUILD_OK|f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3|26",
+  "descendants": 26,
+  "expected_descendants": 26,
+  "ok": true,
+  "readback_differences": 0
+ },
+ "detail": "attempt 3: tool result is not a run_script_in_play_mode result",
+ "episode": "B0/ep0",
+ "n": 3,
+ "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+ "schema": "worldsmith.version_summary/0.1",
+ "status": "CONNECTOR_ERROR",
+ "successes": 1,
+ "verdict": "CONNECTOR_ERROR",
+ "version": 1
+}

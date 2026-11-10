@@ -1,0 +1,9 @@
+{
+ "error": null,
+ "index": 9,
+ "relay_elapsed_note": "request written -> answer saved; includes the operator's relay time",
+ "relay_elapsed_s": 1147.558,
+ "t_response": "2026-11-10T09:00:18.182659Z",
+ "text": "null",
+ "tool": "run_script_in_play_mode"
+}

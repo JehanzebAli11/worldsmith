@@ -1,0 +1,78 @@
+{
+ "attempt": 1,
+ "call_index": 5,
+ "cause": "UNCLASSIFIED",
+ "detail": "moved_before_route: start_pos 0.00,4.51,0.75 is 5.25 studs (XZ) from the spawn centre [0.0, 6.0] (> 2); the attempt says nothing about the scene",
+ "events": [
+  "KILL_FLOOR_TOUCHED"
+ ],
+ "events_agree": true,
+ "events_detail": [
+  {
+   "event": "KILL_FLOOR_TOUCHED",
+   "id": "kill_floor",
+   "pos": [
+    0.0,
+    -7.85,
+    -3.06
+   ],
+   "t_server": 1794299953.127
+  }
+ ],
+ "fell_in_area": null,
+ "hypothesis": null,
+ "nonce": "78af08d0e5944725",
+ "outcome": "HARNESS_ERROR",
+ "raw_file": "attempts/1.raw.txt",
+ "raw_sha256": "7b2bca63407a3fe1287c8b7e32a1c6d1adfeb09788760e6ac87374dbc05e0615",
+ "relay_elapsed_s": 58.124,
+ "report": {
+  "characters_added": 1,
+  "detail": "",
+  "died": true,
+  "events_dropped": 0,
+  "jumps": 0,
+  "last_supported": "0.00,4.51,0.75",
+  "pos_died": "0.00,-7.85,-3.06",
+  "removed": false,
+  "samples": [],
+  "samples_dropped": 0,
+  "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+  "start_pos": "0.00,4.51,0.75",
+  "status": "died",
+  "t_died": 2.740557041717693,
+  "t_end": 4.758270458318293,
+  "t_route_start": 2.3077247915789485,
+  "ticks": 67,
+  "waypoints": [
+   {
+    "died": true,
+    "i": 1,
+    "name": "corridor",
+    "pos": "0.00,-9.05,-2.82",
+    "reached": false,
+    "t": 2.740612416760996
+   }
+  ]
+ },
+ "stuck": {
+  "epsilon_studs": 2.0,
+  "max_gap_s": null,
+  "max_sample_gap_s": 1.0,
+  "n_samples": 1,
+  "reason": "route phase 0.43 s is shorter than the window (10 s): no window fits",
+  "result": "NOT_STUCK",
+  "route_phase_s": 0.433,
+  "window": null,
+  "window_s": 10
+ },
+ "t_wall": "2026-11-10T08:39:38.374774Z",
+ "tags": [
+  "HARNESS_ERROR"
+ ],
+ "tool": {
+  "duration_s": 4.758544208249077,
+  "error": "nil",
+  "is_timeout": false
+ }
+}

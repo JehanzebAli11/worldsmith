@@ -1,0 +1,82 @@
+{
+ "conditions": [
+  {
+   "condition": "B0",
+   "episodes": [
+    {
+     "architect_calls": 0,
+     "attempts_used": 3,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "HARNESS_ERROR",
+        "SUCCESS",
+        "CONNECTOR_ERROR"
+       ],
+       "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+       "successes": 1,
+       "version": 1
+      }
+     ],
+     "cost_usd_reported": null,
+     "episode": "B0/ep0",
+     "final": {
+      "n": 3,
+      "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+      "successes": 1,
+      "verdict": "CONNECTOR_ERROR",
+      "version": 1
+     },
+     "model_calls": 0,
+     "passed_final": false,
+     "passed_original": false,
+     "repaired": false,
+     "revisions": {
+      "accepted": 0,
+      "errors": 0,
+      "malformed": 0,
+      "max": 0,
+      "rejected": 0,
+      "used": 0,
+      "verdicts": []
+     },
+     "status": "CONNECTOR_ERROR"
+    }
+   ],
+   "episodes_done": 1,
+   "episodes_planned": 1,
+   "passed_final": {
+    "n": 0,
+    "of": 1
+   },
+   "proposer": "none",
+   "repaired": {
+    "n": 0,
+    "of": 1
+   },
+   "role": null,
+   "seeds": null,
+   "statuses": [
+    "CONNECTOR_ERROR"
+   ]
+  }
+ ],
+ "config_sha256": "3d8e93f3eda2da620060c47f06571addf4116a23fdbfb7197531a7b79b863b5f",
+ "disclosure": "Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result.",
+ "dry_run": false,
+ "experiment": "smoke_f1e_p0v1",
+ "max_revisions": 3,
+ "n": 3,
+ "pass_k": 3,
+ "player": {
+  "controller_sha256": "dbc1f325ce64bda8b046bc4f08a18050cced76a123b843af5937b85b65754c6d",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "t_attempt_s": 60,
+  "tier": "P0",
+  "version": "p0.v1"
+ },
+ "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+ "schema": "worldsmith.experiment_results/0.1",
+ "stage": "M0"
+}
