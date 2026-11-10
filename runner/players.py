@@ -11,6 +11,13 @@ version is a fixed, reviewed Luau template plus the declared timing it takes:
 - `p0.v2`: p0.v1 plus a spawn check before the route (ADR 0011): grounded within 1 stud (XZ) of
   the spawn centre and staying there through the settle, else harness_error "moved_before_route"
   with `spawn_offset` and `settle_drift` reported. Same timing keys as p0.v1 (samples every 1 s).
+- `p0.v3`: p0.v2 with only the spawn check changed (ADR 0012): it counts physics steps
+  (RunService.Heartbeat), not wall-clock ticks: a warm-up of steady steps ("not_warm"), grounded
+  by FloorMaterial or a downward ray ("not_grounded"), then a settle of SETTLE_STEPS steps within
+  1 stud (XZ) of the spawn centre ("moved_before_route"). Same timing keys as p0.v2.
+
+Every template file's SHA-256 is pinned here (`template_sha256`); `load_template` refuses a
+template whose bytes differ, so a frozen player cannot change under a declared experiment.
 
 The controller hash is the SHA-256 of the rendered text with the nonce slot unfilled (as in
 WS-04). Experiments declare the version, the route and the timing; the experiment loader
@@ -19,6 +26,7 @@ re-derives the hash and refuses a mismatch.
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass
 from functools import lru_cache
 from importlib import resources
@@ -40,22 +48,33 @@ class PlayerVersion:
     samples: bool             # the report carries periodic position samples
     driver: str
     note: str
+    template_sha256: str      # SHA-256 of the template file's bytes (pinned; load_template checks it)
 
 
 PLAYER_VERSIONS = {
     "p0.v0": PlayerVersion(
         "p0.v0", "P0", "p0_controller.luau", _V0_KEYS, False,
         "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
-        "the M0 controller (WS-04); frozen with the M0 gate, never changed"),
+        "the M0 controller (WS-04); frozen with the M0 gate, never changed",
+        "c246c3f6773adc23db2aed23a8f21f7676a41821cbe03f23de6ed4468d00dd12"),
     "p0.v1": PlayerVersion(
         "p0.v1", "P0", "p0_controller_v1.luau", _V1_KEYS, True,
         "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
-        "p0.v0 plus position samples while alive every sample_every s (WS-11, ADR 0010)"),
+        "p0.v0 plus position samples while alive every sample_every s (WS-11, ADR 0010)",
+        "91748051fea911731353e2dcef5cac0b9f288a929908080cde0bd7f731cc145e"),
     "p0.v2": PlayerVersion(
         "p0.v2", "P0", "p0_controller_v2.luau", _V1_KEYS, True,
         "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
         "p0.v1 plus a spawn check before the route: harness_error moved_before_route if the character "
-        "is not grounded within 1 stud (XZ) of the spawn centre through the settle (ADR 0011)"),
+        "is not grounded within 1 stud (XZ) of the spawn centre through the settle (ADR 0011)",
+        "7eeff15ee5222a1027c5eebe2704737ef88bbf24be336380312566c5f0f5ff09"),
+    "p0.v3": PlayerVersion(
+        "p0.v3", "P0", "p0_controller_v3.luau", _V1_KEYS, True,
+        "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+        "p0.v2 with the spawn check counting physics steps (RunService.Heartbeat), not wall time: warm-up "
+        "(not_warm), grounded by FloorMaterial or a downward ray (not_grounded), settle within 1 stud "
+        "(moved_before_route) (ADR 0012)",
+        "58ca4bce6abd0a4315194a05544bfea05fad9575449fb0c7d254f7d3540c66d6"),
 }
 
 
@@ -72,7 +91,12 @@ def get(version: str) -> PlayerVersion:
 @lru_cache(maxsize=None)
 def load_template(version: str) -> str:
     pv = get(version)
-    text = resources.files("worldsmith.runner").joinpath("templates", pv.template).read_text(encoding="utf-8")
+    raw = resources.files("worldsmith.runner").joinpath("templates", pv.template).read_bytes()
+    got = hashlib.sha256(raw).hexdigest()
+    if got != pv.template_sha256:
+        raise TemplateError(f"{pv.template}: sha256 {got} != pinned {pv.template_sha256} (a frozen player "
+                            "template changed; a change is a new player version)")
+    text = raw.decode("utf-8")
     if not text.isascii():
         raise TemplateError(f"{pv.template} is not ASCII")
     return text

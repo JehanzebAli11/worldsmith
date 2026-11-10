@@ -34,6 +34,7 @@ import yaml
 
 from worldsmith.architect import client as acl
 from worldsmith.architect import prompt as pr
+from worldsmith.compiler.templates import TemplateError
 from worldsmith.grammar import scene as sc
 from worldsmith.runner import attempts as at
 from worldsmith.runner import episode as epi
@@ -191,11 +192,15 @@ def load_experiment(path, repo_root=None, *, env=None) -> dict:
                     route = p0.load_route(rf)
                     if scene is not None:
                         errs += [f"player.route: {e}" for e in p0.validate_route(route, scene["bounds"])]
-                    text = players.render_controller(pv.id, route, pl["timing"])
-                    got = players.controller_sha256(text)
-                    if got != pl["controller_sha256"]:
-                        errs.append(f"player.controller_sha256: rendered {got} != declared {pl['controller_sha256']}")
-                    params = players.expected_params(pv.id, route, pl["timing"])
+                    try:
+                        text = players.render_controller(pv.id, route, pl["timing"])
+                    except TemplateError as exc:
+                        errs.append(f"player.template: {exc}")
+                    else:
+                        got = players.controller_sha256(text)
+                        if got != pl["controller_sha256"]:
+                            errs.append(f"player.controller_sha256: rendered {got} != declared {pl['controller_sha256']}")
+                        params = players.expected_params(pv.id, route, pl["timing"])
 
     # Studio and classification
     if not (isinstance(cfg["origin"], list) and len(cfg["origin"]) == 3 and all(_num(c) for c in cfg["origin"])):

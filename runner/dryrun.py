@@ -113,8 +113,11 @@ class FakeOperator:
                   "pos_died": M0_FALLS[(i - 1) % 3] if died else "na", "last_supported": "0.00,3.00,41.70",
                   "start_pos": "0.00,3.00,6.00", "t_route_start": 1.0, "events_dropped": 0, "t_end": t_end,
                   "samples": samples, "samples_dropped": 0}
-        if self.cfg["player"]["version"] == "p0.v2":
+        if self.cfg["player"]["version"] in ("p0.v2", "p0.v3"):
             report.update(spawn_pos="0.00,0.50,6.00", spawn_offset=0, settle_drift=0, settle_max_offset=0)
+        if self.cfg["player"]["version"] == "p0.v3":       # simulated values (shape only)
+            report.update(warm_frames=10, warm_wall_s=0.17, max_dt_warm=0.017, warm_dts=[0.017] * 10,
+                          ground_steps=0, ground_test="floor", ray_dist=-1, settle_steps=30, ground_test_end="floor")
         s = json.dumps(report)
         n = -(-len(s) // 800)
         out = ["[UI Workflow] dry-run operator", *lines] + \

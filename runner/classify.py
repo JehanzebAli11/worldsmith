@@ -187,7 +187,9 @@ def classify_attempt(tool_result, nonce: str, expected_params: dict, area: dict,
                                                  "last_supported", "scene_hash", "waypoints",
                                                  "events_dropped")}
     for k in ("samples", "samples_dropped",       # p0.v1 position samples (WS-11); absent in p0.v0
-              "spawn_pos", "spawn_offset", "settle_drift", "settle_max_offset"):   # p0.v2 (ADR 0011)
+              "spawn_pos", "spawn_offset", "settle_drift", "settle_max_offset",    # p0.v2 (ADR 0011)
+              "warm_frames", "warm_wall_s", "max_dt_warm", "warm_dts", "ground_steps",  # p0.v3 (ADR 0012)
+              "ground_test", "ray_dist", "settle_steps", "ground_test_end"):
         if k in report:
             out["report"][k] = report[k]
     if not _same(report.get("params"), expected_params):
