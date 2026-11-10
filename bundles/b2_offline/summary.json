@@ -1,0 +1,148 @@
+{
+ "disclosure": "Offline validator/graph-only statistic: each proposal is a uniformly random patch from the stage's op set (values uniform within grammar/bounds.yaml), judged by the WS-06 validator and the WS-07 walk-graph approximation against the unchanged F1-A scene. It is not a play result and not a repair rate: no Studio runs, no player, no model calls. 'accepted' means the validator would let the patch be tried; 'walk_connected' is the ADR 0008 approximation, never a proof of solvability. Only actual runs (WS-11) decide whether B2 repairs F1-A.",
+ "inputs_sha256": {
+  "compiler/geometry.py": "03c3ccbe6d9a35630afaa035ae5793e84ca94a6bff6e71a18463f27cfcad4657",
+  "grammar/bounds.yaml": "bdc4f68883b085d63962c72ae9da5295f14c573bea973ddf1d99892b4fe45aa2",
+  "grammar/patch_schema.json": "f4ab035ef932bcf56faf47c1a6b8d0d38149d6ef50d2a94ccf7df2a797bf0228",
+  "grammar/patch_schema_0.2.json": "0692e3e234c7bf3ff4e9fa19deda21011309866e6871244d644439ad1296c883",
+  "grammar/schema.json": "cbc2b4c86bee216bb3cd1f9a5cbb4729f55337bfba35d82c760b06b711e5b043",
+  "validator/nav.py": "a5f4f18f02ea9b980988d2751e589cee0b4bc733b251b0975b824e70af6935a0",
+  "validator/patch.py": "aad09d1ee84037d3aaadce5f8d3a30f78d012352941675e2489171c3fa5f5310",
+  "validator/validate.py": "b7b5d0b76ec9249819963e168d441c69c56d3d9f55a5cb83d0046921d04c69ed"
+ },
+ "kind": "offline validator/graph statistic (no play)",
+ "not_a_play_result": true,
+ "records": {
+  "file": "bundles/b2_offline/proposals.jsonl.gz",
+  "format": "gzip of JSONL, one record per proposal",
+  "n": 1200,
+  "sha256": "c3f1da5c01e533b500794b555b761a929dda309f726483035adbcaa84a25cc0b"
+ },
+ "sampler": {
+  "budget": 3,
+  "episode": 0,
+  "id": "worldsmith.b2/0.1",
+  "model_calls": 0,
+  "module": "worldsmith/baselines/random_valid.py",
+  "seed_derivation": "random.Random(first 8 bytes, big-endian, of SHA-256('worldsmith.b2/0.1|seed=<s>|episode=<e>|proposal=<i>'))",
+  "seeds": {
+   "first": 0,
+   "last": 199,
+   "n": 200
+  },
+  "source_sha256": "8ab5704a35637428c46d0f3f15678adc9ba6d9da82008b2ea6cc9d9e898902c0"
+ },
+ "scene": {
+  "canonical_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+  "path": "scenes/F1-A/scene.json",
+  "scene_id": "f1_a"
+ },
+ "stages": {
+  "M0": {
+   "accepted": {
+    "n": 158,
+    "of": 600,
+    "share": 0.2633
+   },
+   "accepted_and_walk_connected": {
+    "n": 16,
+    "of": 600,
+    "share": 0.0267
+   },
+   "budget_per_episode": 3,
+   "episodes": 200,
+   "episodes_with_accepted": {
+    "n": 124,
+    "of": 200,
+    "share": 0.62
+   },
+   "episodes_with_accepted_walk_connected": {
+    "n": 16,
+    "of": 200,
+    "share": 0.08
+   },
+   "graph_not_computed": 0,
+   "ops_by_kind": {
+    "set bridge_1.length": 600
+   },
+   "ops_per_patch": {
+    "1": 600
+   },
+   "proposals": 600,
+   "rejected": 442,
+   "rejection_codes": {
+    "OUTSIDE_ROOM": 186,
+    "PENETRATION": 442
+   },
+   "walk_connected": {
+    "n": 458,
+    "of": 600,
+    "share": 0.7633
+   },
+   "walk_connected_given_accepted": {
+    "n": 16,
+    "of": 158,
+    "share": 0.1013
+   }
+  },
+  "M1": {
+   "accepted": {
+    "n": 83,
+    "of": 600,
+    "share": 0.1383
+   },
+   "accepted_and_walk_connected": {
+    "n": 1,
+    "of": 600,
+    "share": 0.0017
+   },
+   "budget_per_episode": 3,
+   "episodes": 200,
+   "episodes_with_accepted": {
+    "n": 73,
+    "of": 200,
+    "share": 0.365
+   },
+   "episodes_with_accepted_walk_connected": {
+    "n": 1,
+    "of": 200,
+    "share": 0.005
+   },
+   "graph_not_computed": 0,
+   "ops_by_kind": {
+    "add Decor": 180,
+    "add Wall": 172,
+    "move gate_1": 174,
+    "move lever_1": 160,
+    "set bridge_1.lateral_offset": 162,
+    "set bridge_1.length": 154,
+    "set bridge_1.width": 161
+   },
+   "ops_per_patch": {
+    "1": 219,
+    "2": 199,
+    "3": 182
+   },
+   "proposals": 600,
+   "rejected": 517,
+   "rejection_codes": {
+    "DETOUR_TOO_SHORT": 5,
+    "GATE_BYPASSED": 174,
+    "NEW_FLOOR": 1,
+    "OUTSIDE_ROOM": 501,
+    "PENETRATION": 103,
+    "UNSUPPORTED": 160
+   },
+   "walk_connected": {
+    "n": 92,
+    "of": 600,
+    "share": 0.1533
+   },
+   "walk_connected_given_accepted": {
+    "n": 1,
+    "of": 83,
+    "share": 0.012
+   }
+  }
+ }
+}
