@@ -1,0 +1,201 @@
+[
+ {
+  "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+  "candidate_hash": null,
+  "codes": [
+   "OUTSIDE_ROOM",
+   "PENETRATION"
+  ],
+  "cost_usd": null,
+  "detail": {
+   "b2": {
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "codes": [
+     "OUTSIDE_ROOM",
+     "PENETRATION"
+    ],
+    "episode": 0,
+    "graph_jump": "CONNECTED",
+    "graph_walk": "CONNECTED",
+    "index": 0,
+    "ok": false,
+    "patch": {
+     "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+     "ops": [
+      {
+       "field": "length",
+       "id": "bridge_1",
+       "op": "set",
+       "value": 49.922
+      }
+     ],
+     "schema": "worldsmith.patch/0.1"
+    },
+    "patch_hash": "af11a00f9199178f3d221f19ef7bc5720b09bddea6c26d8aa7b916227a3f64da",
+    "rng": {
+     "derivation": "worldsmith.b2/0.1|seed=0|episode=0|proposal=0",
+     "seed": 8884782297876714068,
+     "state_sha256": "f01d23d1904bb58b539c9dfc72d9b0ecaf47abb1b2662bd8486ba5626161ab5d"
+    },
+    "sampler": "worldsmith.b2/0.1",
+    "seed": 0,
+    "stage": "M0",
+    "warnings": []
+   },
+   "on_version": 1
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 1,
+  "malformed": null,
+  "model_calls": 0,
+  "patch": {
+   "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+   "ops": [
+    {
+     "field": "length",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 49.922
+    }
+   ],
+   "schema": "worldsmith.patch/0.1"
+  },
+  "request_sha": null,
+  "source": "random_valid",
+  "verdict": "REJECTED",
+  "warnings": []
+ },
+ {
+  "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+  "candidate_hash": null,
+  "codes": [
+   "PENETRATION"
+  ],
+  "cost_usd": null,
+  "detail": {
+   "b2": {
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "codes": [
+     "PENETRATION"
+    ],
+    "episode": 0,
+    "graph_jump": "CONNECTED",
+    "graph_walk": "CONNECTED",
+    "index": 1,
+    "ok": false,
+    "patch": {
+     "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+     "ops": [
+      {
+       "field": "length",
+       "id": "bridge_1",
+       "op": "set",
+       "value": 43.366
+      }
+     ],
+     "schema": "worldsmith.patch/0.1"
+    },
+    "patch_hash": "14120067cde82ceea7f8f5500158d53f3522338217829b207ca902cfc8c96eb8",
+    "rng": {
+     "derivation": "worldsmith.b2/0.1|seed=0|episode=0|proposal=1",
+     "seed": 1018292198999215657,
+     "state_sha256": "916391e4562a347f74b7f5a94db54681bb0c68aa9e5f1d82a8281c8f59da6e1e"
+    },
+    "sampler": "worldsmith.b2/0.1",
+    "seed": 0,
+    "stage": "M0",
+    "warnings": []
+   },
+   "on_version": 1
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 2,
+  "malformed": null,
+  "model_calls": 0,
+  "patch": {
+   "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+   "ops": [
+    {
+     "field": "length",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 43.366
+    }
+   ],
+   "schema": "worldsmith.patch/0.1"
+  },
+  "request_sha": null,
+  "source": "random_valid",
+  "verdict": "REJECTED",
+  "warnings": []
+ },
+ {
+  "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+  "candidate_hash": "b50b5baf610abfee128a2d031cfad1ea6b625eeaff35eab02b3b3488764b124c",
+  "codes": [],
+  "cost_usd": null,
+  "detail": {
+   "b2": {
+    "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+    "codes": [],
+    "episode": 0,
+    "graph_jump": "CONNECTED",
+    "graph_walk": "DISCONNECTED",
+    "index": 2,
+    "ok": true,
+    "patch": {
+     "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+     "ops": [
+      {
+       "field": "length",
+       "id": "bridge_1",
+       "op": "set",
+       "value": 12.851
+      }
+     ],
+     "schema": "worldsmith.patch/0.1"
+    },
+    "patch_hash": "1ff7d4e331703f10967c285909ba3ede256a4c0965305b8e91228c2b5a3e2750",
+    "rng": {
+     "derivation": "worldsmith.b2/0.1|seed=0|episode=0|proposal=2",
+     "seed": 11164638306861740598,
+     "state_sha256": "513ac667dcc0862f52036575a30c3dd637c2a09d4a3f8fd0020406d214cb84b1"
+    },
+    "sampler": "worldsmith.b2/0.1",
+    "seed": 0,
+    "stage": "M0",
+    "warnings": [
+     "BRIDGE_SHORT",
+     "GRAPH_DISCONNECTED_WALK"
+    ]
+   },
+   "on_version": 1
+  },
+  "error": null,
+  "graph_walk": "DISCONNECTED",
+  "index": 3,
+  "malformed": null,
+  "model_calls": 0,
+  "patch": {
+   "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+   "ops": [
+    {
+     "field": "length",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 12.851
+    }
+   ],
+   "schema": "worldsmith.patch/0.1"
+  },
+  "request_sha": null,
+  "source": "random_valid",
+  "verdict": "ACCEPTED",
+  "warnings": [
+   "BRIDGE_SHORT",
+   "GRAPH_DISCONNECTED_WALK"
+  ]
+ }
+]

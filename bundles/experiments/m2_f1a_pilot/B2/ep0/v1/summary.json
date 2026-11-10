@@ -1,0 +1,66 @@
+{
+ "attempted": 3,
+ "attempts": [
+  {
+   "attempt": 1,
+   "cause": "UNCLASSIFIED",
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "KILL_FLOOR_TOUCHED"
+   ],
+   "fell_in_area": true,
+   "outcome": "FELL",
+   "stuck": "NOT_STUCK",
+   "tags": [
+    "FELL"
+   ]
+  },
+  {
+   "attempt": 2,
+   "cause": "UNCLASSIFIED",
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "KILL_FLOOR_TOUCHED"
+   ],
+   "fell_in_area": true,
+   "outcome": "FELL",
+   "stuck": "NOT_STUCK",
+   "tags": [
+    "FELL"
+   ]
+  },
+  {
+   "attempt": 3,
+   "cause": "UNCLASSIFIED",
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "KILL_FLOOR_TOUCHED"
+   ],
+   "fell_in_area": true,
+   "outcome": "FELL",
+   "stuck": "NOT_STUCK",
+   "tags": [
+    "FELL"
+   ]
+  }
+ ],
+ "build": {
+  "build_line": "WS_BUILD_OK|92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d|26",
+  "descendants": 26,
+  "expected_descendants": 26,
+  "ok": true,
+  "readback_differences": 0
+ },
+ "detail": "",
+ "episode": "B2/ep0",
+ "n": 3,
+ "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+ "schema": "worldsmith.version_summary/0.1",
+ "status": "complete",
+ "successes": 0,
+ "verdict": "FAIL",
+ "version": 1
+}
