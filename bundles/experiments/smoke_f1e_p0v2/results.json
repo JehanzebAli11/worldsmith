@@ -1,0 +1,82 @@
+{
+ "conditions": [
+  {
+   "condition": "B0",
+   "episodes": [
+    {
+     "architect_calls": 0,
+     "attempts_used": 3,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+       "successes": 3,
+       "version": 1
+      }
+     ],
+     "cost_usd_reported": null,
+     "episode": "B0/ep0",
+     "final": {
+      "n": 3,
+      "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 1
+     },
+     "model_calls": 0,
+     "passed_final": true,
+     "passed_original": true,
+     "repaired": false,
+     "revisions": {
+      "accepted": 0,
+      "errors": 0,
+      "malformed": 0,
+      "max": 0,
+      "rejected": 0,
+      "used": 0,
+      "verdicts": []
+     },
+     "status": "complete"
+    }
+   ],
+   "episodes_done": 1,
+   "episodes_planned": 1,
+   "passed_final": {
+    "n": 1,
+    "of": 1
+   },
+   "proposer": "none",
+   "repaired": {
+    "n": 0,
+    "of": 1
+   },
+   "role": null,
+   "seeds": null,
+   "statuses": [
+    "complete"
+   ]
+  }
+ ],
+ "config_sha256": "bf8bcdbbd75fac9950b9d3135068d96e24d82b6464e05f90bbe21bfb6e2a6ac5",
+ "disclosure": "Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result.",
+ "dry_run": false,
+ "experiment": "smoke_f1e_p0v2",
+ "max_revisions": 3,
+ "n": 3,
+ "pass_k": 3,
+ "player": {
+  "controller_sha256": "a7472c9cbbea9096f678be02a663ffb503cb2619eb9ea1fe136fcbf2a7858cac",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "t_attempt_s": 60,
+  "tier": "P0",
+  "version": "p0.v2"
+ },
+ "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+ "schema": "worldsmith.experiment_results/0.1",
+ "stage": "M0"
+}

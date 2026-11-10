@@ -1,0 +1,15 @@
+{
+ "config_file": "smoke_f1e_p0v2.yaml",
+ "config_sha256": "bf8bcdbbd75fac9950b9d3135068d96e24d82b6464e05f90bbe21bfb6e2a6ac5",
+ "created": "2026-11-10T11:36:25Z",
+ "dry_run": false,
+ "experiment": "smoke_f1e_p0v2",
+ "n_attempts": 3,
+ "player": {
+  "controller_sha256": "a7472c9cbbea9096f678be02a663ffb503cb2619eb9ea1fe136fcbf2a7858cac",
+  "t_attempt_s": 60,
+  "version": "p0.v2"
+ },
+ "rule": "declared before runs: the runner refuses this folder if the config's hash differs",
+ "schema": "worldsmith.experiment_lock/0.1"
+}
