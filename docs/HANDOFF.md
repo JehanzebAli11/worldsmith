@@ -560,3 +560,70 @@ One entry per session, newest last: **Done** · **Verified** · **Next** · **Op
    ADR 0007's hard rules still treat Decor as solid. Recommended: yes.
 4. Warn only on walk-mode DISCONNECTED (P0 never jumps); jump mode stays information only.
    Recommended: yes.
+
+## 2026-11-10 12:25 PKT · WS-09
+
+**Done**
+- `baselines/random_valid.py` (`worldsmith.baselines.random_valid`): baseline B2, the capped
+  random valid sampler (SPEC §12). `propose_episode(scene, stage, seed, budget=3)` returns one
+  `Proposal` per raw proposal: patch, `patch_hash`, `base_hash`, validator verdict (`ok`, sorted
+  `codes`, `warnings`), the WS-07 walk/jump results, and the RNG used (derivation string,
+  integer seed, SHA-256 of the generator's initial state). `replay_patch(record)` re-derives a
+  patch from its record alone.
+- Budget: `MAX_PROPOSALS = 3`; a budget outside 1..3 (or not an int) is refused. Sampling
+  (`sample_patch`) never calls the validator; each raw proposal is then validated exactly once
+  and is returned and counted whether accepted or rejected. No resampling. Zero model calls.
+- Sampling: op count 1 in M0 (one rule, one op per target), `randint(1, 3)` in M1; each op a rule
+  drawn uniformly from `validator.patch.STAGES[stage]` (set/move rules not reused within a patch,
+  `add` may repeat); each number uniform over the 0.001-stud grid of its `bounds.yaml` range;
+  Decor palette uniform from the schema enum; added ids `b2_<type>_<proposal>_<op>`; schema 0.1
+  in M0, 0.2 in M1. A stage that adds a type or op the sampler does not know fails closed.
+- Seeding: proposal i of episode e under seed s uses `random.Random(first 8 bytes big-endian of
+  SHA-256("worldsmith.b2/0.1|seed=s|episode=e|proposal=i"))`, so proposals are independent and
+  identical across processes.
+- WS-11 hook: `make_b2_proposer(seed=, stage=, max_revisions=3)` → `B2Proposer.propose(scene)`
+  (the orchestrator passes the scene each revision patches), `used`, `remaining`, `records`,
+  `model_calls = 0`; `BudgetExhausted` past `max_revisions`; `max_revisions` outside 1..3 refused.
+- `scripts/ws_b2_offline.py` (`--check`) writes `bundles/b2_offline/summary.json` and
+  `proposals.jsonl.gz` (1200 records, gzip with mtime 0; the summary hashes the uncompressed
+  JSONL). `.gitignore` gains `!bundles/b2_offline/`.
+- Tests first at `dbeb89f` (collection failed: no `worldsmith.baselines.random_valid`):
+  `tests/test_ws09_random_valid.py` (44 tests). One test correction in the feat commit `2e98d0e`:
+  the records file became `proposals.jsonl.gz` (940 KB plain → 150 KB), read with gzip.
+
+**Verified** (Linux VM on the Mac bridge, Python 3.10.12, venvs outside the repo)
+- Offline statistic, F1-A, seeds 0..199, 3 proposals each, all against the unchanged F1-A scene.
+  **Validator/graph only, not a play result, not a repair rate; no Studio, no player.**
+  - M0 (n = 600 proposals, all `set bridge_1.length`): accepted 158/600 (0.2633); walk graph
+    CONNECTED 458/600 (0.7633, mostly long bridges the validator rejects for PENETRATION);
+    accepted and walk CONNECTED 16/600 (0.0267); episodes with ≥ 1 accepted 124/200, with
+    ≥ 1 accepted and CONNECTED 16/200. Rejection codes (per proposal): PENETRATION 442,
+    OUTSIDE_ROOM 186.
+  - M1 (n = 600; op counts 1/2/3: 219/199/182): accepted 83/600 (0.1383); walk CONNECTED 92/600
+    (0.1533); accepted and walk CONNECTED 1/600 (0.0017); episodes with ≥ 1 accepted 73/200, with
+    ≥ 1 accepted and CONNECTED 1/200. Rejection codes: OUTSIDE_ROOM 501, GATE_BYPASSED 174,
+    UNSUPPORTED 160, PENETRATION 103, DETOUR_TOO_SHORT 5, NEW_FLOOR 1. No grammar-layer code
+    (schema, stage, conflict, bounds, stale) on any sampled proposal tested.
+- `ws_b2_offline.py --check` in a fresh process with `PYTHONHASHSEED=987` → up to date; the
+  test suite also compares episodes across 4 hash seeds and re-runs 4 recorded episodes.
+- `VENV=… ./scripts/test.sh -q --ignore=tests/test_ws10_architect.py` → `1345 passed` (1301 +
+  44). Fresh `git clone` at `3c490c3` + fresh venv, same command → `1345 passed`. WS-10's
+  tests-first file (`e99ddfa`) fails collection until WS-10 lands, so it was excluded.
+- Not verified: anything in Studio (CPU-only ticket); whether any accepted B2 patch repairs
+  F1-A in play (WS-11 decides); Python 3.12; macOS `make test`.
+
+**Next**
+- WS-11: call `make_b2_proposer(seed=…, stage=…, max_revisions=3)` beside the architect with
+  the same budget; store each `Proposal.to_dict()` in the episode bundle beside its run outcome.
+- README status is the control thread's (not edited here).
+
+**Open questions** (yes/no for the owner)
+1. Keep B2's values uniform over `bounds.yaml` (the grammar), not the room box? Most M1 moves and
+   adds land outside the room (OUTSIDE_ROOM on 501/600). Recommended: yes (that is the SPEC's B2;
+   a room-aware sampler would be a separate, declared baseline, not a quiet change).
+2. In live episodes, revision i+1 patches the last accepted (played, not repaired) scene, for
+   both B2 and the architect (same rule)? The hook supports either. Recommended: yes.
+3. M1 op count uniform 1..3 and each op uniform over the 7 rules (not over op kinds)?
+   Recommended: yes.
+4. Keep the 150 KB gzipped per-proposal records in git beside the summary? Recommended: yes
+   (they make every count auditable and replayable).
