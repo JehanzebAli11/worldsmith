@@ -849,3 +849,52 @@ no key, no network)
    1.0 s `max_sample_gap_s` under normal pacing; a slower frame still gives NOT_EVALUABLE.
    Recommended: yes (no classifier constant changed).
 8. Pilot order B0, B1, B2, B3-haiku, B3-sonnet, B3-opus with one episode each? Recommended: yes.
+
+## 2026-11-10 13:35 PKT · WS-11 follow-up: two machines on the same files
+
+**Done**
+- `step --architect-elsewhere` (or `WS_ARCHITECT_ELSEWHERE=1`): the VM never calls a model. Where
+  a live B3 architect call is due (no stored reply or error for the request hash) it raises
+  `episode.ArchitectPending` before the provider is touched and exits **5**, printing
+  `ARCHITECT PENDING <episode> request <sha> role <role>` and the owner's Mac command. No slot is
+  used, no error is written; `pending.json` names the request. This `step` needs no live switches;
+  `respond` refuses while an architect call is pending.
+- `architect` subcommand (Mac): replays the stored files, makes exactly the pending call through
+  `JzapiArchitect` (same switch and headroom checks as `step`), stores the reply by request hash
+  and stops at once (`ArchitectCallDone`), so it writes no Studio request and makes no Studio
+  call. Nothing pending, or a reply already stored → no call, exit 0. A rebuilt request other
+  than the pending one → nothing sent, exit 1. Provider error → stored, exit 1 (the episode ends
+  CONNECTOR_ERROR at the next step, as on one machine).
+- `CachingArchitect` modes `call` / `defer` / `one` (`Experiment.run(architect_mode=…,
+  architect_expect=…)`); control-flow exceptions derive from `RunInterrupt` and are never turned
+  into an ERROR verdict. `run_dry(two_machine=True)` and `--dry-run --architect-elsewhere`
+  simulate the alternation.
+- `tests/test_architect_smoke.py`: the 4 switch-refusal tests are now `@needs_jzapi` (`main()`
+  prices the call with jzapi first), so a clone without JzLab skips them cleanly.
+- Docs: `docs/EXPERIMENTS.md` §2b (two-machine flow, exit codes), ADR 0010 §9.
+- Commits: `95550a9` (smoke skip fix), tests first `d5f7be8`, feat `6d9ac40`, docs `64f54eb`.
+
+**Verified** (Linux VM, Python 3.10.12, venvs outside the repo; no Studio, no network, no key)
+- Simulator: the two-machine dry run of the pilot equals the single-machine dry run
+  (`results.json` byte-identical), 7 hand-offs, the first `57f00338…`, 7 stored replies, no
+  `*.error.json`. `defer` twice in a row gives the same pending request with no call and no
+  `architect/` folder; `one` makes 1 call, writes no relay file, and a second `one` makes none.
+- CLI end to end (B0 + B3-haiku, fake operator answering through `respond`, a fake jzapi session
+  behind the real `JzapiArchitect`): VM `step --architect-elsewhere` with both switches OFF →
+  exit 5 once; `respond` during it → exit 1; Mac `architect` with switches ON → exit 0, one session
+  call; `results.json` equals the single-machine CLI run; `architect` afterwards → exit 0, no call.
+  With a switch OFF, `architect` → exit 4 and no call.
+- `VENV=$HOME/venv-ws11 ./scripts/test.sh -q` → `1534 passed, 1 skipped` (1526 + 8). Fresh clone at
+  `64f54eb`: beside JzLab → `1534 passed, 1 skipped`; without JzLab → `1506 passed, 29 skipped`,
+  0 failed.
+- Not verified: a real Mac/VM hand-off (both machines on the shared folder at once), a real model
+  call through `architect`.
+
+**Exit codes** (`scripts/run_experiment.py`): 0 done / nothing to do / reply stored; 3 Studio call
+pending; **5 architect call pending**; 4 refused; 2 setup (jzapi missing); 1 other error.
+
+**Open questions** (yes/no for the owner)
+1. `architect` checks the headroom against the worst case of everything left (as `step` does),
+   not just the one call? Recommended: yes (stricter, same rule on both machines).
+2. Run only one machine at a time (VM `step` and Mac `architect` never concurrently)? Recommended:
+   yes; nothing locks the folder against concurrent runs.
