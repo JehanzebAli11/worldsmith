@@ -50,6 +50,7 @@ needs_jzapi = pytest.mark.skipif(jzapi is None, reason="jzapi is not installed a
 def load_script():
     spec = importlib.util.spec_from_file_location("architect_smoke", SCRIPT)
     mod = importlib.util.module_from_spec(spec)
+    sys.modules["architect_smoke"] = mod            # dataclasses look the module up by name
     spec.loader.exec_module(mod)
     return mod
 

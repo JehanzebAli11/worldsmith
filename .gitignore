@@ -23,6 +23,8 @@ bundles/*
 !bundles/m0/
 # WS-09 B2 offline statistic (validator/graph only, no play): summary + gzipped records (~150 KB)
 !bundles/b2_offline/
+# Architect smoke calls (scripts/architect_smoke.py): request, raw reply, verdicts, usage; small, no secrets
+!bundles/architect_smoke/
 
 # macOS
 .DS_Store
