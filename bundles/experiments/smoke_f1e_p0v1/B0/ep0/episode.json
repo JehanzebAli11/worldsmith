@@ -1,0 +1,37 @@
+{
+ "caps": {
+  "architect_calls_per_episode": 3,
+  "attempts_per_episode": 12
+ },
+ "condition": "B0",
+ "config_sha256": "3d8e93f3eda2da620060c47f06571addf4116a23fdbfb7197531a7b79b863b5f",
+ "dry_run": false,
+ "episode": "B0/ep0",
+ "experiment": "smoke_f1e_p0v1",
+ "index": 0,
+ "max_revisions": 0,
+ "n_attempts": 3,
+ "nonces": [
+  [
+   "78af08d0e5944725",
+   "f0dbddefe91c416d",
+   "07673cd55789a82a"
+  ]
+ ],
+ "pass_k": 3,
+ "player": {
+  "controller_sha256": "dbc1f325ce64bda8b046bc4f08a18050cced76a123b843af5937b85b65754c6d",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "freeze_manifest_sha": null,
+  "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+  "t_attempt_s": 60,
+  "tier": "P0",
+  "version": "p0.v1"
+ },
+ "proposer": "none",
+ "role": null,
+ "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+ "schema": "worldsmith.episode/0.1",
+ "seed": null,
+ "stage": "M0"
+}
