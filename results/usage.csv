@@ -1,2 +1,4 @@
 timestamp_utc,job,repo,model_id,mode,request_id,input_tokens,cache_creation_input_tokens,cache_read_input_tokens,output_tokens,cost_usd,note
 2026-11-10T07:50:18Z,architect_ladder,worldsmith,claude-haiku-5-5,sync,req_011Cgtt6hrm579DhaeCneA2y,3742,787,0,338,0.000642,worldsmith architect haiku 57f003382a7e
+2026-11-10T14:20:20Z,architect_ladder,worldsmith,claude-haiku-5-5,sync,req_011CguPqfLH65CpeuKDyfZJX,3742,787,0,442,0.000694,worldsmith architect haiku be21ad774f15
+2026-11-10T14:36:29Z,architect_ladder,worldsmith,claude-haiku-5-5,sync,req_011CguR55r9X2B2WLn8FeTQ2,3973,787,0,746,0.000869,worldsmith architect haiku 71e856ae9f20
