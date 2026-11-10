@@ -19,6 +19,8 @@ bundles/*
 !bundles/ws03/
 # WS-04 M0 bundles (raw tool results, small) are the evidence docs/M0.md cites
 !bundles/m0/
+# WS-09 B2 offline statistic (validator/graph only, no play): summary + gzipped records (~150 KB)
+!bundles/b2_offline/
 
 # macOS
 .DS_Store

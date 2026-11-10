@@ -11,6 +11,7 @@ patch could even be tried, never a play result or a repair rate (no Studio runs 
 """
 
 import copy
+import gzip
 import hashlib
 import json
 import os
@@ -29,7 +30,7 @@ from worldsmith.validator import validate as vd
 
 OFFLINE = REPO_ROOT / "bundles" / "b2_offline"
 SUMMARY = OFFLINE / "summary.json"
-RECORDS = OFFLINE / "proposals.jsonl"
+RECORDS = OFFLINE / "proposals.jsonl.gz"   # gzip of the JSONL; hashes are of the JSONL text
 SOURCE = REPO_ROOT / "baselines" / "random_valid.py"
 DECOR_PALETTE = {"crate", "pillar", "lamp", "plant", "banner"}
 
@@ -350,7 +351,8 @@ def summary():
 
 @pytest.fixture(scope="module")
 def records():
-    return [json.loads(line) for line in RECORDS.read_text(encoding="utf-8").splitlines() if line]
+    text = gzip.decompress(RECORDS.read_bytes()).decode("utf-8")
+    return [json.loads(line) for line in text.splitlines() if line]
 
 
 def test_summary_is_labelled_offline_not_play(summary):
@@ -368,8 +370,9 @@ def test_summary_provenance(summary, f1a_hash):
     assert summary["sampler"]["budget"] == 3
     assert summary["sampler"]["seeds"] == {"first": 0, "last": 199, "n": 200}
     assert summary["sampler"]["source_sha256"] == hashlib.sha256(SOURCE.read_bytes()).hexdigest()
-    assert summary["records"]["file"] == "bundles/b2_offline/proposals.jsonl"
-    assert summary["records"]["sha256"] == hashlib.sha256(RECORDS.read_bytes()).hexdigest()
+    assert summary["records"]["file"] == "bundles/b2_offline/proposals.jsonl.gz"
+    assert summary["records"]["sha256"] == hashlib.sha256(gzip.decompress(RECORDS.read_bytes())).hexdigest()
+    assert summary["records"]["n"] == 1200
 
 
 def test_summary_counts_match_the_records(summary, records):
