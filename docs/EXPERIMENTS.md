@@ -85,6 +85,54 @@ cd ~/lab/worldsmith
 - At most 57 play calls and about 190 Studio calls in all [count from the caps]; M0's relay took
   about a minute per play call.
 
+### 2b. Two machines on the same files (the control thread on the bridge VM, architect calls on the Mac)
+
+The bridge VM's egress proxy blocks keyed Anthropic calls, so a model call made there would fail
+and be stored as a provider ERROR that uses a slot. So the VM never calls a model:
+
+- **VM (control thread, with the Studio MCP):** the same `step` / `respond` loop as in step 2, with
+  `--architect-elsewhere` on every `step` (or `WS_ARCHITECT_ELSEWHERE=1` in the environment):
+
+  ```bash
+  $VENV/bin/python scripts/run_experiment.py --config config/experiments/m2_f1a.yaml step --architect-elsewhere
+  ```
+
+  (`$VENV` is the VM's own venv outside the repo, e.g. `$HOME/venv-ws11`; never the Mac's
+  `.venv`. `respond` works as in step 2.) Where a live B3 architect call is due, `step` makes
+  no call and exits **5**:
+
+  ```
+  ARCHITECT PENDING B3-haiku/ep0 request 57f00338…461d role haiku
+    on the Mac: cd ~/lab/worldsmith && .venv/bin/python scripts/run_experiment.py --config config/experiments/m2_f1a.yaml architect
+    then step here again
+  ```
+
+  No slot is used and nothing is written except `pending.json` (which names the request).
+  `respond` refuses while an architect call is pending. This `step` needs no live switches.
+- **Mac (owner, Terminal), once per exit 5:**
+
+  ```bash
+  cd ~/lab/worldsmith && .venv/bin/python scripts/run_experiment.py --config config/experiments/m2_f1a.yaml architect
+  ```
+
+  It replays the stored files, makes exactly the pending call through `JzapiArchitect` (both
+  switches and the headroom check as for `step`; exit 4 if refused, with no call), stores the
+  reply under `<episode>/architect/replies/<request_sha>.json`, and exits 0 (`architect reply
+  stored: …`). It makes no Studio call. If nothing is pending, or a reply for the pending request
+  is already stored, it calls nothing and exits 0. If the request it rebuilds is not the pending
+  one (the two machines are not on the same files), it sends nothing and exits 1. A provider
+  error is stored (exit 1); the episode then ends CONNECTOR_ERROR at the next `step`.
+- **VM again:** `step --architect-elsewhere` replays the stored reply and continues. The results are
+  identical to the single-machine path (tested end to end in the simulator, and through the CLI
+  with a fake jzapi session). Run one machine at a time; the pilot has at most 9 hand-offs.
+- `--dry-run --architect-elsewhere` simulates this alternation (7 hand-offs with the pilot's
+  fixtures; same results as the single-machine dry run).
+
+Exit codes of `run_experiment.py`: 0 done / nothing to do / reply stored; 3 a Studio call is
+pending (`respond`); **5 an architect call is pending (`architect` on the Mac)**; 4 refused;
+2 setup problem (jzapi missing); 1 other error (for `architect`: provider error stored, or a
+request other than the pending one).
+
 ### 3. After the run
 
 Commit `bundles/experiments/m2_f1a_pilot/` and `results/usage.csv`. `results.json` has, per

@@ -140,6 +140,28 @@ GOAL_TOUCHED; else a fall at the M0 F1-A kill positions): shape, not physics. Ev
 `dry_run: true` and the disclosure "DRY RUN … Not Roblox, not a model, not a result." Its outcome
 counts are not results and are not reported as such; the sample bundle is WS-12's input.
 
+## 9. Two machines (added after review, 10 Nov 2026)
+
+The control thread drives the Studio relay from the bridge VM, whose proxy blocks keyed Anthropic
+calls; architect calls must run on the owner's Mac. Both machines see the same files.
+`CachingArchitect` takes a mode (`Experiment.run(architect_mode=…)`):
+
+- `call` (default): live calls inline, as before.
+- `defer` (`step --architect-elsewhere`): where a live call is due (no stored reply or error for
+  the request hash), raise `ArchitectPending` before the provider is touched. Nothing is stored
+  and no slot is used (the in-memory budget is discarded with the run); `pending.json` records
+  `{episode_dir, architect: {request_sha, role, condition}}`; the CLI exits 5.
+- `one` (`architect`, on the Mac): replay up to the first live call, check it is the request
+  named in `pending.json` (else `EpisodeError`, nothing sent), make it through `JzapiArchitect`
+  with the usual switch and headroom checks, store the reply (or provider error) and raise
+  `ArchitectCallDone` at once, so no Studio request is written. With a stored reply or nothing
+  pending, it calls nothing.
+
+Control-flow exceptions derive from `RunInterrupt`; `ArchitectProposer` re-raises them (never an
+ERROR verdict). Determinism makes the hand-off safe: the VM's next replay rebuilds the same
+request, finds the stored reply and continues; the dry run's two-machine mode equals the
+single-machine results (7 hand-offs for the pilot fixtures).
+
 ## Consequences
 
 - Live runs are relay runs: the operator session makes each Studio call by hand-off; the pilot
