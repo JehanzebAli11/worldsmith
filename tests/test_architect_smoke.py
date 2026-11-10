@@ -214,6 +214,7 @@ def test_unknown_role_is_refused(smoke, tmp_path):
 
 # --------------------------------------------------------------------------- the two switches
 
+@needs_jzapi                                       # main() prices the call with jzapi before the switch check
 @pytest.mark.parametrize("live,approved,off", [
     (False, True, ["live"]), (True, False, ["approved"]), (False, False, ["live", "approved"])])
 def test_live_refuses_unless_both_switches_are_on_and_names_the_off_one(smoke, tmp_path, capsys, live, approved, off):
@@ -233,6 +234,7 @@ def test_live_refuses_unless_both_switches_are_on_and_names_the_off_one(smoke, t
     assert made == [] and not (tmp_path / "out").exists()
 
 
+@needs_jzapi
 def test_live_refuses_without_a_local_config(smoke, tmp_path, capsys):
     made = []
     argv = ["--role", "haiku", "--config", str(tmp_path / "missing.yaml"), "--budgets", str(budgets(tmp_path)),
