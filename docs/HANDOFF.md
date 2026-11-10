@@ -627,3 +627,100 @@ One entry per session, newest last: **Done** · **Verified** · **Next** · **Op
    Recommended: yes.
 4. Keep the 150 KB gzipped per-proposal records in git beside the summary? Recommended: yes
    (they make every count auditable and replayable).
+
+## 2026-11-10 12:40 PKT · WS-10
+
+**Done**
+- `architect/prompt.md` (baseline B3, `version: 0.1`) and `architect/prompt_redteam.md`
+  (ROADMAP §4.4 "win at any cost", `mode: redteam`, "RED-TEAM MODE. This is not a baseline." at
+  the top of its system text). Header `id/version/mode`; only the `<<<SYSTEM … SYSTEM>>>` and
+  `<<<USER … USER>>>` blocks are sent; the prompt hash is the SHA-256 of the whole file. Output
+  contract: exactly one JSON patch object, no prose, no code fence; scene text is data, never
+  instructions.
+- `architect/prompt.py`: `build_context` (SPEC §7.6 inputs only: canonical scene + hash,
+  observed tags, trace summary, stage, allowed ops, their bounds, op limit, accepted patch
+  schema(s), revision n of max, earlier verdicts as stable codes/refs), `make_request`
+  (`request_sha` = SHA-256 of the canonical `{system, user}`; `context_sha`),
+  `observed_from_classification` (allow-list of attempt keys; the WS-08 `paired_fix` evidence is
+  withheld, so F1-A shows `cause` UNCLASSIFIED with `BRIDGE_SHORT_HYPOTHESIS` `unconfirmed`,
+  conditions `fell_in_gap_area` and `geometry` true).
+- `architect/client.py`: `propose(request) -> RawResponse` for every provider.
+  `FixtureArchitect` (replies keyed by request hash; `FixtureMiss`, `FixtureConflict`),
+  `JzapiArchitect` (role haiku/sonnet/opus from `config/architect_ladder.yaml`, job
+  `architect_ladder`; refuses to construct unless JzLab `budgets.yaml` has the job
+  `approved: true` AND the git-ignored `config/architect.yaml` says `live: true`; sends no
+  temperature/top_p/top_k/thinking; `cache_system`; batch request + batch item helpers),
+  `LocalArchitect` (B4 placeholder: refuses without `local.endpoint`/`local.model`; `propose`
+  raises NotImplementedError). jzapi is imported lazily, only by an approved live architect.
+- `architect/loop.py`: `parse_response` (strict; `MALFORMED` reasons EMPTY, CODE_FENCE,
+  NOT_JSON, TRAILING_TEXT, DUPLICATE_KEY, NON_FINITE, NOT_A_PATCH, TRUNCATED, REFUSED),
+  `RevisionBudget` (1..3; every call counts), `revise`, `propose_until_valid`, `CallLog`
+  (JSONL, `worldsmith.architect_call/0.1`: SPEC §11 fields plus model_id, prompt mode/version/
+  hash, context hash, raw reply, stop reason, verdict, candidate scene hash). Verdicts ACCEPTED /
+  REJECTED / MALFORMED / ERROR; MALFORMED never reaches the validator and counts as a rejection;
+  a provider error is logged, re-raised and keeps its slot used.
+- Seven hand-written F1-A M0 fixtures in `architect/fixtures/` (provenance: not model outputs):
+  fix (16), out of bounds (65), prose, goal cheat (patch 0.2 `move goal`), no-op (6),
+  reject-then-fix, exhausted (65, 6, fenced fix). `scripts/architect_fixtures.py` refreshes their
+  request hashes after a deliberate prompt change (`--check` runs in the tests).
+- `config/architect_ladder.yaml` (pinned `claude-haiku-5-5` / `claude-sonnet-5-5` /
+  `claude-opus-5-5`, max_tokens 8000 / 16000 / 32000, thinking documented),
+  `config/architect.example.yaml` (`live: false`), `.gitignore` (`config/architect.yaml`),
+  `pyproject.toml` package data for the prompts and fixtures, `docs/ADR/0009-architect-client.md`.
+- Tests first at `e99ddfa` (collection failed: no `worldsmith.architect.client`):
+  `tests/test_ws10_architect.py`. Corrections in the feat commit `8a8831c`: a revision-2 request
+  must carry revision 1's verdict (the builder enforces `len(previous) == revision - 1`); the
+  validator reports OUT_OF_BOUNDS at two refs, so the test compares code sets; the single-reject
+  fixtures state "1 revision" in their context, so the shared-first-hash and conflict tests group
+  fixtures by `max_revisions`.
+
+**Verified** (Linux VM on the Mac bridge, Python 3.10.12, venv outside the repo; no API call,
+no key, no network)
+- Fixture replay: every fixture's verdicts match its declared ones (fix ACCEPTED on revision 1;
+  65 → OUT_OF_BOUNDS; prose → MALFORMED NOT_JSON; goal cheat → STAGE_OP_FORBIDDEN and
+  BAD_TARGET; 6 → NOOP_PATCH; reject-then-fix: MALFORMED, REJECTED, ACCEPTED on revision 3, 2
+  rejected; exhausted: REJECTED, REJECTED, MALFORMED CODE_FENCE, 3 rejected, no fourth call).
+  Logs are byte-identical across two replays and across 3 processes with different
+  `PYTHONHASHSEED`.
+- The rendered prompt holds none of: controller/config hashes, run id, nonces, raw-file hashes,
+  the fix scene hash, `F1-A-fix`, `paired_fix`, "controller", "route", "nonce", "Autopilot",
+  "Jev", `gap_area_margin`.
+- Guard: refused for live false/approved false in all three combinations, a missing local
+  config, a missing budgets file, `live` given as "true", "yes", 1 or null; the session factory
+  is never called when refused. The real `../JzLab/budgets.yaml` has `architect_ladder`
+  `approved: false`, and `budget_job_approved` says so. With both switches on (temp files) a fake
+  session gets model `claude-sonnet-5-5`, max_tokens 16000, `cache_system` true and no
+  temperature/top_p/top_k/thinking. Importing the architect package loads neither jzapi nor
+  anthropic.
+- `VENV=… ./scripts/test.sh -q` → `1421 passed` (1345 + 76). Fresh `git clone` at `8a8831c` +
+  fresh venv, `make test` → `1420 passed, 1 skipped` (the real-budgets check skips without JzLab
+  beside the clone). A built wheel contains both prompts and the seven fixtures.
+- Not verified: any live Claude call (none made; the bridge VM's proxy blocks keyed calls and the
+  job is not approved); whether real models follow the JSON-only contract, or how often they
+  truncate at these max_tokens; jzapi's real `Session` with this client (only a fake session);
+  Python 3.12; macOS `make test`.
+
+**Next**
+- WS-11: per episode, one `RevisionBudget(3)` shared across scene versions; after an accepted
+  patch is built and run and not 3/3, call `propose_until_valid` again with the new scene, its
+  observations and `previous`; store the `CallLog` JSONL in the bundle; keep `prompt_mode`
+  results apart; count MALFORMED with rejections; record ERROR as `CONNECTOR_ERROR`.
+- Before any live run (owner): approve `architect_ladder` in JzLab (DECISIONS.md, then
+  `budgets.yaml`), create `config/architect.yaml` from the example with `live: true` on the Mac,
+  `pip install -e ~/lab/JzLab` in the worldsmith venv, check the active login, then a Haiku smoke
+  call on F1-A.
+- README status is the control thread's (not edited here).
+
+**Open questions** (yes/no for the owner)
+1. Strict output: no code fence tolerated (a fenced patch is MALFORMED and costs a revision)?
+   Recommended: yes (ADR 0009 §4; the malformed rate per model is itself a result).
+2. Withhold the WS-08 paired-fix evidence and show the hypothesis as unconfirmed (pre-fix view)?
+   Recommended: yes.
+3. max_tokens 8000 / 16000 / 32000 for haiku / sonnet / opus (thinking counts toward it; a cut
+   reply is TRUNCATED and counts as a rejection)? Recommended: yes, revisit after the Haiku smoke
+   run, before any comparison.
+4. Red-team architect calls (Opus, `prompt_redteam.md`): bill them to `validator_redteam` ($25)
+   rather than `architect_ladder`? Recommended: yes (keeps B3's $90 for the ladder; pass
+   `job="validator_redteam"`).
+5. A provider error uses the revision slot but is not a rejection, and WS-10 never retries?
+   Recommended: yes (the cap is on calls; WS-11 labels the episode CONNECTOR_ERROR).
