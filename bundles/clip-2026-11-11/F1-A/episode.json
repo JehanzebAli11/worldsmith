@@ -1,0 +1,37 @@
+{
+ "config_file": "config/m0.yaml",
+ "config_sha256": "15884b5aed16e4e3074384e59b54a34e5e058fe36c2f0a0d24fc0f67731647c6",
+ "controller_sha256": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+ "created": "2026-11-10T20:16:05.464871Z",
+ "episode": "clip-F1-A",
+ "n_attempts": 3,
+ "nonces": [
+  "a43540d582a94112",
+  "0c8e72b6c0d0f683",
+  "faca87659cd3fb62"
+ ],
+ "origin": [
+  0,
+  100,
+  0
+ ],
+ "player": {
+  "claim": "Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result.",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "tier": "P0"
+ },
+ "role": "before",
+ "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+ "run_id": "m0-2026-11-10T201605",
+ "scene_file": "scenes/F1-A/scene.json",
+ "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+ "scene_version": 1,
+ "schema": "worldsmith.m0episode/0.1",
+ "t_attempt_s": 60,
+ "tool_timeouts_s": {
+  "get_studio_mode": 15,
+  "run_code": 30,
+  "run_script_in_play_mode": 90,
+  "start_stop_play": 30
+ }
+}

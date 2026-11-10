@@ -27,6 +27,8 @@ bundles/*
 !bundles/architect_smoke/
 # WS-11 experiment bundles (scripts/run_experiment.py step): relay requests/answers, verdicts, summaries
 !bundles/experiments/
+# Episode-1 clip re-runs of the M0 gate scenes (small; the clip cites them)
+!bundles/clip-2026-11-11/
 
 # macOS
 .DS_Store

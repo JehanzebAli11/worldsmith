@@ -1,0 +1,71 @@
+{
+ "attempted": 3,
+ "attempts": [
+  {
+   "attempt": 1,
+   "cause": "UNCLASSIFIED",
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "KILL_FLOOR_TOUCHED"
+   ],
+   "fell_in_area": true,
+   "outcome": "FELL",
+   "tags": [
+    "FELL"
+   ]
+  },
+  {
+   "attempt": 2,
+   "cause": "UNCLASSIFIED",
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "KILL_FLOOR_TOUCHED"
+   ],
+   "fell_in_area": true,
+   "outcome": "FELL",
+   "tags": [
+    "FELL"
+   ]
+  },
+  {
+   "attempt": 3,
+   "cause": "UNCLASSIFIED",
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "KILL_FLOOR_TOUCHED"
+   ],
+   "fell_in_area": true,
+   "outcome": "FELL",
+   "tags": [
+    "FELL"
+   ]
+  }
+ ],
+ "build": {
+  "build_line": "WS_BUILD_OK|92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d|26",
+  "descendants": 26,
+  "expected_descendants": 26,
+  "ok": true,
+  "readback_differences": 0
+ },
+ "config_sha256": "15884b5aed16e4e3074384e59b54a34e5e058fe36c2f0a0d24fc0f67731647c6",
+ "controller_sha256": "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034",
+ "counts": {
+  "FELL": 3
+ },
+ "detail": "",
+ "episode": "clip-F1-A",
+ "n": 3,
+ "player_tier": "P0",
+ "role": "before",
+ "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+ "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+ "scene_version": 1,
+ "schema": "worldsmith.m0summary/0.1",
+ "status": "complete",
+ "successes": 0,
+ "t_attempt_s": 60
+}
