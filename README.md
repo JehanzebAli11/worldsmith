@@ -1,11 +1,33 @@
 # worldsmith
 
-Worldsmith is a small companion tool for [Autopilot](https://github.com/ramenvr/autopilot). It
-builds one owned Roblox room from a bounded JSON recipe, and a frozen player tries to complete it.
-Worldsmith records an instrumented failure event, and an architect proposes a bounded scene patch
-that an independent validator must approve. Then the room is rebuilt from scratch, the same frozen
-player actually retries, and the tool emits a side-by-side replay bundle. The full design is in
-[`docs/SPEC.md`](docs/SPEC.md).
+**An AI architect fixes a broken game room so the same frozen player can finish it.**
+
+A room is built in Roblox Studio from a bounded JSON recipe and a frozen player tries it. When the
+player fails, an AI architect reads what happened and proposes a small patch to the *world*. An
+independent validator rejects any patch that cheats (moving the goal, changing player physics,
+adding a teleport). The room is rebuilt from scratch and the same player tries again. Every run
+writes a bundle with the raw Studio calls, so each number below can be checked. It builds on my
+[Autopilot](https://github.com/ramenvr/autopilot) contributions (the Roblox Studio connector,
+PR #40). Full design: [`docs/SPEC.md`](docs/SPEC.md).
+
+## Results so far
+
+| Experiment | Room | Before | Fix | After | Source |
+| --- | --- | --- | --- | --- | --- |
+| M0 gate (hand fix, a control) | F1-A, bridge 6 studs over a 16-stud gap | fell 3/3 | `bridge_1.length` 6 → 16, by hand | crossed and reached the goal 3/3 | `bundles/m0/gate.json` |
+| B3: Claude Haiku 5.5 as architect (player p0.v3) | F1-A | fell 3/3 | 1 call, ACCEPTED: `bridge_1.length` → 16 | 3/3 | `bundles/experiments/m2_f1a_b3/results.json` |
+| B3: Claude Sonnet 5.5 | F1-A | fell 3/3 | 1 call, ACCEPTED, same patch | 3/3 | same |
+| B3: Claude Opus 5.5 | F1-A | fell 3/3 | 1 call, ACCEPTED, same patch | 3/3 | same |
+| B2: random valid patch (pilot, player p0.v2) | F1-A | fell 3/3 | 3 proposals (2 rejected) | 3/3 | `bundles/experiments/m2_f1a_pilot/` |
+
+The validator rejects all 69 abuse cases in `tests/abuse/reject/` and accepts the 13 legitimate
+ones in `tests/abuse/accept/` (CPU tests).
+
+What this does not show yet: the player is a scripted walker (server-side `MoveTo` waypoints,
+never jumps), not an AI agent. B3 is one episode per model, and F1-A is easy enough that a random
+valid patch also fixes it, so it doesn't separate the models. Harder rooms come next.
+
+## Build log
 
 **Status: WS-04 / M0 gate: PASS** (`docs/M0.md`, from `bundles/m0/`). Live in Roblox Studio on
 the owner's local place, with one frozen P0 controller (server-scripted `Humanoid:MoveTo`
@@ -32,8 +54,8 @@ not an episode and not a B3 result. **WS-11:** the orchestrator runs declared ex
 architect calls, a new labelled player p0.v1 (the M0 controller plus position samples), a lock
 that refuses config changes after the first episode, resume without repeating answered Studio
 calls or paid architect calls, and P2 freeze-manifest refusal checks (no Autopilot run). The M2
-pilot on F1-A is declared (`config/experiments/m2_f1a.yaml`, worst case $2.961) and has not been
-run ([`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md)). Ticket status is in
+pilot on F1-A (`m2_f1a_pilot`) ran B0-B2 and was closed for a harness fault; player p0.v3 fixed it
+and `m2_f1a_b3` ran B3 ([`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md), ADR 0012). Ticket status is in
 [`docs/TICKETS.md`](docs/TICKETS.md).
 
 ## Honest limits
