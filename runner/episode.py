@@ -78,6 +78,31 @@ class PromptCapExceeded(RuntimeError):
     """An architect request is larger than the declared prompt_bytes_cap; it was not sent."""
 
 
+class RunInterrupt(Exception):
+    """Control flow, not a failure: stop the run here; nothing is counted or stored for it."""
+
+
+class ArchitectPending(RunInterrupt):
+    """`defer` mode: the next action is a live architect call, to be made on another machine
+    (`run_experiment.py architect`). No slot is used and nothing is written."""
+
+    def __init__(self, request_sha: str, role: str):
+        super().__init__(f"architect call pending: request {request_sha} (role {role})")
+        self.request_sha, self.role = request_sha, role
+
+
+class ArchitectCallDone(RunInterrupt):
+    """`one` mode: the one pending architect call was made and its reply (or provider error) is
+    stored; the run stops before anything else happens."""
+
+    def __init__(self, request_sha: str, role: str, error: str | None = None, stop_reason: str | None = None):
+        super().__init__(f"architect reply stored for request {request_sha}")
+        self.request_sha, self.role, self.error, self.stop_reason = request_sha, role, error, stop_reason
+
+
+ARCHITECT_MODES = ("call", "defer", "one")
+
+
 # --------------------------------------------------------------------------- small helpers
 
 def _dumps(obj) -> str:
@@ -148,7 +173,11 @@ class CachingArchitect:
     provider error is stored too and replayed as the same error. `LiveCallRefused` (a switch or
     the budget said no) is not stored: nothing happened."""
 
-    def __init__(self, factory: Callable[[], Any], replies_dir, *, model_role: str):
+    def __init__(self, factory: Callable[[], Any], replies_dir, *, model_role: str, mode: str = "call",
+                 expect_sha: str | None = None):
+        if mode not in ARCHITECT_MODES:
+            raise ValueError(f"architect mode must be one of {ARCHITECT_MODES}")
+        self.mode, self.expect_sha = mode, expect_sha
         self._factory = factory
         self._inner = None
         self.dir = Path(replies_dir)
@@ -178,6 +207,12 @@ class CachingArchitect:
         if err.exists():
             self.replayed += 1
             raise acl.ArchitectCallError(_load(err)["error"] + " (replayed from the stored error)")
+        # A live call is due here. defer: hand it to another machine (nothing used or written).
+        if self.mode == "defer":
+            raise ArchitectPending(req.request_sha, self.model_role)
+        if self.mode == "one" and self.expect_sha is not None and req.request_sha != self.expect_sha:
+            raise EpisodeError(f"the request now due ({req.request_sha[:12]}…) is not the pending request "
+                               f"({self.expect_sha[:12]}…); are both machines on the same files? Nothing was sent")
         if self._inner is None:
             self._inner = self._factory()
         self.model_id = getattr(self._inner, "model_id", None)
@@ -189,6 +224,8 @@ class CachingArchitect:
             self.calls_made += 1
             write_once(err, _dumps({"schema": REPLY_SCHEMA, "request_sha": req.request_sha,
                                     "condition_role": self.model_role, "error": f"{type(exc).__name__}: {exc}"}))
+            if self.mode == "one":
+                raise ArchitectCallDone(req.request_sha, self.model_role, error=f"{type(exc).__name__}: {exc}") from None
             raise
         self.calls_made += 1
         write_once(ok, _dumps({"schema": REPLY_SCHEMA, "request_sha": req.request_sha,
@@ -196,6 +233,8 @@ class CachingArchitect:
                                "response_text": resp.text, "stop_reason": resp.stop_reason, "usage": resp.usage,
                                "cost_usd": resp.cost_usd, "latency_s": resp.latency_s,
                                "request_id": resp.request_id}))
+        if self.mode == "one":
+            raise ArchitectCallDone(req.request_sha, self.model_role, stop_reason=resp.stop_reason)
         return resp
 
 
@@ -321,7 +360,7 @@ class ArchitectProposer:
         try:
             rev = lp.revise(self.arch, scene=scene, observed=observed, stage=self.stage, budget=self.budget,
                             previous=self.previous, prompt=self.prompt, episode=self.episode, log=self.log)
-        except (acl.LiveCallRefused, EpisodeError):
+        except (acl.LiveCallRefused, EpisodeError, RunInterrupt):
             raise
         except Exception as exc:  # provider error: logged by revise, slot used, episode CONNECTOR_ERROR
             rec = self.log.records[-1] if self.log.records else {}
@@ -343,7 +382,8 @@ class ArchitectProposer:
                         scene=cand)
 
 
-def make_proposer(cfg: dict, ep: dict, ep_dir: Path, architect_factory=None):
+def make_proposer(cfg: dict, ep: dict, ep_dir: Path, architect_factory=None, *, architect_mode: str = "call",
+                  architect_expect: str | None = None):
     cond = cfg["_conditions"][ep["condition"]]
     kind = cond["proposer"]
     if kind == "none":
@@ -354,7 +394,8 @@ def make_proposer(cfg: dict, ep: dict, ep_dir: Path, architect_factory=None):
         return RandomProposer(ep["seed"], cfg["stage"], cfg["max_revisions"])
     if architect_factory is None:
         raise EpisodeError(f"condition {cond['id']} needs an architect and none was given")
-    arch = CachingArchitect(architect_factory, Path(ep_dir) / "architect" / "replies", model_role=cond["role"])
+    arch = CachingArchitect(architect_factory, Path(ep_dir) / "architect" / "replies", model_role=cond["role"],
+                            mode=architect_mode, expect_sha=architect_expect)
     return ArchitectProposer(arch, stage=cfg["stage"], max_revisions=cfg["max_revisions"], prompt=cfg["_prompt"],
                              episode=ep["episode"], prompt_bytes_cap=cfg["architect"]["prompt_bytes_cap"],
                              cache_system=cfg["_ladder"]["cache_system"])
@@ -550,7 +591,8 @@ class _Call:
         return r
 
 
-def run_episode(client, cfg: dict, ep_dir, *, architect_factory=None, proposer=None) -> dict:
+def run_episode(client, cfg: dict, ep_dir, *, architect_factory=None, proposer=None, architect_mode: str = "call",
+                architect_expect: str | None = None) -> dict:
     """Run (or replay) one episode and write its bundle; returns the summary. Raises
     `attempts.Pending` at the first unanswered relay call (only the request and any architect
     reply are written then)."""
@@ -560,7 +602,8 @@ def run_episode(client, cfg: dict, ep_dir, *, architect_factory=None, proposer=N
     caps = EpisodeCaps(cfg["caps"]["attempts_per_episode"], cfg["caps"]["architect_calls_per_episode"],
                        ep["max_revisions"])
     call = _Call(client, caps)
-    prop = proposer or make_proposer(cfg, ep, d, architect_factory)
+    prop = proposer or make_proposer(cfg, ep, d, architect_factory, architect_mode=architect_mode,
+                                     architect_expect=architect_expect)
     scene = cfg["_scene"]
     write_once(d / "v1" / "scene.json", sc.canonical_json(scene) + "\n")
     versions = [run_version(call, cfg, scene, ep["nonces"][0], 1)]

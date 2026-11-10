@@ -4,7 +4,9 @@
     python scripts/run_experiment.py --config config/experiments/m2_f1a.yaml --dry-run [--out DIR]
     python scripts/run_experiment.py --config ... plan      # worst case, headroom, switches; no call
     python scripts/run_experiment.py --config ... step      # run until the next Studio call is needed
+    python scripts/run_experiment.py --config ... step --architect-elsewhere   # never call a model here
     python scripts/run_experiment.py --config ... respond K RAW_FILE [--error TEXT]
+    python scripts/run_experiment.py --config ... architect # make the one pending architect call (Mac)
     python scripts/run_experiment.py --config ... status
 
 --dry-run simulates the whole loop with a fake Studio operator and the WS-10 fixture architects
@@ -16,15 +18,25 @@ the Studio MCP) makes exactly that call and stores the raw answer with `respond`
 again. Before a live step that may still call a model it prints the worst case of what is left
 and refuses unless both live switches are on and the job's remaining headroom covers it.
 
-Exit codes: 0 done (or plan/status/dry run printed); 3 a Studio call is pending; 4 refused (a
-switch is off, headroom too low, the config changed after the first episode, mixed players);
-2 setup problem (jzapi missing for a live B3 step); 1 any other error.
+Two machines on the same files (ADR 0010 section 9): `step --architect-elsewhere` (or
+WS_ARCHITECT_ELSEWHERE=1) never calls a model; where a live B3 architect call is due it stops
+with exit 5 and prints the request hash, using no slot and writing no error (no switches needed).
+`architect`, run on the owner's Mac, makes exactly that one call through JzapiArchitect with the
+same switch and headroom checks, stores the reply by request hash and exits; it makes no Studio
+call. With nothing pending, or a reply already stored for the pending request, it calls nothing.
+
+Exit codes: 0 done (or plan/status/dry run printed; `architect`: reply stored or nothing to do);
+3 a Studio call is pending; 5 an architect call is pending (run `architect` on the Mac); 4 refused
+(a switch is off, headroom too low, the config changed after the first episode, mixed players);
+2 setup problem (jzapi missing for a live B3 step); 1 any other error (`architect`: the provider
+failed; the error is stored and the episode will end CONNECTOR_ERROR).
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -39,6 +51,7 @@ from worldsmith.runner import experiment as ex  # noqa: E402
 from worldsmith.runner import freeze  # noqa: E402
 
 DEFAULT_OUT = ROOT / "bundles" / "experiments"
+MAC_COMMAND = "cd ~/lab/worldsmith && .venv/bin/python scripts/run_experiment.py --config {config} architect"
 INSTALL_HINT = ".venv/bin/pip install -e ~/lab/JzLab   (inside the worldsmith repo)"
 
 
@@ -99,7 +112,7 @@ def _switches(cfg, args):
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("what", nargs="?", default="plan", choices=["plan", "step", "respond", "status"])
+    ap.add_argument("what", nargs="?", default="plan", choices=["plan", "step", "respond", "architect", "status"])
     ap.add_argument("args", nargs="*")
     ap.add_argument("--config", required=True)
     ap.add_argument("--dry-run", action="store_true", help="simulate everything in a temp folder; no network")
@@ -107,7 +120,10 @@ def main(argv=None) -> int:
     ap.add_argument("--error", help="respond: the call failed with this error text")
     ap.add_argument("--budgets", help="JzLab budgets.yaml (default as the architect client resolves it)")
     ap.add_argument("--architect-config", help="local architect config (default config/architect.yaml)")
+    ap.add_argument("--architect-elsewhere", action="store_true",
+                    help="step: never call a model here; stop with exit 5 where one is due (also WS_ARCHITECT_ELSEWHERE=1)")
     a = ap.parse_args(argv)
+    elsewhere = a.architect_elsewhere or os.environ.get("WS_ARCHITECT_ELSEWHERE") == "1"
 
     try:
         cfg = ex.load_experiment(a.config, ROOT)
@@ -134,7 +150,11 @@ def main(argv=None) -> int:
         print(f"dry run: fake Studio operator + fixture architects ({', '.join(f'{k}: {v}' for k, v in cfg['dry_run']['fixtures'].items())}); "
               "no network, no key, no Studio. NOT A RESULT.")
         try:
-            res = dryrun.run_dry(cfg, out)
+            handoffs = []
+            res = dryrun.run_dry(cfg, out, two_machine=elsewhere, on_handoff=handoffs.append)
+            if elsewhere:
+                print(f"two machines simulated: {len(handoffs)} architect hand-offs (exit 5 on the VM, "
+                      "`architect` on the Mac)")
         except (ex.ExperimentLocked, ex.MixedPlayers) as exc:
             print(f"refused: {exc}", file=sys.stderr)
             return 4
@@ -159,6 +179,11 @@ def main(argv=None) -> int:
         if not p:
             print("error: no pending call", file=sys.stderr)
             return 1
+        if p.get("architect"):
+            print(f"error: an architect call is pending in {p['episode_dir']} (request "
+                  f"{p['architect']['request_sha']}), not a Studio call; run on the Mac: "
+                  f"{MAC_COMMAND.format(config=_rel_config(a.config))}", file=sys.stderr)
+            return 1
         k, raw = int(a.args[0]), Path(a.args[1]).read_text(encoding="utf-8")
         if k != p["index"]:
             print(f"error: the pending call is {p['index']:03d} in {p['episode_dir']}, not {k:03d}", file=sys.stderr)
@@ -173,6 +198,19 @@ def main(argv=None) -> int:
         print(f"refused: {exc}", file=sys.stderr)
         return 4
     needs_model = any(c["proposer"] == "architect" for c in cfg["_conditions"].values())
+    if a.what == "step" and elsewhere:
+        return _step_elsewhere(cfg, exp, a, jz)
+    pend = exp.pending() if a.what == "architect" else None
+    if a.what == "architect":
+        if not (pend and pend.get("architect")):
+            print("architect: no architect call is pending (pending.json); nothing to do")
+            return 0
+        pa = pend["architect"]
+        stored = exp.dir / pend["episode_dir"] / "architect" / "replies" / f"{pa['request_sha']}.json"
+        if stored.is_file() or stored.with_name(f"{pa['request_sha']}.error.json").is_file():
+            print(f"architect: a reply for request {pa['request_sha']} is already stored; nothing to do (run step)")
+            return 0
+        print(f"architect: pending {pend['episode_dir']} request {pa['request_sha']} (role {pa['role']})")
     wc = None
     if needs_model:
         if jz is None:
@@ -198,7 +236,7 @@ def main(argv=None) -> int:
             print(f"  {s['condition']:<10} ep{s['episode']}  {s['state']}")
         return 0
 
-    # step (live relay)
+    # step (live relay) or architect (the one pending call)
     if wc is not None and wc["remaining_usd"] > 0:
         if not (approved and live):
             print("refused: a B3 episode may still call a model and a live switch is OFF "
@@ -214,16 +252,12 @@ def main(argv=None) -> int:
         return acl.JzapiArchitect(cond["role"], config_path=a.architect_config, budgets_path=a.budgets,
                                   session_factory=no_retry_session)
 
+    if a.what == "architect":
+        return _architect_one(exp, architect_for, pend)
     try:
         res = exp.run(lambda d: at.RelayClient(d / "calls"), architect_for)
     except at.Pending as p:
-        req, pend = p.request, exp.pending()
-        d = exp.dir / pend["episode_dir"]
-        print(f"PENDING {pend['episode_dir']} call {p.index:03d} {req['tool']} timeout_s={req['timeout_s']} "
-              f"args={json.dumps(req['args'])}")
-        if "code_file" in req:
-            print(f"  code: {d / 'calls' / req['code_file']}  ({req['code_arg']}, sha256 {req['code_sha256']})")
-        print(f"  then: python scripts/run_experiment.py --config {a.config} respond {p.index} <raw answer file>")
+        _print_pending(p, exp, a.config)
         return 3
     except acl.LiveCallRefused as exc:
         print(f"refused: {exc}", file=sys.stderr)
@@ -234,6 +268,81 @@ def main(argv=None) -> int:
     for c in res["conditions"]:
         print(f"  {c['condition']:<10} repaired {c['repaired']['n']}/{c['repaired']['of']}  statuses {c['statuses']}")
     print(f"results: {exp.dir / 'results.json'}")
+    return 0
+
+
+def _rel_config(path) -> str:
+    p = Path(path).resolve()
+    try:
+        return p.relative_to(ROOT).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def _print_pending(p, exp, config) -> None:
+    req, pend = p.request, exp.pending()
+    d = exp.dir / pend["episode_dir"]
+    print(f"PENDING {pend['episode_dir']} call {p.index:03d} {req['tool']} timeout_s={req['timeout_s']} "
+          f"args={json.dumps(req['args'])}")
+    if "code_file" in req:
+        print(f"  code: {d / 'calls' / req['code_file']}  ({req['code_arg']}, sha256 {req['code_sha256']})")
+    print(f"  then: python scripts/run_experiment.py --config {config} respond {p.index} <raw answer file>")
+
+
+def _no_model(cond):
+    raise RuntimeError("this machine never calls a model (--architect-elsewhere)")  # defer stops first
+
+
+def _step_elsewhere(cfg, exp, a, jz) -> int:
+    """step on the machine that may not call a model: Studio relay as usual; exit 5 where a live
+    architect call is due (no slot used, nothing written but pending.json)."""
+    if jz is not None:
+        _print_worst(ex.worst_case(cfg, _price(jz), exp), live=True)
+    print("architect calls: elsewhere (this machine never calls a model; run `architect` on the Mac)")
+    try:
+        res = exp.run(lambda d: at.RelayClient(d / "calls"), _no_model, architect_mode="defer")
+    except at.Pending as p:
+        _print_pending(p, exp, a.config)
+        return 3
+    except epi.ArchitectPending as p:
+        pend = exp.pending()
+        print(f"ARCHITECT PENDING {pend['episode_dir']} request {p.request_sha} role {p.role}")
+        print(f"  on the Mac: {MAC_COMMAND.format(config=_rel_config(a.config))}")
+        print("  then step here again")
+        return 5
+    for c in res["conditions"]:
+        print(f"  {c['condition']:<10} repaired {c['repaired']['n']}/{c['repaired']['of']}  statuses {c['statuses']}")
+    print(f"results: {exp.dir / 'results.json'}")
+    return 0
+
+
+def _architect_one(exp, architect_for, pend) -> int:
+    """The Mac: replay the stored files, make exactly the pending architect call, store it, stop."""
+    pa = pend["architect"]
+    try:
+        exp.run(lambda d: at.RelayClient(d / "calls"), architect_for, architect_mode="one",
+                architect_expect=pa["request_sha"])
+    except epi.ArchitectCallDone as done:
+        if done.error:
+            print(f"architect: provider error stored for request {done.request_sha}: {done.error}", file=sys.stderr)
+            print("  the episode will end CONNECTOR_ERROR at the next step (the slot is used)", file=sys.stderr)
+            return 1
+        print(f"architect reply stored: {pend['episode_dir']} request {done.request_sha} role {done.role} "
+              f"(stop_reason {done.stop_reason}); run step on the VM")
+        return 0
+    except at.Pending:
+        print("architect: no architect call was due before the next Studio call; nothing called")
+        return 0
+    except acl.LiveCallRefused as exc:
+        print(f"refused: {exc}", file=sys.stderr)
+        return 4
+    except epi.PromptCapExceeded as exc:
+        print(f"refused: {exc}", file=sys.stderr)
+        return 4
+    except epi.EpisodeError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+    print("architect: the experiment is complete; nothing called")
     return 0
 
 

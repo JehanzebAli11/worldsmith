@@ -401,9 +401,15 @@ class Experiment:
         return out
 
     def run(self, client_for: Callable[[Path], object], architect_for: Callable[[dict], Callable] | None = None,
-            *, nonces_for: Callable[[str, int], list] | None = None) -> dict:
+            *, nonces_for: Callable[[str, int], list] | None = None, architect_mode: str = "call",
+            architect_expect: str | None = None) -> dict:
         """Run every episode in declared order (resuming the first unfinished one). Raises
-        `attempts.Pending` at the first unanswered relay call (and records it in pending.json)."""
+        `attempts.Pending` at the first unanswered relay call (and records it in pending.json).
+
+        `architect_mode` (ADR 0010 section 9): `call` makes live architect calls inline; `defer`
+        raises `episode.ArchitectPending` where a live call is due (no slot used, nothing written;
+        pending.json names the request); `one` makes exactly one live call (it must be
+        `architect_expect` when given), stores the reply and raises `episode.ArchitectCallDone`."""
         self.check_declared()
         for cid, i in self.plan():
             d = self.episode_dir(cid, i)
@@ -419,10 +425,21 @@ class Experiment:
             cond = self.cfg["_conditions"][cid]
             factory = (lambda c=cond: architect_for(c)) if (architect_for and cond["proposer"] == "architect") else None
             try:
-                epi.run_episode(client_for(d), self.cfg, d, architect_factory=factory)
+                epi.run_episode(client_for(d), self.cfg, d, architect_factory=factory, architect_mode=architect_mode,
+                                architect_expect=architect_expect)
             except at.Pending as p:
                 epi.write_once_or_replace_pending(self.dir / "pending.json", {
                     "episode_dir": str(d.relative_to(self.dir)), "index": p.index, "tool": p.request["tool"]})
+                raise
+            except epi.ArchitectPending as p:
+                epi.write_once_or_replace_pending(self.dir / "pending.json", {
+                    "episode_dir": str(d.relative_to(self.dir)), "index": None, "tool": None,
+                    "architect": {"request_sha": p.request_sha, "role": p.role, "condition": cid}})
+                raise
+            except epi.ArchitectCallDone as p:
+                epi.write_once_or_replace_pending(self.dir / "pending.json", {
+                    "episode_dir": None, "index": None, "tool": None,
+                    "note": f"architect reply stored for {cid} request {p.request_sha}; run step"})
                 raise
         res = self.results()
         epi.write_once_or_replace_pending(self.dir / "pending.json", {"episode_dir": None, "index": None, "tool": None})

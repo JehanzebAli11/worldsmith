@@ -21,6 +21,7 @@ from worldsmith.architect import client as acl
 from worldsmith.compiler import geometry
 from worldsmith.grammar import scene as sc
 from worldsmith.runner import attempts as at
+from worldsmith.runner import episode as epi
 from worldsmith.runner import experiment as ex
 from worldsmith.runner import taxonomy
 
@@ -124,17 +125,34 @@ def fixture_architects(cfg: dict):
     return architect_for
 
 
-def run_dry(cfg: dict, out_root, *, max_steps: int = 5000, on_step=None) -> dict:
+def run_dry(cfg: dict, out_root, *, max_steps: int = 5000, on_step=None, two_machine: bool = False,
+            on_handoff=None) -> dict:
     """The whole experiment through the relay files, the fake operator answering each pending
-    call, re-running (= resuming) after every answer. Returns results.json's content."""
+    call, re-running (= resuming) after every answer. Returns results.json's content.
+
+    two_machine: the "VM" steps with architect_mode defer; at each pending architect call a
+    separate "Mac" run (architect_mode one, expecting that request) makes exactly that call and
+    stores the reply; then the VM steps on (ADR 0010 section 9)."""
     exp = ex.Experiment(cfg, out_root, dry_run=True)
     op = FakeOperator(cfg)
+    mode = "defer" if two_machine else "call"
     for _ in range(max_steps):
         try:
-            return exp.run(lambda d: at.RelayClient(d / "calls"), fixture_architects(cfg))
+            return exp.run(lambda d: at.RelayClient(d / "calls"), fixture_architects(cfg), architect_mode=mode)
         except at.Pending as p:
             ep_dir = exp.dir / exp.pending()["episode_dir"]
             at.respond(ep_dir / "calls", p.index, op.answer(ep_dir, p.request))
             if on_step:
                 on_step(ep_dir, p)
+        except epi.ArchitectPending as p:
+            mac = ex.Experiment(cfg, out_root, dry_run=True)
+            try:
+                mac.run(lambda d: at.RelayClient(d / "calls"), fixture_architects(cfg), architect_mode="one",
+                        architect_expect=p.request_sha)
+            except epi.ArchitectCallDone:
+                pass
+            else:
+                raise RuntimeError("the Mac run made no architect call")
+            if on_handoff:
+                on_handoff(p.request_sha)
     raise RuntimeError(f"dry run did not finish in {max_steps} steps")
