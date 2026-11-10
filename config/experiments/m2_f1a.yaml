@@ -1,8 +1,10 @@
 # M2 pilot on F1-A (WS-11, ADR 0010). Declared and committed BEFORE any episode of this experiment;
 # the runner refuses to continue if these bytes change after the first episode bundle is written
 # (bundles/experiments/m2_f1a_pilot/experiment.lock.json holds the hash). A change means a NEW
-# experiment id, never an edit. Player p0.v1 (not the M0 controller p0.v0): a separate, labelled
+# experiment id, never an edit. Player p0.v2 (not the M0 controller p0.v0): a separate, labelled
 # player version (SPEC section 9). No paid call and no Studio call happens until the owner runs it.
+# Changed on 10 Nov 2026 BEFORE any run (no lock existed): player p0.v1 -> p0.v2 and the preflight
+# (ADR 0011, after the smoke_f1e_p0v1 contamination).
 schema: worldsmith.experiment/0.1
 experiment: m2_f1a_pilot
 stage: M0                       # patch ops allowed: set bridge_1.length only (ADR 0006)
@@ -12,11 +14,11 @@ scene:
   canonical_hash: 92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d
 
 player:
-  version: p0.v1
+  version: p0.v2
   tier: P0
   driver: "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps"
   claim: "Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result."
-  template: runner/templates/p0_controller_v1.luau
+  template: runner/templates/p0_controller_v2.luau
   route:
     file: config/p0_route_F1.json
     sha256: b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a
@@ -25,8 +27,8 @@ player:
     t_waypoint: 10
     settle: 2
     tick: 0.05
-    sample_every: 1     # s, p0.v1 position samples while alive
-  controller_sha256: dbc1f325ce64bda8b046bc4f08a18050cced76a123b843af5937b85b65754c6d
+    sample_every: 1     # s, position samples while alive, as in the earlier player
+  controller_sha256: a7472c9cbbea9096f678be02a663ffb503cb2619eb9ea1fe136fcbf2a7858cac
 
 n_attempts: 3           # SPEC section 9: N = 3 per scene version
 pass_k: 3               # 3/3; never lowered. 0 < successes < 3 stops the episode (INCONSISTENT)
@@ -42,6 +44,10 @@ tool_timeouts_s:
   run_code: 30
   start_stop_play: 30
   run_script_in_play_mode: 90       # > t_attempt, so the controller's deadline fires first
+
+preflight:                          # ADR 0011: read-only probe before every build (right place, one driver)
+  script: runner/templates/preflight_v1.luau
+  sha256: 29ffe3d7d717a08910e831054040bcd24098d90a540dc6b7e359627023fdbd6c
 
 classifier:
   file: config/classifier.yaml

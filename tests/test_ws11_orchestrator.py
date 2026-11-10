@@ -28,6 +28,7 @@ from worldsmith.runner.config import load_config
 
 CFG = REPO_ROOT / "config" / "experiments" / "m2_f1a.yaml"
 V1_SHA = "dbc1f325ce64bda8b046bc4f08a18050cced76a123b843af5937b85b65754c6d"
+V2_SHA = "a7472c9cbbea9096f678be02a663ffb503cb2619eb9ea1fe136fcbf2a7858cac"
 M0_CONTROLLER_SHA = "3743d998e900729eaec583dfcae9f584651184a66e133eb14944045aee18c034"
 M0_FIRST_REQUEST = "57f003382a7ef366af5e9073fffeea3bd485946880c74bda9032953964cf461d"
 F1A = "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d"
@@ -87,10 +88,17 @@ def test_p0_v0_is_still_the_m0_controller():
     assert players.controller_sha256(text) == M0_CONTROLLER_SHA == m0["controller"]["sha256"]
 
 
-def test_p0_v1_hash_is_the_declared_one(cfg):
-    assert cfg["player"]["version"] == "p0.v1"
-    assert players.controller_sha256(cfg["_controller_text"]) == V1_SHA == cfg["player"]["controller_sha256"]
+def test_p0_v1_hash_is_the_declared_one():
+    # the pilot moved to p0.v2 before any run (ADR 0011); p0.v1 is declared by smoke_f1e_p0v1
+    v1 = ex.load_experiment(REPO_ROOT / "config" / "experiments" / "smoke_f1e_p0v1.yaml", REPO_ROOT)
+    assert v1["player"]["version"] == "p0.v1"
+    assert players.controller_sha256(v1["_controller_text"]) == V1_SHA == v1["player"]["controller_sha256"]
     assert V1_SHA != M0_CONTROLLER_SHA
+
+
+def test_pilot_declares_p0_v2(cfg):
+    assert cfg["player"]["version"] == "p0.v2"
+    assert players.controller_sha256(cfg["_controller_text"]) == V2_SHA == cfg["player"]["controller_sha256"]
 
 
 def test_p0_v1_template_only_adds_position_samples():
@@ -495,12 +503,12 @@ def test_architect_sees_what_the_m0_smoke_call_saw(dry):
     assert props[0]["request_sha"] == M0_FIRST_REQUEST
 
 
-def test_p0_v1_samples_arrive_in_the_attempts(dry):
+def test_position_samples_arrive_in_the_attempts(dry):
     d, _ = dry
     row = json.loads((d / "B0" / "ep0" / "v1" / "attempts" / "1.json").read_text())
     assert row["report"]["samples"] and row["stuck"]["result"] == "NOT_STUCK"
     trace = [json.loads(l) for l in (d / "B0" / "ep0" / "trace.jsonl").read_text().splitlines()]
-    assert all(t["player"]["version"] == "p0.v1" and t["player"]["controller_sha"] == V1_SHA for t in trace)
+    assert all(t["player"]["version"] == "p0.v2" and t["player"]["controller_sha"] == V2_SHA for t in trace)
 
 
 def test_dry_run_bundle_holds_no_secret(dry):
