@@ -1,0 +1,123 @@
+{
+ "conditions": [
+  {
+   "condition": "B0",
+   "episodes": [
+    {
+     "architect_calls": 0,
+     "attempts_used": 3,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+       "successes": 3,
+       "version": 1
+      }
+     ],
+     "cost_usd_reported": null,
+     "episode": "B0/ep0",
+     "final": {
+      "n": 3,
+      "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 1
+     },
+     "model_calls": 0,
+     "passed_final": true,
+     "passed_original": true,
+     "repaired": false,
+     "revisions": {
+      "accepted": 0,
+      "errors": 0,
+      "malformed": 0,
+      "max": 0,
+      "rejected": 0,
+      "used": 0,
+      "verdicts": []
+     },
+     "status": "complete"
+    },
+    {
+     "architect_calls": 0,
+     "attempts_used": 3,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+       "successes": 3,
+       "version": 1
+      }
+     ],
+     "cost_usd_reported": null,
+     "episode": "B0/ep1",
+     "final": {
+      "n": 3,
+      "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 1
+     },
+     "model_calls": 0,
+     "passed_final": true,
+     "passed_original": true,
+     "repaired": false,
+     "revisions": {
+      "accepted": 0,
+      "errors": 0,
+      "malformed": 0,
+      "max": 0,
+      "rejected": 0,
+      "used": 0,
+      "verdicts": []
+     },
+     "status": "complete"
+    }
+   ],
+   "episodes_done": 2,
+   "episodes_planned": 2,
+   "passed_final": {
+    "n": 2,
+    "of": 2
+   },
+   "proposer": "none",
+   "repaired": {
+    "n": 0,
+    "of": 2
+   },
+   "role": null,
+   "seeds": null,
+   "statuses": [
+    "complete",
+    "complete"
+   ]
+  }
+ ],
+ "config_sha256": "ce5754d29e95145e76ba0f0bd2ba0d4adee46ef2a2f06274fea08d0046de64e6",
+ "disclosure": "Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result.",
+ "dry_run": false,
+ "experiment": "smoke_f1e_p0v3b",
+ "max_revisions": 3,
+ "n": 3,
+ "pass_k": 3,
+ "player": {
+  "controller_sha256": "cd9a7a0a21ccd32ea7e14990f17b7bba58083f1bfeb2a81e77cf2e122a2d0f8c",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "t_attempt_s": 60,
+  "tier": "P0",
+  "version": "p0.v3"
+ },
+ "scene_hash": "f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3",
+ "schema": "worldsmith.experiment_results/0.1",
+ "stage": "M0"
+}
