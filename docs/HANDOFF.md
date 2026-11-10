@@ -724,3 +724,41 @@ no key, no network)
    `job="validator_redteam"`).
 5. A provider error uses the revision slot but is not a rejection, and WS-10 never retries?
    Recommended: yes (the cap is on calls; WS-11 labels the episode CONNECTOR_ERROR).
+
+## 2026-11-10 12:42 PKT · architect smoke script
+
+**Done**
+- `scripts/architect_smoke.py --role haiku [--dry-run]`: builds the WS-10 loop's revision-1-of-3
+  request for F1-A at M0 from `bundles/m0/F1-A/scene.json` + `bundles/m0/classification.json`
+  (baseline prompt, hypothesis unconfirmed, paired-fix evidence withheld), prints prompt, request
+  and context hashes and jzapi's worst case; live: refuses unless both switches are on (names
+  each one that is off), then one call through `JzapiArchitect` (SDK `max_retries=0`, jzapi
+  `token_estimate="bytes"`: one HTTP request, no retries), strict parse, WS-06 validator, bundle
+  in `bundles/architect_smoke/<UTC>-<role>/` (request + rendered prompt, raw reply, parse,
+  validator, usage/cost, SPEC §11 call-log line, summary). `.gitignore` lets that folder be
+  committed. Owner steps in `docs/ARCHITECT_SMOKE.md`.
+- Tests first (`8493422`), then `5d4e65f`: `tests/test_architect_smoke.py` (28).
+
+**Verified** (Linux VM; no live call, no key, no network)
+- Dry run on the real configs: `prompt_sha df1b7a12…83bd`, `request_sha 57f00338…461d` (equal to
+  the `f1a_m0_fix` fixture's first request hash), `worst_case_usd 0.005464` (haiku: ≤ 11715
+  prompt tokens by bytes at the cache-write rate + 8000 output tokens). Both switches read ON on
+  this machine.
+- With jzapi's own fake SDK client in a temp repo: exactly one `create`, no `count_tokens`; ACCEPTED
+  (16), REJECTED OUT_OF_BOUNDS (65), MALFORMED CODE_FENCE / NOT_JSON / TRUNCATED (validator
+  skipped), provider error logged as ERROR with one attempt and exit 1; one usage.csv row; no
+  `sk-ant` or fake-key string in any written file or output; params equal `JzapiArchitect._params`
+  for all three roles; worst case equals what `jzapi.Session(token_estimate="bytes")` reserves.
+- `VENV=… ./scripts/test.sh -q` → `1448 passed, 1 skipped` (the WS-10 "not approved today" check
+  now skips: `architect_ladder` is approved). The smoke tests also pass in a venv without jzapi
+  (they use the JzLab checkout beside the repo; they skip if neither exists).
+- Not verified: the live call itself (the bridge VM's proxy blocks keyed calls), macOS.
+
+**Next**
+- Owner, on the Mac: the four commands in `docs/ARCHITECT_SMOKE.md`; then commit the bundle and
+  check the verdict and `stop_reason` (TRUNCATED at 8000 would argue for a higher haiku
+  max_tokens before any comparison, WS-10 open question 3).
+
+**Open questions**
+- Commit `results/usage.csv` (written by jzapi) with the bundle? Recommended: yes, it is the cost
+  record SPEND.md rolls up.
