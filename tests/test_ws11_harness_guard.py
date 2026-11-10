@@ -520,3 +520,15 @@ def test_dry_run_with_preflight(smoke2, tmp_path):
     assert s["status"] == "complete" and s["versions"][0]["outcomes"] == ["SUCCESS"] * 3
     assert json.loads((d / "v1" / "preflight.json").read_text())["ok"] is True
     assert res["conditions"][0]["statuses"] == ["complete"]
+
+
+def test_a_failed_preflight_stops_the_experiment_after_that_episode(m2, tmp_path):
+    op = ProbeOp(m2, probe_over={"ws_place": "<none>"})
+    exp = ex.Experiment(m2, tmp_path)
+    with pytest.raises(ex.PreflightFailed, match="place_marker"):
+        exp.run(lambda d: Direct(op, d))
+    st = {s["condition"]: s["state"] for s in exp.status()}
+    assert st["B0"] == "done" and all(st[c] == "todo" for c in st if c != "B0")
+    s = json.loads((exp.episode_dir("B0", 0) / "summary.json").read_text())
+    assert s["status"] == "HARNESS_ERROR" and s["attempts_used"] == 0
+    assert op.tools == ["get_studio_mode", "probe"] and not (exp.dir / "results.json").exists()
