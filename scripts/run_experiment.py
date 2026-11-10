@@ -25,9 +25,13 @@ with exit 5 and prints the request hash, using no slot and writing no error (no 
 same switch and headroom checks, stores the reply by request hash and exits; it makes no Studio
 call. With nothing pending, or a reply already stored for the pending request, it calls nothing.
 
+A closed experiment (CLOSED.md in its bundle folder, ADR 0012) refuses `step`, `respond` and
+`architect` with exit 4 and sends, writes and calls nothing; `status` and `plan` still print.
+
 Exit codes: 0 done (or plan/status/dry run printed; `architect`: reply stored or nothing to do);
 3 a Studio call is pending; 5 an architect call is pending (run `architect` on the Mac); 4 refused
-(a switch is off, headroom too low, the config changed after the first episode, mixed players);
+(a switch is off, headroom too low, the config changed after the first episode, mixed players,
+the experiment is closed);
 2 setup problem (jzapi missing for a live B3 step); 1 any other error (`architect`: the provider
 failed; the error is stored and the episode will end CONNECTOR_ERROR).
 """
@@ -155,7 +159,7 @@ def main(argv=None) -> int:
             if elsewhere:
                 print(f"two machines simulated: {len(handoffs)} architect hand-offs (exit 5 on the VM, "
                       "`architect` on the Mac)")
-        except (ex.ExperimentLocked, ex.MixedPlayers) as exc:
+        except (ex.ExperimentLocked, ex.MixedPlayers, ex.ExperimentClosed) as exc:
             print(f"refused: {exc}", file=sys.stderr)
             return 4
         for c in res["conditions"]:
@@ -168,6 +172,14 @@ def main(argv=None) -> int:
         return 0
 
     exp = ex.Experiment(cfg, Path(a.out) if a.out else DEFAULT_OUT)
+    if exp.closed():
+        print(f"closed: {exp.closed_path()} (step, respond and architect refuse; nothing more runs)")
+        if a.what in ("step", "respond", "architect"):
+            try:
+                exp.check_open()
+            except ex.ExperimentClosed as exc:
+                print(f"refused: {exc}", file=sys.stderr)
+                return 4
     if a.what == "status":
         for s in exp.status():
             print(f"  {s['condition']:<10} ep{s['episode']}  {s['state']}")

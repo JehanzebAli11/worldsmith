@@ -53,6 +53,7 @@ _OPTIONAL = {"preflight"}       # ADR 0011: absent in configs declared before it
 _ID = re.compile(r"[a-z0-9][a-z0-9_]{0,47}")
 _COND_ID = re.compile(r"B[0-9]([a-z0-9-]{0,24})?")
 _HEX64 = re.compile(r"[0-9a-f]{64}")
+CLOSED_FILE = "CLOSED.md"       # ADR 0012: an experiment closed by the owner decision; step/respond/architect refuse
 
 
 class ExperimentError(ValueError):
@@ -61,6 +62,11 @@ class ExperimentError(ValueError):
 
 class ExperimentLocked(ExperimentError):
     """The config changed after the experiment's first episode bundle was written."""
+
+
+class ExperimentClosed(ExperimentError):
+    """The experiment's bundle folder holds CLOSED.md (closed by the owner): nothing more is run,
+    answered or paid for; its remaining conditions move to a new experiment id."""
 
 
 class MixedPlayers(ExperimentError):
@@ -391,6 +397,19 @@ class Experiment:
     def lock_path(self) -> Path:
         return self.dir / "experiment.lock.json"
 
+    def closed_path(self) -> Path:
+        return self.dir / CLOSED_FILE
+
+    def closed(self) -> bool:
+        return self.closed_path().is_file()
+
+    def check_open(self) -> None:
+        """Refuse a closed experiment (ADR 0012): no Studio request, answer or architect call."""
+        if self.closed():
+            raise ExperimentClosed(
+                f"{self.cfg['experiment']} is closed ({self.closed_path()}): nothing is run, answered or "
+                "called for it; its remaining conditions move to a new experiment id")
+
     def check_declared(self) -> None:
         """Refuse a changed config after the first episode, and any mixed episode folder."""
         lp_ = self.lock_path()
@@ -437,11 +456,13 @@ class Experiment:
             architect_expect: str | None = None) -> dict:
         """Run every episode in declared order (resuming the first unfinished one). Raises
         `attempts.Pending` at the first unanswered relay call (and records it in pending.json).
+        A closed experiment (CLOSED.md) raises `ExperimentClosed` before anything is read or sent.
 
         `architect_mode` (ADR 0010 section 9): `call` makes live architect calls inline; `defer`
         raises `episode.ArchitectPending` where a live call is due (no slot used, nothing written;
         pending.json names the request); `one` makes exactly one live call (it must be
         `architect_expect` when given), stores the reply and raises `episode.ArchitectCallDone`."""
+        self.check_open()
         self.check_declared()
         for cid, i in self.plan():
             d = self.episode_dir(cid, i)
