@@ -1073,3 +1073,84 @@ pending; **5 architect call pending**; 4 refused; 2 setup (jzapi missing); 1 oth
 2. Commit and push this entry with the bundle and usage.csv.
 
 **Open questions**: none new.
+
+## 2026-11-11 16:15 PKT · WS-14 CPU parts: fixtures F1-B, F1-C, F1-D; offline hardness; `m2_hard` declared (ADR 0013, ADR 0014)
+
+**Done** (CPU only: no Studio call, no network call, no paid call; branch `ws14`, not pushed)
+- **Three broken F1 fixtures** (`scenes/F1-B`, `F1-C`, `F1-D`: `scene.json`, `fix.json`,
+  `patches/m1_fix.json`, `README.md`), each F1-A's room plus its declared defect and nothing else
+  (tested field for field; locked F1 rules, protected entities, gap 16, kill floor unchanged):
+
+  | Fixture | Defect (by construction) | Hand fix (`worldsmith.patch/0.2`, M1) |
+  | --- | --- | --- |
+  | F1-B `2b54bbe7…` | full-length bridge built 10 studs beside the path (`lateral_offset` 10) | `set bridge_1.lateral_offset 0` (1 op) |
+  | F1-C `e916fde2…` | lever behind a protected wall `wall_ledge` across the ledge (lever at x -16) | `move lever_1` to [-10, 0, 24] (1 op) |
+  | F1-D `16d226d1…` | F1-C's walled-off lever and F1-A's short bridge (length 6) | `move lever_1` + `set bridge_1.length 16` (2 ops) |
+
+  Two fixes are not `set bridge_1.length`; F1-D needs two ops (each alone: accepted, walk
+  DISCONNECTED). F1-B's fixed room is F1-A's fix room; F1-C's and F1-D's fixed rooms are the same.
+  ADR 0013 records each defect, the fix, and what the frozen p0.v3 route is predicted to do:
+  F1-B **FELL** in the gap_1 area (cause UNCLASSIFIED: the bridge is not short); F1-C and F1-D
+  **STUCK** at the closed gate with no `LEVER_ACTIVATED` (route ends about 46 to 48 s after the
+  script start, before T_attempt 60 s); each fix **SUCCESS**. Build snapshots for all six scenes.
+- **Offline hardness** (`scripts/ws_hardness.py` → `bundles/hardness/summary.json` +
+  `proposals.jsonl.gz`, input hashes; `.gitignore` un-ignores the folder): B2 at M1, seeds 0 to 199,
+  3 proposals each, the `b2_offline` method and seed derivation; bar declared in ADR 0013 before
+  the run (commit `cf536dc`).
+- **`config/experiments/m2_hard.yaml`**: a declared **suite** (new, ADR 0014: one file, one part
+  per scene, each part locked to the whole file's hash; `load_experiment(part=)`, `load_suite`,
+  `suite_worst_case`, CLI `--part`; existing configs unchanged). Parts `m2_hard_f1a`, `_f1b`, `_f1c`,
+  `_f1d`; stage M1; p0.v3; N 3, k 3; B0, B1 (hand fix), B2 (seeds 0, 1, 2), B3-haiku, B3-sonnet,
+  B3-opus, 3 episodes each; `prompt_bytes_cap` 32000 (24000 in `m2_f1a_b3`). **Not run.**
+- Commits: `cf536dc` (fixtures, ADR 0013), `bebf61b` (hardness), `df4f591` (m2_hard, ADR 0014),
+  and this entry with the TICKETS status.
+
+**Verified** (bridge VM, `/home/claude/venv-ws14`)
+- `bundles/hardness/summary.json` (n = 600 proposals, 200 episodes per fixture):
+
+  | Fixture | Episodes with an accepted, walk-CONNECTED patch | Broken walk | Hand fix | Verdict |
+  | --- | --- | --- | --- | --- |
+  | F1-A at M1 (reference) | 1/200 | DISCONNECTED | not judged | equals `b2_offline` M1, record for record |
+  | F1-B | 4/200 | DISCONNECTED | ACCEPTED, CONNECTED | passes (bar ≤ 10/200) |
+  | F1-C | 0/200 | DISCONNECTED | ACCEPTED, CONNECTED | passes |
+  | F1-D | 0/200 | DISCONNECTED | ACCEPTED, CONNECTED | passes |
+
+  No fixture was dropped or redesigned; each was scored once. Validator and walk graph only
+  (ADR 0008 approximation, never a proof): not a play result, not a repair rate. F1-C and F1-D
+  score 0 largely because the sampler draws lever positions over ±256 studs (ADR 0013).
+- `m2_hard` worst case **$37.728** (108 calls: per call haiku $0.008, sonnet $0.24, opus $0.80; per
+  part $9.432), from per-token rates derived from the repo's recorded jzapi figures (tested to
+  reproduce $0.007000 / $0.220000 / $0.760000 at 24000 tokens and $0.005464 at 11715). jzapi is not
+  installed on this VM, so jzapi itself did not compute it; 42 % of the job's ~$89.96 headroom.
+- Dry run (simulated, not a result): B0, B1, B2 of `m2_hard_f1d` complete 3/3 episodes each; B1's
+  two-op 0.2 patch accepted, final scene = `F1-D/fix.json`.
+- `VENV=/home/claude/venv-ws14 ./scripts/test.sh -q` → **1788 passed, 30 skipped** (1589 before;
+  new: `test_ws14_fixtures.py`, `test_ws14_hardness.py`, `test_ws14_m2_hard.py`, and the six new
+  scenes in the shared fixture tests).
+- Not verified: anything in Roblox. The route predictions in ADR 0013 rest on geometry, the
+  classifier rules, MoveTo's ~8 s give-up (stated in `config/m0.yaml`, not measured here) and the
+  recorded p0.v3 route starts (1.685 to 3.387 s, n = 24).
+
+**Next**
+1. Owner/relay, Studio (one driver, `places/worldsmith-lab.rbxl`, p0.v3, N 3, k 3, read-back 0
+   differences): the **live gate** of ADR 0013. F1-B `scene.json` FELL 3/3 in the gap_1 area;
+   F1-C and F1-D `scene.json` STUCK 3/3 with no `LEVER_ACTIVATED`; each `fix.json` SUCCESS 3/3.
+   Anything else (2/3, TIMEOUT where STUCK is expected) means stop and debug; a fixture whose defect
+   does not show with the frozen route is dropped from `m2_hard` (a new suite id).
+2. Owner: approve `m2_hard`'s worst case after `plan --part <id>` on the Mac prints jzapi's figure
+   for each part (expected $9.432 each, $37.728 in all). No paid call before that.
+
+**Open questions** (yes/no for the owner)
+1. Declare `m2_hard` as one suite file with `--part` (ADR 0014) rather than four config files?
+   Recommended: yes (one hash to approve; the runner itself is unchanged).
+2. Raise `prompt_bytes_cap` to 32000 for M1 runs (worst case $37.728 instead of $35.532)?
+   Recommended: yes; a request over the cap stops the run.
+3. The live gate has no runner of its own yet (M0 used `scripts/m0.py` with `config/m0.yaml`). Run
+   it as `m0.py`-style configs per fixture (scene → fix.json), or as a B0 + B1 experiment per
+   fixture? Recommended: the M0 tool, one config per fixture, declared before the run.
+4. 3 episodes of B0 and B1 on deterministic rooms cost Studio time but no money (up to 756 play
+   calls in all, many hours of relay). Keep 3, or 1 episode for B0/B1 (a new suite before any
+   run)? Recommended: keep 3 as the ticket asks, unless Studio time is the bottleneck.
+5. `--dry-run` cannot cover B3 in `m2_hard` (the WS-10 fixtures are F1-A M0 replies; FakeOperator
+   only knows bridge length). Add M1 dry-run fixtures and a lever rule to FakeOperator before the
+   run? Recommended: yes, CPU only, a small follow-up.
