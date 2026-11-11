@@ -1,0 +1,52 @@
+{
+ "caps": {
+  "architect_calls_per_episode": 3,
+  "attempts_per_episode": 12
+ },
+ "condition": "B3-sonnet",
+ "config_sha256": "897a730aa0ce244181e525bd638c83b82945b6a05e00a851436a61d37baca285",
+ "dry_run": false,
+ "episode": "B3-sonnet/ep0",
+ "experiment": "m2_hard_f1a",
+ "index": 0,
+ "max_revisions": 3,
+ "n_attempts": 3,
+ "nonces": [
+  [
+   "1be37582bb787971",
+   "8e74aa878502748d",
+   "84b0989af812e1ab"
+  ],
+  [
+   "2694f1d9b1622002",
+   "b5c2b5f602dd8c7a",
+   "00fb0d103c5e0eaa"
+  ],
+  [
+   "e3229850a9e0332a",
+   "5909f9eedaab3632",
+   "fe6dbbcf6cce28d7"
+  ],
+  [
+   "c4c93e1e12580c54",
+   "6f029310c76c4f73",
+   "91df44fe63a387a6"
+  ]
+ ],
+ "pass_k": 3,
+ "player": {
+  "controller_sha256": "cd9a7a0a21ccd32ea7e14990f17b7bba58083f1bfeb2a81e77cf2e122a2d0f8c",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "freeze_manifest_sha": null,
+  "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+  "t_attempt_s": 60,
+  "tier": "P0",
+  "version": "p0.v3"
+ },
+ "proposer": "architect",
+ "role": "sonnet",
+ "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+ "schema": "worldsmith.episode/0.1",
+ "seed": null,
+ "stage": "M1"
+}

@@ -1,0 +1,76 @@
+[
+ {
+  "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+  "candidate_hash": null,
+  "codes": [
+   "PENETRATION"
+  ],
+  "cost_usd": 0.000994975,
+  "detail": {
+   "model_id": "claude-haiku-5-5",
+   "model_role": "haiku",
+   "on_version": 1,
+   "prompt_bytes_bound": 18818,
+   "provider": "jzapi",
+   "stop_reason": "end_turn"
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 1,
+  "malformed": null,
+  "model_calls": 1,
+  "patch": {
+   "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+   "ops": [
+    {
+     "field": "length",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 18
+    }
+   ],
+   "schema": "worldsmith.patch/0.1"
+  },
+  "request_sha": "9f6209e3ab5426a66d9fa1746e21118889badfb18a0765e2e27427de331ab4e5",
+  "source": "architect",
+  "verdict": "REJECTED",
+  "warnings": []
+ },
+ {
+  "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+  "candidate_hash": "9018d6df4b0a043bdbdd687cea003627448e356dd23b87a0bacf3f0ddfee1277",
+  "codes": [],
+  "cost_usd": 0.0010510699999999999,
+  "detail": {
+   "model_id": "claude-haiku-5-5",
+   "model_role": "haiku",
+   "on_version": 1,
+   "prompt_bytes_bound": 19399,
+   "provider": "jzapi",
+   "stop_reason": "end_turn"
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 2,
+  "malformed": null,
+  "model_calls": 1,
+  "patch": {
+   "base_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+   "ops": [
+    {
+     "field": "length",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 15.5
+    }
+   ],
+   "schema": "worldsmith.patch/0.1"
+  },
+  "request_sha": "e1759aab206951f859614d02aeb17b645da85b0f042bfc7dd02e5d18cb6a0904",
+  "source": "architect",
+  "verdict": "ACCEPTED",
+  "warnings": [
+   "BRIDGE_SHORT"
+  ]
+ }
+]

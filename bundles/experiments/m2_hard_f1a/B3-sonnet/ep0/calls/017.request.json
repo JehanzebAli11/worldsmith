@@ -1,0 +1,10 @@
+{
+ "args": {},
+ "code_arg": "command",
+ "code_file": "017.code.luau",
+ "code_sha256": "9baf4283c57151d4179f5d5e2464e9caee76e09f2656b4a9dae0143d9e7ab1c3",
+ "index": 17,
+ "t_request": "2026-11-11T15:30:30.813835Z",
+ "timeout_s": 30,
+ "tool": "run_code"
+}

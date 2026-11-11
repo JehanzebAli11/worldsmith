@@ -1,0 +1,865 @@
+{
+ "conditions": [
+  {
+   "condition": "B0",
+   "episodes": [
+    {
+     "architect_calls": 0,
+     "attempts_used": 3,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      }
+     ],
+     "cost_usd_reported": null,
+     "episode": "B0/ep0",
+     "final": {
+      "n": 3,
+      "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+      "successes": 0,
+      "verdict": "FAIL",
+      "version": 1
+     },
+     "model_calls": 0,
+     "passed_final": false,
+     "passed_original": false,
+     "repaired": false,
+     "revisions": {
+      "accepted": 0,
+      "errors": 0,
+      "malformed": 0,
+      "max": 0,
+      "rejected": 0,
+      "used": 0,
+      "verdicts": []
+     },
+     "status": "complete"
+    }
+   ],
+   "episodes_done": 1,
+   "episodes_planned": 1,
+   "passed_final": {
+    "n": 0,
+    "of": 1
+   },
+   "proposer": "none",
+   "repaired": {
+    "n": 0,
+    "of": 1
+   },
+   "role": null,
+   "seeds": null,
+   "statuses": [
+    "complete"
+   ]
+  },
+  {
+   "condition": "B1",
+   "episodes": [
+    {
+     "architect_calls": 0,
+     "attempts_used": 6,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      },
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+       "successes": 3,
+       "version": 2
+      }
+     ],
+     "cost_usd_reported": null,
+     "episode": "B1/ep0",
+     "final": {
+      "n": 3,
+      "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 2
+     },
+     "model_calls": 0,
+     "passed_final": true,
+     "passed_original": false,
+     "repaired": true,
+     "revisions": {
+      "accepted": 1,
+      "errors": 0,
+      "malformed": 0,
+      "max": 1,
+      "rejected": 0,
+      "used": 1,
+      "verdicts": [
+       "ACCEPTED"
+      ]
+     },
+     "status": "complete"
+    }
+   ],
+   "episodes_done": 1,
+   "episodes_planned": 1,
+   "passed_final": {
+    "n": 1,
+    "of": 1
+   },
+   "proposer": "hand_fix",
+   "repaired": {
+    "n": 1,
+    "of": 1
+   },
+   "role": null,
+   "seeds": null,
+   "statuses": [
+    "complete"
+   ]
+  },
+  {
+   "condition": "B2",
+   "episodes": [
+    {
+     "architect_calls": 0,
+     "attempts_used": 3,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      }
+     ],
+     "cost_usd_reported": null,
+     "episode": "B2/ep0",
+     "final": {
+      "n": 3,
+      "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+      "successes": 0,
+      "verdict": "FAIL",
+      "version": 1
+     },
+     "model_calls": 0,
+     "passed_final": false,
+     "passed_original": false,
+     "repaired": false,
+     "revisions": {
+      "accepted": 0,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 3,
+      "used": 3,
+      "verdicts": [
+       "REJECTED",
+       "REJECTED",
+       "REJECTED"
+      ]
+     },
+     "status": "complete"
+    },
+    {
+     "architect_calls": 0,
+     "attempts_used": 3,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      }
+     ],
+     "cost_usd_reported": null,
+     "episode": "B2/ep1",
+     "final": {
+      "n": 3,
+      "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+      "successes": 0,
+      "verdict": "FAIL",
+      "version": 1
+     },
+     "model_calls": 0,
+     "passed_final": false,
+     "passed_original": false,
+     "repaired": false,
+     "revisions": {
+      "accepted": 0,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 3,
+      "used": 3,
+      "verdicts": [
+       "REJECTED",
+       "REJECTED",
+       "REJECTED"
+      ]
+     },
+     "status": "complete"
+    },
+    {
+     "architect_calls": 0,
+     "attempts_used": 3,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      }
+     ],
+     "cost_usd_reported": null,
+     "episode": "B2/ep2",
+     "final": {
+      "n": 3,
+      "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+      "successes": 0,
+      "verdict": "FAIL",
+      "version": 1
+     },
+     "model_calls": 0,
+     "passed_final": false,
+     "passed_original": false,
+     "repaired": false,
+     "revisions": {
+      "accepted": 0,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 3,
+      "used": 3,
+      "verdicts": [
+       "REJECTED",
+       "REJECTED",
+       "REJECTED"
+      ]
+     },
+     "status": "complete"
+    }
+   ],
+   "episodes_done": 3,
+   "episodes_planned": 3,
+   "passed_final": {
+    "n": 0,
+    "of": 3
+   },
+   "proposer": "random_valid",
+   "repaired": {
+    "n": 0,
+    "of": 3
+   },
+   "role": null,
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "statuses": [
+    "complete",
+    "complete",
+    "complete"
+   ]
+  },
+  {
+   "condition": "B3-haiku",
+   "episodes": [
+    {
+     "architect_calls": 1,
+     "attempts_used": 6,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      },
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+       "successes": 3,
+       "version": 2
+      }
+     ],
+     "cost_usd_reported": 0.000981975,
+     "episode": "B3-haiku/ep0",
+     "final": {
+      "n": 3,
+      "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 2
+     },
+     "model_calls": 1,
+     "passed_final": true,
+     "passed_original": false,
+     "repaired": true,
+     "revisions": {
+      "accepted": 1,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 0,
+      "used": 1,
+      "verdicts": [
+       "ACCEPTED"
+      ]
+     },
+     "status": "complete"
+    },
+    {
+     "architect_calls": 2,
+     "attempts_used": 6,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      },
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+       "successes": 3,
+       "version": 2
+      }
+     ],
+     "cost_usd_reported": 0.002026045,
+     "episode": "B3-haiku/ep1",
+     "final": {
+      "n": 3,
+      "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 2
+     },
+     "model_calls": 2,
+     "passed_final": true,
+     "passed_original": false,
+     "repaired": true,
+     "revisions": {
+      "accepted": 1,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 1,
+      "used": 2,
+      "verdicts": [
+       "REJECTED",
+       "ACCEPTED"
+      ]
+     },
+     "status": "complete"
+    },
+    {
+     "architect_calls": 2,
+     "attempts_used": 6,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      },
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "9018d6df4b0a043bdbdd687cea003627448e356dd23b87a0bacf3f0ddfee1277",
+       "successes": 3,
+       "version": 2
+      }
+     ],
+     "cost_usd_reported": 0.002046045,
+     "episode": "B3-haiku/ep2",
+     "final": {
+      "n": 3,
+      "scene_hash": "9018d6df4b0a043bdbdd687cea003627448e356dd23b87a0bacf3f0ddfee1277",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 2
+     },
+     "model_calls": 2,
+     "passed_final": true,
+     "passed_original": false,
+     "repaired": true,
+     "revisions": {
+      "accepted": 1,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 1,
+      "used": 2,
+      "verdicts": [
+       "REJECTED",
+       "ACCEPTED"
+      ]
+     },
+     "status": "complete"
+    }
+   ],
+   "episodes_done": 3,
+   "episodes_planned": 3,
+   "passed_final": {
+    "n": 3,
+    "of": 3
+   },
+   "proposer": "architect",
+   "repaired": {
+    "n": 3,
+    "of": 3
+   },
+   "role": "haiku",
+   "seeds": null,
+   "statuses": [
+    "complete",
+    "complete",
+    "complete"
+   ]
+  },
+  {
+   "condition": "B3-sonnet",
+   "episodes": [
+    {
+     "architect_calls": 2,
+     "attempts_used": 6,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      },
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+       "successes": 3,
+       "version": 2
+      }
+     ],
+     "cost_usd_reported": 0.0357222,
+     "episode": "B3-sonnet/ep0",
+     "final": {
+      "n": 3,
+      "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 2
+     },
+     "model_calls": 2,
+     "passed_final": true,
+     "passed_original": false,
+     "repaired": true,
+     "revisions": {
+      "accepted": 1,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 1,
+      "used": 2,
+      "verdicts": [
+       "REJECTED",
+       "ACCEPTED"
+      ]
+     },
+     "status": "complete"
+    },
+    {
+     "architect_calls": 2,
+     "attempts_used": 6,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      },
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+       "successes": 3,
+       "version": 2
+      }
+     ],
+     "cost_usd_reported": 0.0381622,
+     "episode": "B3-sonnet/ep1",
+     "final": {
+      "n": 3,
+      "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 2
+     },
+     "model_calls": 2,
+     "passed_final": true,
+     "passed_original": false,
+     "repaired": true,
+     "revisions": {
+      "accepted": 1,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 1,
+      "used": 2,
+      "verdicts": [
+       "REJECTED",
+       "ACCEPTED"
+      ]
+     },
+     "status": "complete"
+    },
+    {
+     "architect_calls": 1,
+     "attempts_used": 6,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      },
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+       "successes": 3,
+       "version": 2
+      }
+     ],
+     "cost_usd_reported": 0.0173895,
+     "episode": "B3-sonnet/ep2",
+     "final": {
+      "n": 3,
+      "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 2
+     },
+     "model_calls": 1,
+     "passed_final": true,
+     "passed_original": false,
+     "repaired": true,
+     "revisions": {
+      "accepted": 1,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 0,
+      "used": 1,
+      "verdicts": [
+       "ACCEPTED"
+      ]
+     },
+     "status": "complete"
+    }
+   ],
+   "episodes_done": 3,
+   "episodes_planned": 3,
+   "passed_final": {
+    "n": 3,
+    "of": 3
+   },
+   "proposer": "architect",
+   "repaired": {
+    "n": 3,
+    "of": 3
+   },
+   "role": "sonnet",
+   "seeds": null,
+   "statuses": [
+    "complete",
+    "complete",
+    "complete"
+   ]
+  },
+  {
+   "condition": "B3-opus",
+   "episodes": [
+    {
+     "architect_calls": 1,
+     "attempts_used": 6,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      },
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+       "successes": 3,
+       "version": 2
+      }
+     ],
+     "cost_usd_reported": 0.032339,
+     "episode": "B3-opus/ep0",
+     "final": {
+      "n": 3,
+      "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 2
+     },
+     "model_calls": 1,
+     "passed_final": true,
+     "passed_original": false,
+     "repaired": true,
+     "revisions": {
+      "accepted": 1,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 0,
+      "used": 1,
+      "verdicts": [
+       "ACCEPTED"
+      ]
+     },
+     "status": "complete"
+    },
+    {
+     "architect_calls": 1,
+     "attempts_used": 6,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      },
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+       "successes": 3,
+       "version": 2
+      }
+     ],
+     "cost_usd_reported": 0.033799,
+     "episode": "B3-opus/ep1",
+     "final": {
+      "n": 3,
+      "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 2
+     },
+     "model_calls": 1,
+     "passed_final": true,
+     "passed_original": false,
+     "repaired": true,
+     "revisions": {
+      "accepted": 1,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 0,
+      "used": 1,
+      "verdicts": [
+       "ACCEPTED"
+      ]
+     },
+     "status": "complete"
+    },
+    {
+     "architect_calls": 1,
+     "attempts_used": 6,
+     "canonical": [
+      {
+       "n": 3,
+       "outcomes": [
+        "FELL",
+        "FELL",
+        "FELL"
+       ],
+       "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+       "successes": 0,
+       "version": 1
+      },
+      {
+       "n": 3,
+       "outcomes": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+       ],
+       "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+       "successes": 3,
+       "version": 2
+      }
+     ],
+     "cost_usd_reported": 0.032799,
+     "episode": "B3-opus/ep2",
+     "final": {
+      "n": 3,
+      "scene_hash": "297b23c884e196a80f9a19aa32d006768e1ace84cfbd4bd1e932981fdabf0535",
+      "successes": 3,
+      "verdict": "PASS",
+      "version": 2
+     },
+     "model_calls": 1,
+     "passed_final": true,
+     "passed_original": false,
+     "repaired": true,
+     "revisions": {
+      "accepted": 1,
+      "errors": 0,
+      "malformed": 0,
+      "max": 3,
+      "rejected": 0,
+      "used": 1,
+      "verdicts": [
+       "ACCEPTED"
+      ]
+     },
+     "status": "complete"
+    }
+   ],
+   "episodes_done": 3,
+   "episodes_planned": 3,
+   "passed_final": {
+    "n": 3,
+    "of": 3
+   },
+   "proposer": "architect",
+   "repaired": {
+    "n": 3,
+    "of": 3
+   },
+   "role": "opus",
+   "seeds": null,
+   "statuses": [
+    "complete",
+    "complete",
+    "complete"
+   ]
+  }
+ ],
+ "config_sha256": "897a730aa0ce244181e525bd638c83b82945b6a05e00a851436a61d37baca285",
+ "disclosure": "Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result.",
+ "dry_run": false,
+ "experiment": "m2_hard_f1a",
+ "max_revisions": 3,
+ "n": 3,
+ "pass_k": 3,
+ "player": {
+  "controller_sha256": "cd9a7a0a21ccd32ea7e14990f17b7bba58083f1bfeb2a81e77cf2e122a2d0f8c",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "t_attempt_s": 60,
+  "tier": "P0",
+  "version": "p0.v3"
+ },
+ "scene_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d",
+ "schema": "worldsmith.experiment_results/0.1",
+ "stage": "M1"
+}

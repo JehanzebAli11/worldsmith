@@ -1,0 +1,20 @@
+{
+ "condition_role": "sonnet",
+ "cost_usd": 0.0173895,
+ "latency_s": 4.307943374849856,
+ "model_id": "claude-sonnet-5-5",
+ "model_role": "sonnet",
+ "provider": "jzapi",
+ "request_id": "req_011CgwRKZWhMiMzv9yeh4wRg",
+ "request_sha": "d708e16b944cc93f07e6ee739337f2c9fd093b5b559087d04cd0145888678652",
+ "response_text": "{\"schema\":\"worldsmith.patch/0.1\",\"base_hash\":\"92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d\",\"ops\":[{\"op\":\"set\",\"id\":\"bridge_1\",\"field\":\"length\",\"value\":16}]}",
+ "schema": "worldsmith.architect_reply/0.1",
+ "stop_reason": "end_turn",
+ "usage": {
+  "cache_creation_input_tokens": 787,
+  "cache_read_input_tokens": 0,
+  "cache_write_1h_tokens": 0,
+  "input_tokens": 6016,
+  "output_tokens": 339
+ }
+}
