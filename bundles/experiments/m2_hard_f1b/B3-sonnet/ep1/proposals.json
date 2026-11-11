@@ -1,0 +1,37 @@
+[
+ {
+  "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+  "candidate_hash": "74c137b1180168319c0c3d9469e91b484d6fc828a8a69c47485404c8c6a71f21",
+  "codes": [],
+  "cost_usd": 0.0190755,
+  "detail": {
+   "model_id": "claude-sonnet-5-5",
+   "model_role": "sonnet",
+   "on_version": 1,
+   "prompt_bytes_bound": 18827,
+   "provider": "jzapi",
+   "stop_reason": "end_turn"
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 1,
+  "malformed": null,
+  "model_calls": 1,
+  "patch": {
+   "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+   "ops": [
+    {
+     "field": "lateral_offset",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 0
+    }
+   ],
+   "schema": "worldsmith.patch/0.1"
+  },
+  "request_sha": "7664dbd9ee91268e8f58b2b5bae76c4937ff55ee57048bdb57b6f5b472127c98",
+  "source": "architect",
+  "verdict": "ACCEPTED",
+  "warnings": []
+ }
+]

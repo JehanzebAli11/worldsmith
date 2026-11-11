@@ -1,0 +1,9 @@
+{
+ "error": null,
+ "index": 14,
+ "relay_elapsed_note": "request written -> answer saved; includes the operator's relay time",
+ "relay_elapsed_s": 20.448,
+ "t_response": "2026-11-11T18:56:00.996536Z",
+ "text": "[OUTPUT] WS_PREFLIGHT|{\"owned_scripts\":0,\"load_character_appearance\":false,\"starter_character\":false,\"character_auto_loads\":true,\"spawns_inside\":1,\"spawns_outside_list\":[{\"neutral\":true,\"path\":\"Workspace.SpawnLocation\",\"enabled\":true,\"pos\":\"0.00,0.50,0.00\"}],\"spawns_outside\":1,\"place_id\":0,\"is_running\":false,\"foreign_scripts\":0,\"foreign_scripts_list\":[],\"game_name\":\"worldsmith-lab.rbxl\",\"schema\":\"worldsmith.preflight_probe/0.1\",\"ws_place\":\"worldsmith-lab\"}",
+ "tool": "run_code"
+}

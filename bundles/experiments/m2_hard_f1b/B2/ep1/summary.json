@@ -1,0 +1,98 @@
+{
+ "architect_calls": 0,
+ "attempts_used": 3,
+ "canonical": [
+  {
+   "n": 3,
+   "outcomes": [
+    "FELL",
+    "FELL",
+    "FELL"
+   ],
+   "scene_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+   "successes": 0,
+   "version": 1
+  }
+ ],
+ "caps": {
+  "architect_calls_per_episode": 3,
+  "attempts_per_episode": 12,
+  "max_revisions": 3
+ },
+ "condition": "B2",
+ "config_sha256": "897a730aa0ce244181e525bd638c83b82945b6a05e00a851436a61d37baca285",
+ "cost_usd_reported": null,
+ "detail": "",
+ "disclosure": "P0 player p0.v3: Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result.",
+ "dry_run": false,
+ "episode": "B2/ep1",
+ "experiment": "m2_hard_f1b",
+ "final": {
+  "n": 3,
+  "scene_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+  "successes": 0,
+  "verdict": "FAIL",
+  "version": 1
+ },
+ "model_calls": 0,
+ "n": 3,
+ "pass_k": 3,
+ "passed_final": false,
+ "passed_original": false,
+ "player": {
+  "controller_sha256": "cd9a7a0a21ccd32ea7e14990f17b7bba58083f1bfeb2a81e77cf2e122a2d0f8c",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "freeze_manifest_sha": null,
+  "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+  "t_attempt_s": 60,
+  "tier": "P0",
+  "version": "p0.v3"
+ },
+ "proposer": "random_valid",
+ "repaired": false,
+ "revisions": {
+  "accepted": 0,
+  "errors": 0,
+  "malformed": 0,
+  "max": 3,
+  "rejected": 3,
+  "used": 3,
+  "verdicts": [
+   "REJECTED",
+   "REJECTED",
+   "REJECTED"
+  ]
+ },
+ "role": null,
+ "schema": "worldsmith.episode_summary/0.1",
+ "seed": 1,
+ "stage": "M1",
+ "status": "complete",
+ "versions": [
+  {
+   "attempted": 3,
+   "n": 3,
+   "outcomes": [
+    "FELL",
+    "FELL",
+    "FELL"
+   ],
+   "scene_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+   "status": "complete",
+   "successes": 0,
+   "tags": [
+    [
+     "FELL"
+    ],
+    [
+     "FELL"
+    ],
+    [
+     "FELL"
+    ]
+   ],
+   "verdict": "FAIL",
+   "version": 1
+  }
+ ]
+}

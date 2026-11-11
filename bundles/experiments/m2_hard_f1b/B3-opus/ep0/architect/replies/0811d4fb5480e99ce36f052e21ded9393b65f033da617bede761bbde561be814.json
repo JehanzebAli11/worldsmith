@@ -1,0 +1,20 @@
+{
+ "condition_role": "opus",
+ "cost_usd": 0.035371,
+ "latency_s": 4.124036832945421,
+ "model_id": "claude-opus-5-5",
+ "model_role": "opus",
+ "provider": "jzapi",
+ "request_id": "req_011CgwjJVMyRHosDBewzE7nE",
+ "request_sha": "0811d4fb5480e99ce36f052e21ded9393b65f033da617bede761bbde561be814",
+ "response_text": "{\"schema\":\"worldsmith.patch/0.1\",\"base_hash\":\"2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b\",\"ops\":[{\"op\":\"set\",\"id\":\"bridge_1\",\"field\":\"lateral_offset\",\"value\":0}]}",
+ "schema": "worldsmith.architect_reply/0.1",
+ "stop_reason": "end_turn",
+ "usage": {
+  "cache_creation_input_tokens": 787,
+  "cache_read_input_tokens": 0,
+  "cache_write_1h_tokens": 0,
+  "input_tokens": 6024,
+  "output_tokens": 367
+ }
+}

@@ -1,0 +1,66 @@
+{
+ "attempted": 3,
+ "attempts": [
+  {
+   "attempt": 1,
+   "cause": "UNCLASSIFIED",
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "KILL_FLOOR_TOUCHED"
+   ],
+   "fell_in_area": true,
+   "outcome": "FELL",
+   "stuck": "NOT_STUCK",
+   "tags": [
+    "FELL"
+   ]
+  },
+  {
+   "attempt": 2,
+   "cause": "UNCLASSIFIED",
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "KILL_FLOOR_TOUCHED"
+   ],
+   "fell_in_area": true,
+   "outcome": "FELL",
+   "stuck": "NOT_STUCK",
+   "tags": [
+    "FELL"
+   ]
+  },
+  {
+   "attempt": 3,
+   "cause": "UNCLASSIFIED",
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "KILL_FLOOR_TOUCHED"
+   ],
+   "fell_in_area": true,
+   "outcome": "FELL",
+   "stuck": "NOT_STUCK",
+   "tags": [
+    "FELL"
+   ]
+  }
+ ],
+ "build": {
+  "build_line": "WS_BUILD_OK|2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b|26",
+  "descendants": 26,
+  "expected_descendants": 26,
+  "ok": true,
+  "readback_differences": 0
+ },
+ "detail": "",
+ "episode": "B3-haiku/ep2",
+ "n": 3,
+ "scene_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+ "schema": "worldsmith.version_summary/0.1",
+ "status": "complete",
+ "successes": 0,
+ "verdict": "FAIL",
+ "version": 1
+}

@@ -1,0 +1,227 @@
+{
+ "attempt": 2,
+ "call_index": 21,
+ "cause": null,
+ "detail": "BRIDGE_CROSSED then GOAL_TOUCHED",
+ "events": [
+  "LEVER_ACTIVATED",
+  "GATE_OPENED",
+  "BRIDGE_CROSSED",
+  "GOAL_TOUCHED"
+ ],
+ "events_agree": true,
+ "events_detail": [
+  {
+   "event": "LEVER_ACTIVATED",
+   "id": "lever_1",
+   "pos": [
+    -7.87,
+    3.0,
+    23.73
+   ],
+   "t_server": 1794422697.691
+  },
+  {
+   "event": "GATE_OPENED",
+   "id": "gate_1",
+   "pos": null,
+   "t_server": 1794422697.691
+  },
+  {
+   "event": "BRIDGE_CROSSED",
+   "id": "trig_bridge",
+   "pos": [
+    0.0,
+    3.0,
+    48.21
+   ],
+   "t_server": 1794422701.441
+  },
+  {
+   "event": "GOAL_TOUCHED",
+   "id": "trig_goal",
+   "pos": [
+    0.0,
+    3.0,
+    57.05
+   ],
+   "t_server": 1794422702.208
+  }
+ ],
+ "fell_in_area": null,
+ "hypothesis": null,
+ "nonce": "5571ca16a3816f94",
+ "outcome": "SUCCESS",
+ "raw_file": "attempts/2.raw.txt",
+ "raw_sha256": "773711d993486a8ff78836a0726fb00f070e031c92a8e4f3305322d9a9096e53",
+ "relay_elapsed_s": 77.04,
+ "report": {
+  "characters_added": 1,
+  "detail": "goal event seen",
+  "died": false,
+  "events_dropped": 0,
+  "ground_steps": 0,
+  "ground_test": "floor",
+  "ground_test_end": "floor",
+  "jumps": 0,
+  "last_supported": "0.00,3.53,58.69",
+  "max_dt_warm": 0.813,
+  "pos_died": "na",
+  "ray_dist": -1,
+  "removed": false,
+  "samples": [
+   {
+    "pos": "0.00,3.00,16.05",
+    "t": 3.2574461665935814
+   },
+   {
+    "pos": "-5.49,3.00,23.61",
+    "t": 4.190500291530043
+   },
+   {
+    "pos": "-11.39,3.00,23.96",
+    "t": 5.124430499970913
+   },
+   {
+    "pos": "-0.64,3.00,24.69",
+    "t": 6.074166166596115
+   },
+   {
+    "pos": "-0.01,3.00,34.90",
+    "t": 6.976030083373189
+   },
+   {
+    "pos": "0.00,3.00,43.44",
+    "t": 7.9078662500251085
+   },
+   {
+    "pos": "0.00,3.00,55.17",
+    "t": 8.857204208383337
+   }
+  ],
+  "samples_dropped": 0,
+  "scene_hash": "74c137b1180168319c0c3d9469e91b484d6fc828a8a69c47485404c8c6a71f21",
+  "settle_drift": 0,
+  "settle_max_offset": 0,
+  "settle_steps": 30,
+  "spawn_offset": 0,
+  "spawn_pos": "0.00,0.10,6.00",
+  "start_pos": "0.00,3.20,6.00",
+  "status": "route_done",
+  "t_died": -1,
+  "t_end": 9.141682249959558,
+  "t_route_start": 2.3409464582800865,
+  "ticks": 114,
+  "warm_dts": [
+   0.813,
+   0.02,
+   0.65,
+   0.002,
+   0.034,
+   0.016,
+   0.025,
+   0.049,
+   0.089,
+   0.028,
+   0.035,
+   0.009,
+   0.013
+  ],
+  "warm_frames": 13,
+  "warm_wall_s": 0.96,
+  "waypoints": [
+   {
+    "died": false,
+    "i": 1,
+    "name": "corridor",
+    "pos": "0.00,3.00,19.32",
+    "reached": true,
+    "t": 3.440887083299458
+   },
+   {
+    "died": false,
+    "i": 2,
+    "name": "ledge_entry",
+    "pos": "-5.52,3.00,23.63",
+    "reached": true,
+    "t": 4.12376133329235
+   },
+   {
+    "died": false,
+    "i": 3,
+    "name": "lever_zone",
+    "pos": "-12.16,3.00,23.96",
+    "reached": true,
+    "t": 4.824562083231285
+   },
+   {
+    "died": false,
+    "i": 4,
+    "name": "corridor_mid",
+    "pos": "-0.71,3.00,24.00",
+    "reached": true,
+    "t": 5.824131750036031
+   },
+   {
+    "died": false,
+    "i": 5,
+    "name": "before_gate",
+    "pos": "-0.06,3.00,30.39",
+    "reached": true,
+    "t": 6.424753416562453
+   },
+   {
+    "died": false,
+    "i": 6,
+    "name": "past_gate",
+    "pos": "-0.01,3.00,34.86",
+    "reached": true,
+    "t": 6.907409499865025
+   },
+   {
+    "died": false,
+    "i": 7,
+    "name": "bridge",
+    "pos": "-0.00,3.00,39.17",
+    "reached": true,
+    "t": 7.440475666662678
+   },
+   {
+    "died": false,
+    "i": 8,
+    "name": "landing",
+    "pos": "0.00,3.00,54.46",
+    "reached": true,
+    "t": 8.624293083325028
+   },
+   {
+    "died": false,
+    "i": 9,
+    "name": "goal",
+    "pos": "0.00,3.79,59.27",
+    "reached": true,
+    "t": 9.141649874858558
+   }
+  ]
+ },
+ "stuck": {
+  "epsilon_studs": 2.0,
+  "max_gap_s": null,
+  "max_sample_gap_s": 1.0,
+  "n_samples": 17,
+  "reason": "route phase 6.80 s is shorter than the window (10 s): no window fits",
+  "result": "NOT_STUCK",
+  "route_phase_s": 6.801,
+  "window": null,
+  "window_s": 10
+ },
+ "t_wall": "2026-11-11T18:45:26.484821Z",
+ "tags": [
+  "SUCCESS"
+ ],
+ "tool": {
+  "duration_s": 9.142310416558757,
+  "error": "nil",
+  "is_timeout": false
+ }
+}

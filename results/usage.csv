@@ -18,3 +18,12 @@ timestamp_utc,job,repo,model_id,mode,request_id,input_tokens,cache_creation_inpu
 2026-11-11T16:17:30Z,architect_ladder,worldsmith,claude-opus-5-5,sync,req_011CgwSarwUdvGPdhm6g7vCF,6016,787,0,217,0.032339,worldsmith architect opus aa1082fefed9
 2026-11-11T16:32:45Z,architect_ladder,worldsmith,claude-opus-5-5,sync,req_011CgwTkCKREBJWhuuSwmWhu,6016,787,0,290,0.033799,worldsmith architect opus aee3f57aecbf
 2026-11-11T16:48:18Z,architect_ladder,worldsmith,claude-opus-5-5,sync,req_011CgwUw5rtXN8uf1qAvSr36,6016,787,0,240,0.032799,worldsmith architect opus 506c07409ec0
+2026-11-11T18:24:32Z,architect_ladder,worldsmith,claude-haiku-5-5,sync,req_011CgwcGfVZWGy4qyJZuhSDN,6024,787,0,679,0.001040,worldsmith architect haiku c920a54f5ae8
+2026-11-11T18:39:46Z,architect_ladder,worldsmith,claude-haiku-5-5,sync,req_011CgwdS5R6CoANqBazV9Fbt,6024,787,0,560,0.000981,worldsmith architect haiku 36183308df77
+2026-11-11T18:55:02Z,architect_ladder,worldsmith,claude-haiku-5-5,sync,req_011CgwebVBhfxCZGh67E8RuR,6024,787,0,799,0.001100,worldsmith architect haiku f8b1404fd8fe
+2026-11-11T19:11:21Z,architect_ladder,worldsmith,claude-sonnet-5-5,sync,req_011Cgwfqa2g5cTrWvM2y9WWc,6024,787,0,503,0.019045,worldsmith architect sonnet cc01e3c6f194
+2026-11-11T19:25:56Z,architect_ladder,worldsmith,claude-sonnet-5-5,sync,req_011Cgwgx8CTahjCtm7FrAR7T,6024,787,0,506,0.019075,worldsmith architect sonnet 7664dbd9ee91
+2026-11-11T19:40:51Z,architect_ladder,worldsmith,claude-sonnet-5-5,sync,req_011Cgwi69QErE2ZgKcSUoycp,6024,787,0,474,0.018756,worldsmith architect sonnet c80c6e34912b
+2026-11-11T19:56:45Z,architect_ladder,worldsmith,claude-opus-5-5,sync,req_011CgwjJVMyRHosDBewzE7nE,6024,787,0,367,0.035371,worldsmith architect opus 0811d4fb5480
+2026-11-11T20:11:16Z,architect_ladder,worldsmith,claude-opus-5-5,sync,req_011CgwkQhMqJLy64MvDqb6qx,6024,787,0,288,0.033791,worldsmith architect opus ee48bf132391
+2026-11-11T20:26:28Z,architect_ladder,worldsmith,claude-opus-5-5,sync,req_011CgwmZuctJbbGyKfUherzk,6022,787,0,348,0.034983,worldsmith architect opus 8d22ec936047

@@ -1,0 +1,13 @@
+{
+ "args": {
+  "mode": "start_play",
+  "timeout": 90
+ },
+ "code_arg": "code",
+ "code_file": "007.code.luau",
+ "code_sha256": "6f1fea23da45d50e28a4c59af8db39287a52d5502a182c7bc72154f780e92471",
+ "index": 7,
+ "t_request": "2026-11-11T18:19:23.425862Z",
+ "timeout_s": 90,
+ "tool": "run_script_in_play_mode"
+}

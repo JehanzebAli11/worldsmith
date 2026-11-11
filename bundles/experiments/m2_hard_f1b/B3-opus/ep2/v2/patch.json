@@ -1,0 +1,12 @@
+{
+ "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+ "ops": [
+  {
+   "field": "lateral_offset",
+   "id": "bridge_1",
+   "op": "set",
+   "value": 0
+  }
+ ],
+ "schema": "worldsmith.patch/0.1"
+}

@@ -1,0 +1,1 @@
+26 expected nodes, 0 differences (tolerance {'pos': 0.01, 'size': 0.01, 'rot': 0.01})

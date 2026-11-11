@@ -1,0 +1,271 @@
+[
+ {
+  "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+  "candidate_hash": null,
+  "codes": [
+   "OUTSIDE_ROOM",
+   "UNSUPPORTED"
+  ],
+  "cost_usd": null,
+  "detail": {
+   "b2": {
+    "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+    "codes": [
+     "OUTSIDE_ROOM",
+     "UNSUPPORTED"
+    ],
+    "episode": 0,
+    "graph_jump": "DISCONNECTED",
+    "graph_walk": "DISCONNECTED",
+    "index": 0,
+    "ok": false,
+    "patch": {
+     "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+     "ops": [
+      {
+       "field": "lateral_offset",
+       "id": "bridge_1",
+       "op": "set",
+       "value": -25.507
+      },
+      {
+       "id": "lever_1",
+       "op": "move",
+       "pos": [
+        62.594,
+        68.905,
+        164.081
+       ]
+      }
+     ],
+     "schema": "worldsmith.patch/0.2"
+    },
+    "patch_hash": "bcfb903f6c098dc14036b310cb37565e62631a4d0bdf78242ff9c3fbc3c94c13",
+    "rng": {
+     "derivation": "worldsmith.b2/0.1|seed=1|episode=0|proposal=0",
+     "seed": 13561653879919664202,
+     "state_sha256": "1a79a1ac4742ff4b04a352597a5d0dfe2ea19eb11a27eace2b70315f8a5fce3e"
+    },
+    "sampler": "worldsmith.b2/0.1",
+    "seed": 1,
+    "stage": "M1",
+    "warnings": [
+     "GRAPH_DISCONNECTED_WALK"
+    ]
+   },
+   "on_version": 1
+  },
+  "error": null,
+  "graph_walk": "DISCONNECTED",
+  "index": 1,
+  "malformed": null,
+  "model_calls": 0,
+  "patch": {
+   "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+   "ops": [
+    {
+     "field": "lateral_offset",
+     "id": "bridge_1",
+     "op": "set",
+     "value": -25.507
+    },
+    {
+     "id": "lever_1",
+     "op": "move",
+     "pos": [
+      62.594,
+      68.905,
+      164.081
+     ]
+    }
+   ],
+   "schema": "worldsmith.patch/0.2"
+  },
+  "request_sha": null,
+  "source": "random_valid",
+  "verdict": "REJECTED",
+  "warnings": [
+   "GRAPH_DISCONNECTED_WALK"
+  ]
+ },
+ {
+  "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+  "candidate_hash": null,
+  "codes": [
+   "GATE_BYPASSED",
+   "OUTSIDE_ROOM"
+  ],
+  "cost_usd": null,
+  "detail": {
+   "b2": {
+    "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+    "codes": [
+     "GATE_BYPASSED",
+     "OUTSIDE_ROOM"
+    ],
+    "episode": 0,
+    "graph_jump": "DISCONNECTED",
+    "graph_walk": "DISCONNECTED",
+    "index": 1,
+    "ok": false,
+    "patch": {
+     "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+     "ops": [
+      {
+       "id": "gate_1",
+       "op": "move",
+       "pos": [
+        -185.755,
+        153.832,
+        -226.341
+       ]
+      }
+     ],
+     "schema": "worldsmith.patch/0.2"
+    },
+    "patch_hash": "a1b800b16f02c4905a801f17ffab7d2a5e53e3d9146136cca29932712e334390",
+    "rng": {
+     "derivation": "worldsmith.b2/0.1|seed=1|episode=0|proposal=1",
+     "seed": 15811628593856357580,
+     "state_sha256": "1da202f49d6e440280dfc1228fdba467f3288e6b3d74759dd82091b9a204e203"
+    },
+    "sampler": "worldsmith.b2/0.1",
+    "seed": 1,
+    "stage": "M1",
+    "warnings": [
+     "GRAPH_DISCONNECTED_WALK"
+    ]
+   },
+   "on_version": 1
+  },
+  "error": null,
+  "graph_walk": "DISCONNECTED",
+  "index": 2,
+  "malformed": null,
+  "model_calls": 0,
+  "patch": {
+   "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+   "ops": [
+    {
+     "id": "gate_1",
+     "op": "move",
+     "pos": [
+      -185.755,
+      153.832,
+      -226.341
+     ]
+    }
+   ],
+   "schema": "worldsmith.patch/0.2"
+  },
+  "request_sha": null,
+  "source": "random_valid",
+  "verdict": "REJECTED",
+  "warnings": [
+   "GRAPH_DISCONNECTED_WALK"
+  ]
+ },
+ {
+  "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+  "candidate_hash": null,
+  "codes": [
+   "OUTSIDE_ROOM"
+  ],
+  "cost_usd": null,
+  "detail": {
+   "b2": {
+    "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+    "codes": [
+     "OUTSIDE_ROOM"
+    ],
+    "episode": 0,
+    "graph_jump": "DISCONNECTED",
+    "graph_walk": "DISCONNECTED",
+    "index": 2,
+    "ok": false,
+    "patch": {
+     "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+     "ops": [
+      {
+       "field": "lateral_offset",
+       "id": "bridge_1",
+       "op": "set",
+       "value": 13.284
+      },
+      {
+       "entity": {
+        "id": "b2_wall_2_1",
+        "pos": [
+         212.387,
+         95.192,
+         -232.399
+        ],
+        "size": [
+         23.474,
+         54.162,
+         84.793
+        ],
+        "type": "Wall"
+       },
+       "op": "add"
+      }
+     ],
+     "schema": "worldsmith.patch/0.2"
+    },
+    "patch_hash": "a960c438589f12d7c4eb38d672a8365042ffc7515f0e9a8982e0ac2b6713e00a",
+    "rng": {
+     "derivation": "worldsmith.b2/0.1|seed=1|episode=0|proposal=2",
+     "seed": 15146167914864850212,
+     "state_sha256": "9a107638bba59a120b47be9cc125a176cb100695b98aace1d7d29c5175f3d36d"
+    },
+    "sampler": "worldsmith.b2/0.1",
+    "seed": 1,
+    "stage": "M1",
+    "warnings": [
+     "GRAPH_DISCONNECTED_WALK"
+    ]
+   },
+   "on_version": 1
+  },
+  "error": null,
+  "graph_walk": "DISCONNECTED",
+  "index": 3,
+  "malformed": null,
+  "model_calls": 0,
+  "patch": {
+   "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+   "ops": [
+    {
+     "field": "lateral_offset",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 13.284
+    },
+    {
+     "entity": {
+      "id": "b2_wall_2_1",
+      "pos": [
+       212.387,
+       95.192,
+       -232.399
+      ],
+      "size": [
+       23.474,
+       54.162,
+       84.793
+      ],
+      "type": "Wall"
+     },
+     "op": "add"
+    }
+   ],
+   "schema": "worldsmith.patch/0.2"
+  },
+  "request_sha": null,
+  "source": "random_valid",
+  "verdict": "REJECTED",
+  "warnings": [
+   "GRAPH_DISCONNECTED_WALK"
+  ]
+ }
+]

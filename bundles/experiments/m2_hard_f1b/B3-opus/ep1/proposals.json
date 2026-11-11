@@ -1,0 +1,37 @@
+[
+ {
+  "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+  "candidate_hash": "74c137b1180168319c0c3d9469e91b484d6fc828a8a69c47485404c8c6a71f21",
+  "codes": [],
+  "cost_usd": 0.033791,
+  "detail": {
+   "model_id": "claude-opus-5-5",
+   "model_role": "opus",
+   "on_version": 1,
+   "prompt_bytes_bound": 18829,
+   "provider": "jzapi",
+   "stop_reason": "end_turn"
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 1,
+  "malformed": null,
+  "model_calls": 1,
+  "patch": {
+   "base_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b",
+   "ops": [
+    {
+     "field": "lateral_offset",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 0
+    }
+   ],
+   "schema": "worldsmith.patch/0.1"
+  },
+  "request_sha": "ee48bf13239102666f174a1f39fa6a2c73011f2c4ac489e908cf2130e695c323",
+  "source": "architect",
+  "verdict": "ACCEPTED",
+  "warnings": []
+ }
+]
