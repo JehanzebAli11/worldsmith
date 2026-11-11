@@ -5,6 +5,25 @@ config file fixes the scene, the stage, one player version, N = 3, k = 3, the re
 the caps and the conditions with their episode counts, before any run. After the first episode
 bundle exists the runner refuses a changed config (a change is a new experiment id).
 
+## Declared, not run: `m2_hard` (WS-14; ADR 0013, ADR 0014)
+
+`config/experiments/m2_hard.yaml` is a **suite**: one declared file with one part per scene,
+`m2_hard_f1a` (F1-A), `m2_hard_f1b`, `m2_hard_f1c`, `m2_hard_f1d` (the WS-14 broken fixtures, all of
+which passed the offline hardness test, `bundles/hardness/summary.json`). Stage M1, player p0.v3,
+N 3, k 3, conditions B0, B1 (hand fix), B2 (seeds 0, 1, 2), B3-haiku, B3-sonnet, B3-opus, 3
+episodes each; `prompt_bytes_cap` 32000. Worst case **$37.728** (108 calls; ADR 0014, rates derived
+from the recorded jzapi figures; `plan --part` on the Mac prints jzapi's own). **Not run; nothing
+paid.** Before it runs: each fixture's live gate (ADR 0013) and the owner's approval of the worst
+case. Every command names a part:
+
+```bash
+.venv/bin/python scripts/run_experiment.py --config config/experiments/m2_hard.yaml --part m2_hard_f1b plan
+.venv/bin/python scripts/run_experiment.py --config config/experiments/m2_hard.yaml --part m2_hard_f1b step
+```
+
+`--dry-run` of a B3 condition here stops at FixtureMiss (the WS-10 fixtures are F1-A M0 replies),
+and the dry run's FakeOperator only knows bridge length; see ADR 0014.
+
 ## Now: `smoke_f1e_p0v3`, then `m2_f1a_b3` (ADR 0012)
 
 **Status 10 Nov 2026, 22:45 PKT:** `smoke_f1e_p0v3b` PASS (6/6). `m2_f1a_b3` complete: B3-haiku,

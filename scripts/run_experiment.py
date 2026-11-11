@@ -8,6 +8,8 @@
     python scripts/run_experiment.py --config ... respond K RAW_FILE [--error TEXT]
     python scripts/run_experiment.py --config ... architect # make the one pending architect call (Mac)
     python scripts/run_experiment.py --config ... status
+    python scripts/run_experiment.py --config config/experiments/m2_hard.yaml --part m2_hard_f1b ...
+                                    # a suite (ADR 0014): every command names one part
 
 --dry-run simulates the whole loop with a fake Studio operator and the WS-10 fixture architects
 in a temporary folder (or --out): no network, no key, no Studio, nothing paid. Its numbers are
@@ -119,6 +121,7 @@ def main(argv=None) -> int:
     ap.add_argument("what", nargs="?", default="plan", choices=["plan", "step", "respond", "architect", "status"])
     ap.add_argument("args", nargs="*")
     ap.add_argument("--config", required=True)
+    ap.add_argument("--part", help="for a suite config (ADR 0014): the experiment id of the part to use")
     ap.add_argument("--dry-run", action="store_true", help="simulate everything in a temp folder; no network")
     ap.add_argument("--out", help="experiments folder (default bundles/experiments; a temp folder for --dry-run)")
     ap.add_argument("--error", help="respond: the call failed with this error text")
@@ -130,7 +133,7 @@ def main(argv=None) -> int:
     elsewhere = a.architect_elsewhere or os.environ.get("WS_ARCHITECT_ELSEWHERE") == "1"
 
     try:
-        cfg = ex.load_experiment(a.config, ROOT)
+        cfg = ex.load_experiment(a.config, ROOT, part=a.part)
     except freeze.P2Refused as exc:
         print(f"refused: {exc}", file=sys.stderr)
         return 4
@@ -194,7 +197,7 @@ def main(argv=None) -> int:
         if p.get("architect"):
             print(f"error: an architect call is pending in {p['episode_dir']} (request "
                   f"{p['architect']['request_sha']}), not a Studio call; run on the Mac: "
-                  f"{MAC_COMMAND.format(config=_rel_config(a.config))}", file=sys.stderr)
+                  f"{MAC_COMMAND.format(config=_rel_config(a.config, a.part))}", file=sys.stderr)
             return 1
         k, raw = int(a.args[0]), Path(a.args[1]).read_text(encoding="utf-8")
         if k != p["index"]:
@@ -269,7 +272,7 @@ def main(argv=None) -> int:
     try:
         res = exp.run(lambda d: at.RelayClient(d / "calls"), architect_for)
     except at.Pending as p:
-        _print_pending(p, exp, a.config)
+        _print_pending(p, exp, _rel_config(a.config, a.part) if a.part else a.config)
         return 3
     except acl.LiveCallRefused as exc:
         print(f"refused: {exc}", file=sys.stderr)
@@ -286,12 +289,13 @@ def main(argv=None) -> int:
     return 0
 
 
-def _rel_config(path) -> str:
+def _rel_config(path, part=None) -> str:
     p = Path(path).resolve()
     try:
-        return p.relative_to(ROOT).as_posix()
+        rel = p.relative_to(ROOT).as_posix()
     except ValueError:
-        return str(path)
+        rel = str(path)
+    return f"{rel} --part {part}" if part else rel
 
 
 def _print_pending(p, exp, config) -> None:
@@ -317,7 +321,7 @@ def _step_elsewhere(cfg, exp, a, jz) -> int:
     try:
         res = exp.run(lambda d: at.RelayClient(d / "calls"), _no_model, architect_mode="defer")
     except at.Pending as p:
-        _print_pending(p, exp, a.config)
+        _print_pending(p, exp, _rel_config(a.config, a.part) if a.part else a.config)
         return 3
     except ex.PreflightFailed as exc:
         print(f"stopped: preflight failed: {exc}", file=sys.stderr)
@@ -325,7 +329,7 @@ def _step_elsewhere(cfg, exp, a, jz) -> int:
     except epi.ArchitectPending as p:
         pend = exp.pending()
         print(f"ARCHITECT PENDING {pend['episode_dir']} request {p.request_sha} role {p.role}")
-        print(f"  on the Mac: {MAC_COMMAND.format(config=_rel_config(a.config))}")
+        print(f"  on the Mac: {MAC_COMMAND.format(config=_rel_config(a.config, a.part))}")
         print("  then step here again")
         return 5
     for c in res["conditions"]:

@@ -7,6 +7,12 @@ conditions in run order with their episode counts (B2 seeds declared up front, o
 `load_experiment` re-derives every hash it declares and refuses any mismatch. Optional:
 `preflight: {script, sha256}` (ADR 0011), the read-only probe run before every build.
 
+Suites (ADR 0014, schema `worldsmith.experiment_suite/0.1`): one declared file holding several
+experiments that share every field except the experiment id, the scene and the conditions
+(`common` + `parts`). `load_experiment(path, part=<experiment id>)` expands one part into an
+ordinary experiment config and checks it exactly as above; its `_sha256` is the hash of the whole
+suite file, so a change to any part is a change to every part. `load_suite` loads every part.
+
 Declared before runs: when the first episode bundle of an experiment is created, the runner
 writes `<out>/<experiment>/experiment.lock.json` with the config's SHA-256 (of its bytes) and a
 copy of the config. Afterwards it refuses to run if the config's hash differs (a change is a new
@@ -42,6 +48,9 @@ from worldsmith.runner import freeze, p0, players, taxonomy
 from worldsmith.validator import patch as pt
 
 EXPERIMENT_SCHEMA = "worldsmith.experiment/0.1"
+SUITE_SCHEMA = "worldsmith.experiment_suite/0.1"      # ADR 0014
+_SUITE_TOP = {"schema", "suite", "common", "parts"}
+_PART_KEYS = {"experiment", "scene", "conditions"}
 LOCK_SCHEMA = "worldsmith.experiment_lock/0.1"
 RESULTS_SCHEMA = "worldsmith.experiment_results/0.1"
 PROPOSERS = ("none", "hand_fix", "random_valid", "architect")
@@ -109,14 +118,84 @@ def _file_and_sha(root: Path, spec, key_file: str, key_sha: str, what: str, errs
     return f
 
 
-def load_experiment(path, repo_root=None, *, env=None) -> dict:
+def _suite_doc(doc: dict, path: Path) -> list[str]:
+    """Check a suite's shape (ADR 0014); return its part ids in declared order."""
+    keys = set(doc)
+    if keys != _SUITE_TOP:
+        raise ExperimentError(f"{path.name}: suite keys must be {sorted(_SUITE_TOP)} (got {sorted(keys)})")
+    suite, common, parts = doc["suite"], doc["common"], doc["parts"]
+    errs = []
+    if not (isinstance(suite, str) and _ID.fullmatch(suite)):
+        errs.append("suite must be a short lower-case id")
+    if not isinstance(common, dict) or set(common) & ({"schema", "experiment"} | _PART_KEYS):
+        errs.append("common must be a mapping without schema, experiment, scene or conditions")
+    if not (isinstance(parts, list) and parts):
+        errs.append("parts must be a non-empty list")
+        raise ExperimentError("; ".join(errs))
+    ids, scenes = [], []
+    for i, prt in enumerate(parts):
+        if not (isinstance(prt, dict) and set(prt) == _PART_KEYS):
+            errs.append(f"parts[{i}]: part keys must be {sorted(_PART_KEYS)}")
+            continue
+        pid = prt["experiment"]
+        if not (isinstance(pid, str) and _ID.fullmatch(pid) and isinstance(suite, str) and pid.startswith(suite + "_")):
+            errs.append(f"parts[{i}]: experiment {pid!r} must be a short lower-case id that starts with {suite!r}_")
+        elif pid in ids:
+            errs.append(f"parts[{i}]: duplicate experiment {pid!r}")
+        ids.append(pid)
+        f = prt["scene"].get("file") if isinstance(prt["scene"], dict) else None
+        if f in scenes:
+            errs.append(f"parts[{i}]: scene {f!r} is already another part's scene")
+        scenes.append(f)
+    if errs:
+        raise ExperimentError("; ".join(errs))
+    return ids
+
+
+def suite_parts(path) -> list[str]:
+    """The experiment ids of a suite file, in declared order (ADR 0014)."""
+    path = Path(path)
+    doc = yaml.safe_load(path.read_bytes().decode("utf-8"))
+    if not (isinstance(doc, dict) and doc.get("schema") == SUITE_SCHEMA):
+        raise ExperimentError(f"{path.name} is not a suite ({SUITE_SCHEMA})")
+    return _suite_doc(doc, path)
+
+
+def load_suite(path, repo_root=None, *, env=None) -> list[dict]:
+    """Every part of a suite, each loaded and checked as one experiment (ADR 0014)."""
+    return [load_experiment(path, repo_root, env=env, part=pid) for pid in suite_parts(path)]
+
+
+def load_experiment(path, repo_root=None, *, env=None, part=None) -> dict:
     """The parsed config plus derived keys (`_sha256`, `_path`, `_root`, `_scene`, `_route`,
     `_controller_text`, `_params`, `_stuck`, `_prompt`, `_ladder`, `_conditions`,
-    `_hand_patches`). Raises ExperimentError listing every problem."""
+    `_hand_patches`; `_suite` for a part of a suite). Raises ExperimentError listing every problem.
+    `part` names one experiment of a suite file (ADR 0014); a single experiment takes none."""
     path = Path(path)
     root = Path(repo_root) if repo_root else path.resolve().parent.parent.parent
     raw = path.read_bytes()
     cfg = yaml.safe_load(raw.decode("utf-8"))
+    suite = None
+    if isinstance(cfg, dict) and cfg.get("schema") == SUITE_SCHEMA:
+        ids = _suite_doc(cfg, path)
+        if part is None:
+            raise ExperimentError(f"{path.name} is a suite of {len(ids)} experiments; choose one part: "
+                                  f"{', '.join(ids)}")
+        if part not in ids:
+            raise ExperimentError(f"{path.name} has no part {part!r}; its parts: {', '.join(ids)}")
+        prt = cfg["parts"][ids.index(part)]
+        suite = {"suite": cfg["suite"], "part": part, "parts": ids}
+        cfg = {"schema": EXPERIMENT_SCHEMA, "experiment": part, **cfg["common"],
+               "scene": prt["scene"], "conditions": prt["conditions"]}
+    elif part is not None:
+        raise ExperimentError(f"{path.name} is not a suite: it takes no part")
+    out = _check_experiment(cfg, raw, path, root, env)
+    if suite is not None:
+        out["_suite"] = suite
+    return out
+
+
+def _check_experiment(cfg, raw: bytes, path: Path, root: Path, env) -> dict:
     if not isinstance(cfg, dict):
         raise ExperimentError("config is not a mapping")
     errs = [f"{'unknown' if k in cfg else 'missing'} key {k!r}" for k in sorted((set(cfg) - _OPTIONAL) ^ _TOP)]
@@ -360,6 +439,14 @@ def worst_case(cfg: dict, price: Callable[..., float], exp: "Experiment | None" 
             "conditions": rows, "total_usd": total, "remaining_usd": left,
             "method": "per call: jzapi.worst_case_usd(model, prompt_tokens = prompt_bytes_cap, max_tokens, cache "
                       "write 5m); x max_revisions x episodes; requests over the cap are refused unsent"}
+
+
+def suite_worst_case(cfgs: list[dict], price: Callable[..., float]) -> dict:
+    """The worst case of every part of a suite together (ADR 0014): the sum of `worst_case`."""
+    parts = [{"experiment": c["experiment"], **worst_case(c, price)} for c in cfgs]
+    return {"parts": parts, "total_usd": sum(p["total_usd"] for p in parts),
+            "calls_max": sum(r["calls_max"] for p in parts for r in p["conditions"]),
+            "method": parts[0]["method"] if parts else None}
 
 
 def check_headroom(worst_usd: float, headroom_usd: float) -> None:
