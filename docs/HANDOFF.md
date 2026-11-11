@@ -1187,3 +1187,82 @@ B0, 1 episode, N 3, k 3, player p0.v3, controller `cd9a7a0a…`, no architect, $
    before any paid call.
 
 **Open questions**: none new.
+
+## 2026-11-11 18:20 PKT · WS-14: owner decisions applied to `m2_hard`; `--dry-run` rehearses every condition (branch `ws14b`)
+
+**Done** (CPU only: no Studio call, no network call, no paid call; branch `ws14b` from `7ae5f20`,
+not pushed)
+- **Owner decisions (11 Nov 2026), applied:** ADR 0014 **accepted** (suite format,
+  `prompt_bytes_cap` 32000). `config/experiments/m2_hard.yaml` (never run: no folder, no lock)
+  edited: **B0 and B1 1 episode per part**; B2, B3-haiku, B3-sonnet, B3-opus stay at 3. Header
+  records the reason (B0/B1 rooms are deterministic; the live gate already played them 3/3; saves
+  Studio time), the live gate PASS (cites `bundles/experiments/gate_f1b` … `gate_f1d_fix` and the
+  entry above) and the worst case. New file SHA-256 `897a730a…` (was `0b41b49f…`).
+- **FakeOperator learns the live gate's facts** (`runner/dryrun.py`, stand-in rules on scene
+  geometry from `compiler/geometry.py`, never scene ids): straight legs between the frozen route's
+  waypoints, character radius 0.5 (fits the live stops: x −10.44…−10.48 at `wall_ledge`, z
+  32.45…32.48 at the gate) and height 5.19; walls, and the gate until the lever's zone is touched,
+  stop a leg. Never reaching the gap = STUCK (no `LEVER_ACTIVATED` if the lever was not touched);
+  a route point beside the bridge deck = FELL at the live gate_f1b kill positions; a short bridge
+  = FELL at the M0 F1-A positions; otherwise SUCCESS. Commit `a7965d6`.
+- **Twelve M1 dry-run architect fixtures** (`architect/fixtures/m1/`, the WS-10 format; hand-written,
+  not model outputs): per part `<f1x>_m1_fix` (hand fix accepted on revision 1), `_reject_then_fix`
+  (prose MALFORMED, an M1 rejection: NEW_FLOOR / OUT_OF_BOUNDS / GATE_BYPASSED / PATH_BLOCKED, then
+  the fix), `_exhausted` (two rejections incl. STAGE_OP_FORBIDDEN, UNSUPPORTED, NOOP_PATCH,
+  STALE_BASE; then a code-fenced fix). F1-B/C/D fixtures observe the live gate's B0 bundles (new
+  fixture input `{episode_dir, version}` in `architect/fixtures.py`); F1-A's observe M0's
+  classification. `m2_hard`'s `dry_run.fixtures` lists them (haiku: fix, sonnet: reject then fix,
+  opus: exhausted). Commit `12dd828`.
+- `docs/EXPERIMENTS.md`: what the dry run does and does not prove (a rehearsal of plumbing, never a
+  result), with the per-part coverage table. ADR 0014, TICKETS status updated.
+
+**Verified** (bridge VM, `/home/claude/venv-ws14`)
+- Worst case unchanged: **$37.728** (108 calls; per part $9.432: haiku 9 × $0.008, sonnet 9 ×
+  $0.24, opus 9 × $0.80), `tests/test_ws14_m2_hard.py::test_worst_case` on the edited file (B0/B1
+  make no calls). Rates derived from the recorded jzapi figures; jzapi is not installed here.
+- Studio-time count from the caps (not a measurement): 159 play calls per part, 636 in all (189 /
+  756 before), plus builds and preflights.
+- Dry run of every condition of every part as declared (`tests/test_ws14_m2_hard.py`, in process,
+  one run per condition; 14 episodes per part, all `complete`, bundles validate):
+
+  | Part | B0 v1 | B1 | B2 (seeds 0, 1, 2) | B3-haiku | B3-sonnet | B3-opus |
+  | --- | --- | --- | --- | --- | --- | --- |
+  | f1a | FELL ×3 | repaired | 3 × REJECTED ×3 | ACCEPTED, repaired | MALFORMED, REJECTED, ACCEPTED, repaired | REJECTED, REJECTED, MALFORMED, not repaired |
+  | f1b | FELL ×3 | repaired | same | same | same | same |
+  | f1c | STUCK ×3, no LEVER_ACTIVATED | repaired | same | same | same | same |
+  | f1d | STUCK ×3, no LEVER_ACTIVATED | repaired (two ops) | same | same | same | same |
+
+  Every B3 episode's request hashes equal its fixture's; repaired rooms equal the hand-patched
+  rooms (F1-B/C/D `fix.json`; F1-A `297b23c8…`). CLI `--part m2_hard_f1d step --dry-run` on a
+  1-episode copy: 6 conditions complete. Simulated; **not a result**.
+- Dry runs of the six gate configs reproduce the live bundles: the same outcomes and tags per
+  attempt and the same architect view (`observed`) of every attempt
+  (`tests/test_ws14_dryrun.py::test_dry_run_of_each_gate_scene_matches_the_live_gate`).
+- F1-A/F1-E unchanged: the dry-run bundles of all six existing configs (`m2_f1a`, `m2_f1a_b3`, four
+  smokes; 980 files) compared before and after the FakeOperator change with fixed nonces: 0
+  differences except wall-clock times; every M0 bridge length 1…64 (step 0.5) on F1-A/F1-E gives
+  the earlier report byte for byte (tested).
+- B2's proposals do not depend on the fake: seeds 0, 1, 2 propose 3 rejected patches each on every
+  part (36/36), equal to the offline hardness record (`bundles/hardness/proposals.jsonl.gz`;
+  tested). As declared, live B2 will play v1 only and repair nothing.
+- `VENV=/home/claude/venv-ws14 ./scripts/test.sh -q` → **1823 passed, 30 skipped** (1788 before; new:
+  `tests/test_ws14_dryrun.py`, the dry-run tests in `tests/test_ws14_m2_hard.py`). The suite now
+  takes about 5.5 min on this VM (3.5 before): the full `m2_hard` dry run is about 100 s of it.
+
+**Next**
+1. Mac, Terminal (no Studio, nothing paid): jzapi's own worst case for each part:
+   `.venv/bin/python scripts/run_experiment.py --config config/experiments/m2_hard.yaml --part m2_hard_f1a plan`
+   (then `_f1b`, `_f1c`, `_f1d`); expected $9.432 each, $37.728 in all. If jzapi prints another
+   figure, that figure is the one to approve. Optionally `--part <id> --dry-run` there too.
+2. Owner: approve that worst case; then the paid run, part by part in order (f1a, f1b, f1c, f1d),
+   one Studio driver, `places/worldsmith-lab.rbxl`, preflight before every build.
+
+**Open questions** (yes/no for the owner)
+1. B2 with seeds 0, 1, 2 can repair nothing on any part (every proposal is rejected by the
+   validator; deterministic). Keep it as declared (it is the honest "random valid" baseline, and
+   costs 9 play calls per part), or declare other seeds before any part runs (a new suite id is
+   not needed while nothing has run)? Recommended: keep; it is the pre-declared baseline and the
+   hardness record already shows a random valid patch rarely helps.
+2. The M1 fixtures cannot express an accepted-but-still-broken revision followed by another
+   revision (a fixture holds one scene and one observation). Leave that path to the orchestrator
+   tests (scripted architects), or extend the fixture format? Recommended: leave it.
