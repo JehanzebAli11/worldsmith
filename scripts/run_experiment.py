@@ -11,7 +11,7 @@
     python scripts/run_experiment.py --config config/experiments/m2_hard.yaml --part m2_hard_f1b ...
                                     # a suite (ADR 0014): every command names one part
 
---dry-run simulates the whole loop with a fake Studio operator and the WS-10 fixture architects
+--dry-run simulates the whole loop with a fake Studio operator and the config's fixture architects
 in a temporary folder (or --out): no network, no key, no Studio, nothing paid. Its numbers are
 not results. `step` is the live relay mode (ADR 0005 section 8): it replays every answered call,
 makes architect calls (paid, job architect_ladder) when a B3 episode reaches one, and stops at

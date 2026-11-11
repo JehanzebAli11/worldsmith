@@ -9,20 +9,69 @@ bundle exists the runner refuses a changed config (a change is a new experiment 
 
 `config/experiments/m2_hard.yaml` is a **suite**: one declared file with one part per scene,
 `m2_hard_f1a` (F1-A), `m2_hard_f1b`, `m2_hard_f1c`, `m2_hard_f1d` (the WS-14 broken fixtures, all of
-which passed the offline hardness test, `bundles/hardness/summary.json`). Stage M1, player p0.v3,
-N 3, k 3, conditions B0, B1 (hand fix), B2 (seeds 0, 1, 2), B3-haiku, B3-sonnet, B3-opus, 3
-episodes each; `prompt_bytes_cap` 32000. Worst case **$37.728** (108 calls; ADR 0014, rates derived
-from the recorded jzapi figures; `plan --part` on the Mac prints jzapi's own). **Not run; nothing
-paid.** Before it runs: each fixture's live gate (ADR 0013) and the owner's approval of the worst
-case. Every command names a part:
+which passed the offline hardness test, `bundles/hardness/summary.json`, and the live gate of
+ADR 0013 on 11 Nov 2026, `bundles/experiments/gate_*`). Stage M1, player p0.v3, N 3, k 3;
+conditions B0 and B1 (hand fix) **1 episode each**, B2 (seeds 0, 1, 2), B3-haiku, B3-sonnet and
+B3-opus **3 episodes each** (owner, 11 Nov 2026: B0/B1 rooms are deterministic and the gate already
+played them 3/3); `prompt_bytes_cap` 32000. Worst case **$37.728** (108 calls; B0/B1 make no calls,
+so the episode change leaves it as it was; ADR 0014, rates derived from the recorded jzapi figures;
+`plan --part` on the Mac prints jzapi's own). **Not run; nothing paid.** Before it runs: the
+owner's approval of the worst case. Every command names a part:
 
 ```bash
 .venv/bin/python scripts/run_experiment.py --config config/experiments/m2_hard.yaml --part m2_hard_f1b plan
+.venv/bin/python scripts/run_experiment.py --config config/experiments/m2_hard.yaml --part m2_hard_f1b --dry-run
 .venv/bin/python scripts/run_experiment.py --config config/experiments/m2_hard.yaml --part m2_hard_f1b step
 ```
 
-`--dry-run` of a B3 condition here stops at FixtureMiss (the WS-10 fixtures are F1-A M0 replies),
-and the dry run's FakeOperator only knows bridge length; see ADR 0014.
+### What `--dry-run` does and does not prove
+
+A dry run is a **rehearsal of the plumbing, never a result**. It runs the declared part end to end
+in a temp folder: every condition and episode, the relay files, resume after every answer, the
+caps, the validator on every proposal, the bundle checks, `results.json`. Studio is
+`runner/dryrun.py`'s `FakeOperator` and the architect is a `FixtureArchitect` replaying hand-written
+replies; there is no network, no key, no Studio and nothing paid. Every bundle says `dry_run: true`.
+
+What it covers for `m2_hard` (tests: `tests/test_ws14_m2_hard.py`):
+
+| Part | B0 (v1) | B1 | B2 | B3-haiku | B3-sonnet | B3-opus |
+| --- | --- | --- | --- | --- | --- | --- |
+| `m2_hard_f1a` | FELL ×3 | hand fix, SUCCESS ×3 | seeds 0, 1, 2: 3 rejected proposals each | fix on revision 1, repaired | prose, `add` a Wall as a gap floor (NEW_FLOOR), fix: repaired | remove `wall_r`, no-op width, fenced fix: exhausted |
+| `m2_hard_f1b` | FELL ×3 beside the bridge | `lateral_offset 0`, SUCCESS ×3 | as F1-A | fix on revision 1, repaired | prose, width 40 (OUT_OF_BOUNDS), fix: repaired | move the goal, no-op length, fenced fix: exhausted |
+| `m2_hard_f1c` | STUCK ×3, no LEVER_ACTIVATED | `move lever_1`, SUCCESS ×3 | as F1-A | fix on revision 1, repaired | prose, gate moved off the path (GATE_BYPASSED), fix: repaired | remove `wall_ledge`, lever off its ledge (UNSUPPORTED), fenced fix: exhausted |
+| `m2_hard_f1d` | STUCK ×3, no LEVER_ACTIVATED | two ops, SUCCESS ×3 | as F1-A | two-op fix on revision 1, repaired | prose, crate on the walkway (PATH_BLOCKED), fix: repaired | stale base hash, remove `wall_ledge`, fenced fix: exhausted |
+
+How the fake decides a play (stand-in rules on the scene's geometry, `walk` and
+`stand_in_outcome`, never on scene ids): straight legs between the frozen route's waypoints; walls,
+and the gate until the lever's zone is touched, stop a leg; a character that never reaches the gap
+is STUCK; on the gap, a route point beside the bridge deck falls at the live gate_f1b kill
+positions, a bridge short of the far platform falls at the M0 F1-A kill positions, otherwise
+SUCCESS. On the six live gate scenes it reproduces the recorded outcomes and the architect's view
+of every attempt exactly (tested against `bundles/experiments/gate_*/B0/ep0`), and on F1-A and
+F1-E it gives byte for byte what the earlier bridge-length-only rule gave. The M1 fixtures
+(`architect/fixtures/m1/`) observe the live gate's bundles (F1-B, F1-C, F1-D) or M0's F1-A
+classification, so their request hashes are the dry run's.
+
+What it does **not** prove:
+
+- Nothing about Roblox: the fake is not physics. It knows only what the M0 runs and the live gate
+  showed (lever behind a wall, bridge beside the path, short bridge) and will "pass" any other
+  broken room. A dry-run SUCCESS, FELL or STUCK is not evidence of what Studio will do.
+- Nothing about the models: B3 replies are hand-written, one scripted path per role (haiku
+  repairs, sonnet repairs on revision 3, opus is exhausted). No repair rate, cost or ranking can
+  come from it; the dry run's architect cost is $0.
+- Not the accepted-but-still-broken path at M1 (an accepted patch that fails in play, then a
+  revision on the new version): a fixture holds one scene and one observation, so it cannot
+  express a request that carries the previous accepted revision. The orchestrator's handling of
+  that path is tested with scripted architects (`tests/test_ws11_orchestrator.py`, e.g. the
+  stubborn architect that uses 12 attempts and 3 calls), not by these fixtures.
+- B2's play outcomes follow the fake's rules, not Studio's. Its **proposals** do not depend on
+  the fake: the sampler is seeded and the validator is deterministic, and seeds 0, 1, 2 propose
+  three rejected patches each on every part (36 of 36, equal to the offline hardness record,
+  `bundles/hardness/proposals.jsonl.gz`). So, as declared, live B2 will play only v1 (3 plays per
+  episode, like B0) and repair nothing; that is a property of the declared seeds, not a result.
+  The hardness test (`bundles/hardness/summary.json`) is the B2 prior, and it too is not a play
+  result.
 
 ## Now: `smoke_f1e_p0v3`, then `m2_f1a_b3` (ADR 0012)
 
@@ -148,8 +197,9 @@ make test                                   # CPU tests; .venv as in docs/ARCHIT
 .venv/bin/python scripts/run_experiment.py --config config/experiments/m2_f1a.yaml plan
 ```
 
-- The dry run simulates everything in a temp folder (fake Studio operator, WS-10 fixture
-  architects) and prints the worst case and a sample bundle path. It is not a result.
+- The dry run simulates everything in a temp folder (fake Studio operator, the config's fixture
+  architects) and prints the worst case and a sample bundle path. It is not a result (what it
+  does and does not prove: the `m2_hard` section above).
 - `plan` prints the worst case, what is left, both live switches (JzLab `budgets.yaml`
   `architect_ladder approved: true`; the git-ignored `config/architect.yaml` `live: true`) and the
   job's headroom. Check both say ON and the headroom covers the worst case. Check the active

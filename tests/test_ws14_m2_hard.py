@@ -1,11 +1,14 @@
 """WS-14 step 3: the declared experiment suite config/experiments/m2_hard.yaml (ADR 0014).
 
-CPU only: the config is loaded and validated, never run (no Studio, no network, no key). Prices
+CPU only: the config is loaded and validated, never run live (no Studio, no network, no key); the
+dry run rehearses every part with the fake Studio operator and the M1 fixture architects (a
+rehearsal of the plumbing, never a result; docs/EXPERIMENTS.md). Prices
 for the worst case come from a stub that reproduces the per-call figures recorded in the repo
 (ADR 0010 section 6, HANDOFF WS-10 smoke); jzapi itself prints the authoritative figure with
 `plan` on the Mac before any approval.
 """
 
+import gzip
 import hashlib
 import json
 import sys
@@ -14,6 +17,7 @@ import pytest
 import yaml
 
 from _repo import REPO_ROOT
+from worldsmith.architect import fixtures as fx
 from worldsmith.architect import prompt as pr
 from worldsmith.grammar import scene as sc
 from worldsmith.runner import dryrun
@@ -28,6 +32,11 @@ HARDNESS = REPO_ROOT / "bundles" / "hardness" / "summary.json"
 PARTS = ["m2_hard_f1a", "m2_hard_f1b", "m2_hard_f1c", "m2_hard_f1d"]
 SCENE_OF = {"m2_hard_f1a": "F1-A", "m2_hard_f1b": "F1-B", "m2_hard_f1c": "F1-C", "m2_hard_f1d": "F1-D"}
 CONDITIONS = ["B0", "B1", "B2", "B3-haiku", "B3-sonnet", "B3-opus"]
+EPISODES = {"B0": 1, "B1": 1, "B2": 3, "B3-haiku": 3, "B3-sonnet": 3, "B3-opus": 3}
+KEYS = ["f1a", "f1b", "f1c", "f1d"]
+M1_FIXTURES = {"haiku": [f"m1/{k}_m1_fix" for k in KEYS],
+               "sonnet": [f"m1/{k}_m1_reject_then_fix" for k in KEYS],
+               "opus": [f"m1/{k}_m1_exhausted" for k in KEYS]}
 V3_SHA = "cd9a7a0a21ccd32ea7e14990f17b7bba58083f1bfeb2a81e77cf2e122a2d0f8c"
 JOB_CAP, JOB_SPENT = 90.0, 0.04          # ROADMAP section 9 / TICKETS WS-14: $90 approved, $0.04 spent
 
@@ -94,7 +103,7 @@ def test_every_part_declares_the_ticket_fields(parts):
         assert cfg["n_attempts"] == 3 and cfg["pass_k"] == 3 and cfg["max_revisions"] == 3
         assert cfg["caps"] == {"attempts_per_episode": 12, "architect_calls_per_episode": 3}
         assert [c["id"] for c in cfg["conditions"]] == CONDITIONS
-        assert all(c["episodes"] == 3 for c in cfg["conditions"])
+        assert {c["id"]: c["episodes"] for c in cfg["conditions"]} == EPISODES      # owner, 11 Nov 2026
         c = {x["id"]: x for x in cfg["conditions"]}
         assert c["B0"]["proposer"] == "none"
         assert c["B2"] == {"id": "B2", "proposer": "random_valid", "episodes": 3, "seeds": [0, 1, 2]}
@@ -108,10 +117,11 @@ def test_every_part_declares_the_ticket_fields(parts):
         assert res.ok and res.graph["walk"]["result"] == "CONNECTED"
 
 
-def test_common_fields_equal_m2_f1a_b3_except_stage_and_prompt_cap(parts, b3):
+def test_common_fields_equal_m2_f1a_b3_except_stage_prompt_cap_and_dry_run_fixtures(parts, b3):
     keep = ("player", "n_attempts", "pass_k", "max_revisions", "caps", "origin", "gap_area_margin_studs",
-            "tool_timeouts_s", "preflight", "classifier", "dry_run")
+            "tool_timeouts_s", "preflight", "classifier")
     for cfg in parts.values():
+        assert cfg["dry_run"] == {"fixtures": M1_FIXTURES}               # M1 replies; b3's are F1-A M0 replies
         for k in keep:
             assert cfg[k] == b3[k], k
         a, b = dict(cfg["architect"]), dict(b3["architect"])
@@ -228,27 +238,160 @@ def test_cli_status_of_one_part_writes_nothing(tmp_path, capsys):
     rc = _cli().main(["--config", str(M2H), "--part", "m2_hard_f1c", "status", "--out", str(tmp_path)])
     out = capsys.readouterr().out
     assert rc == 0 and "experiment m2_hard_f1c" in out and "player p0.v3" in out
-    assert out.count(" todo") == 18                                   # 6 conditions x 3 episodes
+    assert out.count(" todo") == 14                                   # B0 1, B1 1, four conditions x 3
     assert list(tmp_path.iterdir()) == []
 
 
-# --- the parts run through the episode machinery (simulated; NOT a result) ------------------------
 
-def test_dry_run_of_the_non_model_conditions(parts, tmp_path):
-    """FakeOperator decides outcomes by bridge length only (not physics, not Roblox: it "passes"
-    F1-B and F1-C, whose bridges are full length), and the WS-10 dry-run fixtures are F1-A M0
-    replies, so only B0, B1 and B2 of the F1-D part are simulated here (its short bridge makes the
-    fake fail v1, so proposals happen): the point is that an M1 part, its two-op 0.2 hand patch and
-    B2 at M1 pass through the orchestrator and the bundle checks. Not a result."""
-    pid = "m2_hard_f1d"
-    cfg = dict(parts[pid])
-    cfg["_conditions"] = {k: v for k, v in cfg["_conditions"].items() if k in ("B0", "B1", "B2")}
-    res = dryrun.run_dry(cfg, tmp_path)
-    assert [c["condition"] for c in res["conditions"]] == ["B0", "B1", "B2"]
-    for c in res["conditions"]:
-        assert c["episodes_done"] == 3 and all(s == "complete" for s in c["statuses"]), c["statuses"]
-    assert res["dry_run"] is True
-    b1 = json.loads((tmp_path / pid / "B1" / "ep0" / "summary.json").read_text())
-    assert b1["revisions"]["verdicts"] == ["ACCEPTED"] and b1["repaired"] is True
-    assert b1["final"]["scene_hash"] == sc.canonical_hash(json.loads(
-        (REPO_ROOT / "scenes" / "F1-D" / "fix.json").read_text()))
+
+def test_header_records_the_owner_decisions_and_the_live_gate():
+    head = M2H.read_text(encoding="utf-8").split("schema:", 1)[0]
+    assert "B0 1 and B1 1" in head and "$37.728" in head and "test_worst_case" in head
+    assert "Live gate (ADR 0013) PASSED" in head
+    for g in GATES:
+        assert f"{g}" in head or g.replace("gate_", "") in head
+        assert (REPO_ROOT / "bundles" / "experiments" / g / "B0" / "ep0" / "summary.json").is_file()
+
+
+# --- the dry run rehearses every condition of every part (simulated; NEVER a result) -------------
+
+GATES = ["gate_f1b", "gate_f1b_fix", "gate_f1c", "gate_f1c_fix", "gate_f1d", "gate_f1d_fix"]
+B0_OUTCOME = {"m2_hard_f1a": "FELL", "m2_hard_f1b": "FELL", "m2_hard_f1c": "STUCK", "m2_hard_f1d": "STUCK"}
+
+
+def _fixed_hash(cfg):
+    """The room the part's hand patch makes (F1-B/C/D: their fix.json, ADR 0013; F1-A: 297b23c8,
+    the M0 fix room recorded in m2_f1a_b3)."""
+    return sc.canonical_hash(validate(cfg["_scene"], cfg["_hand_patches"]["B1"], stage="M1").scene)
+
+
+def test_the_hand_patched_rooms_are_the_fix_files(parts):
+    for pid, cfg in parts.items():
+        if pid == "m2_hard_f1a":
+            assert _fixed_hash(cfg).startswith("297b23c8")
+        else:
+            fix = sc.load_scene(REPO_ROOT / "scenes" / SCENE_OF[pid] / "fix.json")
+            assert _fixed_hash(cfg) == sc.canonical_hash(fix)
+
+
+def _observed(ep_dir, version=1):
+    rows = [json.loads((ep_dir / f"v{version}" / "attempts" / f"{i}.json").read_text()) for i in (1, 2, 3)]
+    return pr.observed_from_classification({"attempts": rows, "episode_tags": []})
+
+
+@pytest.fixture(scope="module")
+def dry(parts, tmp_path_factory):
+    """Every part, every condition with its declared episodes, through dryrun.run_dry (one run per
+    condition, so the resume-after-every-answer replay stays short). {(part, condition): (row, dir)}."""
+    base = tmp_path_factory.mktemp("m2_hard_dry")
+    out = {}
+    for pid, cfg in parts.items():
+        for cid in CONDITIONS:
+            c = dict(cfg)
+            c["_conditions"] = {cid: cfg["_conditions"][cid]}
+            root = base / pid / cid
+            res = dryrun.run_dry(c, root)
+            assert res["dry_run"] is True and "DRY RUN" in res["disclosure"]
+            [row] = res["conditions"]
+            out[pid, cid] = (row, root / pid / cid)
+    return out
+
+
+def test_dry_run_completes_every_condition_of_every_part(dry):
+    assert sorted(dry) == sorted((p, c) for p in PARTS for c in CONDITIONS)
+    for (pid, cid), (row, _) in dry.items():
+        assert row["condition"] == cid and row["episodes_done"] == EPISODES[cid], (pid, cid)
+        assert row["statuses"] == ["complete"] * EPISODES[cid], (pid, cid, row["statuses"])
+        for e in row["episodes"]:
+            assert e["attempts_used"] <= 12 and e["architect_calls"] <= 3
+
+
+def test_dry_run_bundles_validate_and_say_dry_run(dry, parts):
+    for (pid, cid), (_, d) in dry.items():
+        for ep in sorted(d.glob("ep*")):
+            assert epi.validate_episode_bundle(ep, parts[pid]) == [], ep
+            s = json.loads((ep / "summary.json").read_text())
+            assert s["dry_run"] is True and "DRY RUN" in s["disclosure"] and s["stage"] == "M1"
+
+
+def test_dry_run_b0_fails_as_the_live_gate_showed(dry):
+    for pid in PARTS:
+        row, d = dry[pid, "B0"]
+        [e] = row["episodes"]
+        assert e["final"]["verdict"] == "FAIL" and e["canonical"][0]["outcomes"] == [B0_OUTCOME[pid]] * 3
+        events = [json.loads((d / "ep0" / "v1" / "attempts" / f"{i}.json").read_text())["events"] for i in (1, 2, 3)]
+        if B0_OUTCOME[pid] == "STUCK":                   # F1-C, F1-D: lever behind wall_ledge, gate shut
+            assert all("LEVER_ACTIVATED" not in ev and "GATE_OPENED" not in ev for ev in events)
+        else:
+            assert all(ev[-1] == "KILL_FLOOR_TOUCHED" for ev in events)
+    for pid in ("m2_hard_f1b", "m2_hard_f1c", "m2_hard_f1d"):    # the architect sees what the gate saw
+        live = REPO_ROOT / "bundles" / "experiments" / f"gate_{pid[-3:]}" / "B0" / "ep0"
+        assert _observed(dry[pid, "B0"][1] / "ep0") == _observed(live)
+
+
+def test_dry_run_b1_hand_fix_succeeds(dry, parts):
+    for pid in PARTS:
+        row, d = dry[pid, "B1"]
+        [e] = row["episodes"]
+        assert e["repaired"] is True and e["revisions"]["verdicts"] == ["ACCEPTED"]
+        assert [v["outcomes"] for v in e["canonical"]] == [[B0_OUTCOME[pid]] * 3, ["SUCCESS"] * 3]
+        assert e["final"]["scene_hash"] == _fixed_hash(parts[pid])
+
+
+def test_dry_run_b2_runs_the_declared_seeds_at_m1(dry):
+    """B2's proposals come from the seeded sampler and the validator, not from the fake: seeds 0,
+    1, 2 propose 3 rejected patches each on every part, as the offline hardness record has them
+    (bundles/hardness/proposals.jsonl.gz), so B2 plays only v1 here."""
+    with gzip.open(REPO_ROOT / "bundles" / "hardness" / "proposals.jsonl.gz", "rt") as f:
+        rec = {(r["fixture"], r["seed"], r["index"]): r for r in map(json.loads, f) if r["seed"] in (0, 1, 2)}
+    for pid in PARTS:
+        row, d = dry[pid, "B2"]
+        assert [e["model_calls"] for e in row["episodes"]] == [0, 0, 0]
+        for i, e in enumerate(row["episodes"]):
+            assert json.loads((d / f"ep{i}" / "episode.json").read_text())["seed"] == i
+            assert e["revisions"]["verdicts"] == ["REJECTED"] * 3 and len(e["canonical"]) == 1
+            props = json.loads((d / f"ep{i}" / "proposals.json").read_text())
+            for j, p in enumerate(props):
+                r = rec[SCENE_OF[pid], i, j]
+                assert r["ok"] is False and sorted(p["codes"]) == sorted(r["codes"]), (pid, i, j)
+
+
+@pytest.mark.parametrize("role,verdicts,repaired", [
+    ("haiku", ["ACCEPTED"], True),
+    ("sonnet", ["MALFORMED", "REJECTED", "ACCEPTED"], True),
+    ("opus", ["REJECTED", "REJECTED", "MALFORMED"], False),
+])
+def test_dry_run_b3_replays_the_m1_fixtures(dry, parts, role, verdicts, repaired):
+    for pid in PARTS:
+        row, d = dry[pid, f"B3-{role}"]
+        fixture = fx.load_fixture(M1_FIXTURES[role][PARTS.index(pid)])
+        assert fixture["scene"] == f"scenes/{SCENE_OF[pid]}/scene.json" and fixture["stage"] == "M1"
+        for i, e in enumerate(row["episodes"]):
+            assert e["revisions"]["verdicts"] == verdicts and e["repaired"] is repaired, (pid, role)
+            assert e["architect_calls"] == len(verdicts) and e["cost_usd_reported"] is None
+            want = [["SUCCESS"] * 3] if repaired else []
+            assert [v["outcomes"] for v in e["canonical"]] == [[B0_OUTCOME[pid]] * 3, *want]
+            props = json.loads((d / f"ep{i}" / "proposals.json").read_text())
+            assert [p["request_sha"] for p in props] == [t["request_sha"] for t in fixture["turns"]]
+            if repaired:
+                assert e["final"]["scene_hash"] == _fixed_hash(parts[pid])
+
+
+def test_cli_dry_run_of_one_part(tmp_path, capsys):
+    """The CLI path (`--part ... step --dry-run`) on a copy of the suite with one episode per
+    condition (the full declared run is the `dry` fixture above, in process)."""
+    d = _suite_doc()
+    for p in d["parts"]:
+        for c in p["conditions"]:
+            c["episodes"] = 1
+            if "seeds" in c:
+                c["seeds"] = c["seeds"][:1]
+    f = tmp_path / "config" / "experiments" / "m2_hard.yaml"
+    f.parent.mkdir(parents=True)
+    f.write_text(yaml.safe_dump(d, sort_keys=False))
+    rc = _cli().main(["--config", str(f), "--part", "m2_hard_f1d", "step", "--dry-run", "--out", str(tmp_path / "o")])
+    out = capsys.readouterr().out
+    assert rc == 0 and "NOT A RESULT" in out and "experiment m2_hard_f1d" in out and "m1/f1d_m1_fix" in out
+    lines = [l for l in out.splitlines() if l.startswith("  B")]
+    assert len(lines) == 6 and all(" complete " in l for l in lines)
+    assert "repaired=True revisions ['ACCEPTED']" in next(l for l in lines if l.startswith("  B3-haiku"))
