@@ -168,11 +168,30 @@ A fixture that misses is redesigned or dropped, never re-scored with another bar
 attempt is recorded below. F1-A at M1 is computed the same way for reference (b2_offline: 1/200).
 Script: `scripts/ws_hardness.py`; output: `bundles/hardness/summary.json`.
 
+### Result (`bundles/hardness/summary.json`; 600 proposals per fixture, 200 episodes)
+
+| Fixture | Episodes with an accepted, walk-CONNECTED patch | Accepted proposals | Broken walk | Hand fix | Verdict |
+| --- | --- | --- | --- | --- | --- |
+| F1-A (reference, not judged) | 1/200 | 83/600 | DISCONNECTED | (M0 patch; not judged here) | equals b2_offline M1 (tested, record for record) |
+| F1-B | **4/200** | 84/600 | DISCONNECTED | ACCEPTED, CONNECTED | **passes** |
+| F1-C | **0/200** | 83/600 | DISCONNECTED | ACCEPTED, CONNECTED | **passes** |
+| F1-D | **0/200** | 83/600 | DISCONNECTED | ACCEPTED, CONNECTED | **passes** |
+
+F1-B's four episodes each drew `set bridge_1.lateral_offset` inside -4.5 to 4.5 (values -0.769
+with a width change, -1.325, -1.411, -3.181; seeds 37, 65, 74, 197). For F1-C and F1-D the only
+repairing op is a lever move, and the sampler draws each position component uniformly in
+-256 to 256 (grammar bounds), so a move that lands on the ledge top at y 0 inside its footprint
+is practically never drawn: the same statistic is 0 because the sampler is blind, not because
+the rooms are subtle. That is the SPEC's B2 as defined (ADR 0009, WS-09), reported, not tuned.
+The statistic is validator and graph only: not a play result, not a repair rate.
+
 ## Dropped or redesigned attempts
 
-None at the time of writing (before the hardness run). The design choices above (offset 10, the
-lever at x -16, a 2-stud wall) were made from the geometry and the rules, before any B2 statistic
-was computed for these rooms.
+None. Each fixture was scored once, in the design committed before the run (commit
+`cf536dc`), and all three passed. The design choices above (offset 10, the lever at x -16, a
+2-stud wall) were made from the geometry and the rules, before any B2 statistic was computed
+for these rooms. While designing (before any B2 statistic), only the validator and the walk
+graph were run on candidate rooms and fixes, to check the rules above.
 
 ## Consequences
 

@@ -23,6 +23,8 @@ bundles/*
 !bundles/m0/
 # WS-09 B2 offline statistic (validator/graph only, no play): summary + gzipped records (~150 KB)
 !bundles/b2_offline/
+# WS-14 offline hardness of the broken F1 fixtures (same method as b2_offline; summary + gzipped records)
+!bundles/hardness/
 # Architect smoke calls (scripts/architect_smoke.py): request, raw reply, verdicts, usage; small, no secrets
 !bundles/architect_smoke/
 # WS-11 experiment bundles (scripts/run_experiment.py step): relay requests/answers, verdicts, summaries

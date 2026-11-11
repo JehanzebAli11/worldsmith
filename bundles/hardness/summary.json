@@ -1,0 +1,421 @@
+{
+ "kind": "offline validator/graph statistic (no play): WS-14 hardness",
+ "not_a_play_result": true,
+ "disclosure": "Offline validator/graph-only statistic: each proposal is a uniformly random patch from the M1 op set (values uniform within grammar/bounds.yaml), judged by the WS-06 validator and the WS-07 walk-graph approximation against the unchanged fixture scene. It is not a play result and not a repair rate: no Studio runs, no player, no model calls. 'accepted' means the validator would let the patch be tried; 'walk_connected' is the ADR 0008 approximation, never a proof of solvability. Only actual runs decide whether anything repairs a room.",
+ "method": {
+  "stage": "M1",
+  "same_as": "scripts/ws_b2_offline.py (bundles/b2_offline), stage M1",
+  "sampler": {
+   "id": "worldsmith.b2/0.1",
+   "module": "worldsmith/baselines/random_valid.py",
+   "source_sha256": "8ab5704a35637428c46d0f3f15678adc9ba6d9da82008b2ea6cc9d9e898902c0",
+   "budget": 3,
+   "seeds": {
+    "first": 0,
+    "last": 199,
+    "n": 200
+   },
+   "episode": 0,
+   "seed_derivation": "random.Random(first 8 bytes, big-endian, of SHA-256('worldsmith.b2/0.1|seed=<s>|episode=<e>|proposal=<i>'))",
+   "model_calls": 0
+  },
+  "statistic": "episodes_with_accepted_walk_connected",
+  "bar": {
+   "max_share": 0.05,
+   "max_n": 10,
+   "of": 200,
+   "rule": "declared in ADR 0013 before the statistic was computed; a fixture that misses is redesigned or dropped (recorded in ADR 0013), never re-scored with another bar or method"
+  },
+  "also_required": [
+   "broken scene walk-DISCONNECTED (ADR 0008 approximation)",
+   "hand fix ACCEPTED at M1 and walk-CONNECTED"
+  ]
+ },
+ "inputs_sha256": {
+  "grammar/bounds.yaml": "bdc4f68883b085d63962c72ae9da5295f14c573bea973ddf1d99892b4fe45aa2",
+  "grammar/schema.json": "cbc2b4c86bee216bb3cd1f9a5cbb4729f55337bfba35d82c760b06b711e5b043",
+  "grammar/patch_schema.json": "f4ab035ef932bcf56faf47c1a6b8d0d38149d6ef50d2a94ccf7df2a797bf0228",
+  "grammar/patch_schema_0.2.json": "0692e3e234c7bf3ff4e9fa19deda21011309866e6871244d644439ad1296c883",
+  "validator/patch.py": "aad09d1ee84037d3aaadce5f8d3a30f78d012352941675e2489171c3fa5f5310",
+  "validator/validate.py": "b7b5d0b76ec9249819963e168d441c69c56d3d9f55a5cb83d0046921d04c69ed",
+  "validator/nav.py": "a5f4f18f02ea9b980988d2751e589cee0b4bc733b251b0975b824e70af6935a0",
+  "compiler/geometry.py": "03c3ccbe6d9a35630afaa035ae5793e84ca94a6bff6e71a18463f27cfcad4657",
+  "baselines/random_valid.py": "8ab5704a35637428c46d0f3f15678adc9ba6d9da82008b2ea6cc9d9e898902c0",
+  "scenes/F1-A/scene.json": "a2b9d0aaa66505f5a3de3abbff5a88f8ef1973e14714aba6352374e279ecaab9",
+  "scenes/F1-B/scene.json": "7bdb8582966d8d7c1daa42b957555c0df9a930396a971aa5c8eee616603d57dd",
+  "scenes/F1-C/scene.json": "d9f14b1aec782ef4d7bb87a182fc170745f3df85fa1adaf3365f4230a06e8a04",
+  "scenes/F1-D/scene.json": "c3aed8c4362e1b071628cf174fa0b738ad19cb1be894b343289ef7dc648edf19",
+  "scenes/F1-B/patches/m1_fix.json": "96da1cafbe9ba22489e76e33100859a3573eaba24f1bf448ce9760c28a713ff2",
+  "scenes/F1-C/patches/m1_fix.json": "e1b0f51f809b1ce478c74f45f8a2449d65d2859e8c8f8a3de17f57edc07e5dc9",
+  "scenes/F1-D/patches/m1_fix.json": "8599c68ec51e0f81de3120c3af65f68c4b2d7e1c071c99b7cc95a5f811dfd82d"
+ },
+ "records": {
+  "file": "bundles/hardness/proposals.jsonl.gz",
+  "format": "gzip of JSONL, one record per proposal (the b2_offline record plus `fixture`)",
+  "sha256": "e8df3312d7018c825ef29f3a685b35e23ac23206ef8ab21ed9be8d635a588215",
+  "n": 2400
+ },
+ "fixtures": {
+  "F1-A": {
+   "role": "reference",
+   "scene": {
+    "path": "scenes/F1-A/scene.json",
+    "scene_id": "f1_a",
+    "canonical_hash": "92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d"
+   },
+   "base_walk": "DISCONNECTED",
+   "stats": {
+    "proposals": 600,
+    "episodes": 200,
+    "budget_per_episode": 3,
+    "accepted": {
+     "n": 83,
+     "of": 600,
+     "share": 0.1383
+    },
+    "rejected": 517,
+    "walk_connected": {
+     "n": 92,
+     "of": 600,
+     "share": 0.1533
+    },
+    "walk_connected_given_accepted": {
+     "n": 1,
+     "of": 83,
+     "share": 0.012
+    },
+    "accepted_and_walk_connected": {
+     "n": 1,
+     "of": 600,
+     "share": 0.0017
+    },
+    "graph_not_computed": 0,
+    "episodes_with_accepted": {
+     "n": 73,
+     "of": 200,
+     "share": 0.365
+    },
+    "episodes_with_accepted_walk_connected": {
+     "n": 1,
+     "of": 200,
+     "share": 0.005
+    },
+    "rejection_codes": {
+     "DETOUR_TOO_SHORT": 5,
+     "GATE_BYPASSED": 174,
+     "NEW_FLOOR": 1,
+     "OUTSIDE_ROOM": 501,
+     "PENETRATION": 103,
+     "UNSUPPORTED": 160
+    },
+    "ops_per_patch": {
+     "1": 219,
+     "2": 199,
+     "3": 182
+    },
+    "ops_by_kind": {
+     "add Decor": 180,
+     "add Wall": 172,
+     "move gate_1": 174,
+     "move lever_1": 160,
+     "set bridge_1.lateral_offset": 162,
+     "set bridge_1.length": 154,
+     "set bridge_1.width": 161
+    }
+   },
+   "passes": null,
+   "note": "reference only, not judged: F1-A at M1 recomputed with the same method; equals bundles/b2_offline/summary.json stages.M1"
+  },
+  "F1-B": {
+   "role": "broken",
+   "scene": {
+    "path": "scenes/F1-B/scene.json",
+    "scene_id": "f1_b",
+    "canonical_hash": "2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b"
+   },
+   "base_walk": "DISCONNECTED",
+   "stats": {
+    "proposals": 600,
+    "episodes": 200,
+    "budget_per_episode": 3,
+    "accepted": {
+     "n": 84,
+     "of": 600,
+     "share": 0.14
+    },
+    "rejected": 516,
+    "walk_connected": {
+     "n": 17,
+     "of": 600,
+     "share": 0.0283
+    },
+    "walk_connected_given_accepted": {
+     "n": 4,
+     "of": 84,
+     "share": 0.0476
+    },
+    "accepted_and_walk_connected": {
+     "n": 4,
+     "of": 600,
+     "share": 0.0067
+    },
+    "graph_not_computed": 0,
+    "episodes_with_accepted": {
+     "n": 74,
+     "of": 200,
+     "share": 0.37
+    },
+    "episodes_with_accepted_walk_connected": {
+     "n": 4,
+     "of": 200,
+     "share": 0.02
+    },
+    "rejection_codes": {
+     "DETOUR_TOO_SHORT": 5,
+     "GATE_BYPASSED": 174,
+     "NEW_FLOOR": 1,
+     "OUTSIDE_ROOM": 501,
+     "PENETRATION": 101,
+     "UNSUPPORTED": 160
+    },
+    "ops_per_patch": {
+     "1": 219,
+     "2": 199,
+     "3": 182
+    },
+    "ops_by_kind": {
+     "add Decor": 180,
+     "add Wall": 172,
+     "move gate_1": 174,
+     "move lever_1": 160,
+     "set bridge_1.lateral_offset": 162,
+     "set bridge_1.length": 154,
+     "set bridge_1.width": 161
+    }
+   },
+   "hand_fix": {
+    "path": "scenes/F1-B/patches/m1_fix.json",
+    "sha256": "96da1cafbe9ba22489e76e33100859a3573eaba24f1bf448ce9760c28a713ff2",
+    "ops": [
+     {
+      "op": "set",
+      "id": "bridge_1",
+      "field": "lateral_offset",
+      "value": 0
+     }
+    ],
+    "ok": true,
+    "codes": [],
+    "walk": "CONNECTED",
+    "scene_hash": "74c137b1180168319c0c3d9469e91b484d6fc828a8a69c47485404c8c6a71f21"
+   },
+   "checks": {
+    "hardness_at_most_5_percent": true,
+    "broken_walk_disconnected": true,
+    "hand_fix_accepted": true,
+    "hand_fix_walk_connected": true
+   },
+   "passes": true
+  },
+  "F1-C": {
+   "role": "broken",
+   "scene": {
+    "path": "scenes/F1-C/scene.json",
+    "scene_id": "f1_c",
+    "canonical_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585"
+   },
+   "base_walk": "DISCONNECTED",
+   "stats": {
+    "proposals": 600,
+    "episodes": 200,
+    "budget_per_episode": 3,
+    "accepted": {
+     "n": 83,
+     "of": 600,
+     "share": 0.1383
+    },
+    "rejected": 517,
+    "walk_connected": {
+     "n": 130,
+     "of": 600,
+     "share": 0.2167
+    },
+    "walk_connected_given_accepted": {
+     "n": 0,
+     "of": 83,
+     "share": 0.0
+    },
+    "accepted_and_walk_connected": {
+     "n": 0,
+     "of": 600,
+     "share": 0.0
+    },
+    "graph_not_computed": 0,
+    "episodes_with_accepted": {
+     "n": 73,
+     "of": 200,
+     "share": 0.365
+    },
+    "episodes_with_accepted_walk_connected": {
+     "n": 0,
+     "of": 200,
+     "share": 0.0
+    },
+    "rejection_codes": {
+     "DETOUR_TOO_SHORT": 5,
+     "GATE_BYPASSED": 174,
+     "NEW_FLOOR": 1,
+     "OUTSIDE_ROOM": 501,
+     "PENETRATION": 103,
+     "UNSUPPORTED": 160
+    },
+    "ops_per_patch": {
+     "1": 219,
+     "2": 199,
+     "3": 182
+    },
+    "ops_by_kind": {
+     "add Decor": 180,
+     "add Wall": 172,
+     "move gate_1": 174,
+     "move lever_1": 160,
+     "set bridge_1.lateral_offset": 162,
+     "set bridge_1.length": 154,
+     "set bridge_1.width": 161
+    }
+   },
+   "hand_fix": {
+    "path": "scenes/F1-C/patches/m1_fix.json",
+    "sha256": "e1b0f51f809b1ce478c74f45f8a2449d65d2859e8c8f8a3de17f57edc07e5dc9",
+    "ops": [
+     {
+      "op": "move",
+      "id": "lever_1",
+      "pos": [
+       -10,
+       0,
+       24
+      ]
+     }
+    ],
+    "ok": true,
+    "codes": [],
+    "walk": "CONNECTED",
+    "scene_hash": "53abb4abcafc90d8323aae77722fb93dd984bd81aedfdb7d463b71d639fce6f0"
+   },
+   "checks": {
+    "hardness_at_most_5_percent": true,
+    "broken_walk_disconnected": true,
+    "hand_fix_accepted": true,
+    "hand_fix_walk_connected": true
+   },
+   "passes": true
+  },
+  "F1-D": {
+   "role": "broken",
+   "scene": {
+    "path": "scenes/F1-D/scene.json",
+    "scene_id": "f1_d",
+    "canonical_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387"
+   },
+   "base_walk": "DISCONNECTED",
+   "stats": {
+    "proposals": 600,
+    "episodes": 200,
+    "budget_per_episode": 3,
+    "accepted": {
+     "n": 83,
+     "of": 600,
+     "share": 0.1383
+    },
+    "rejected": 517,
+    "walk_connected": {
+     "n": 27,
+     "of": 600,
+     "share": 0.045
+    },
+    "walk_connected_given_accepted": {
+     "n": 0,
+     "of": 83,
+     "share": 0.0
+    },
+    "accepted_and_walk_connected": {
+     "n": 0,
+     "of": 600,
+     "share": 0.0
+    },
+    "graph_not_computed": 0,
+    "episodes_with_accepted": {
+     "n": 73,
+     "of": 200,
+     "share": 0.365
+    },
+    "episodes_with_accepted_walk_connected": {
+     "n": 0,
+     "of": 200,
+     "share": 0.0
+    },
+    "rejection_codes": {
+     "DETOUR_TOO_SHORT": 5,
+     "GATE_BYPASSED": 174,
+     "NEW_FLOOR": 1,
+     "OUTSIDE_ROOM": 501,
+     "PENETRATION": 103,
+     "UNSUPPORTED": 160
+    },
+    "ops_per_patch": {
+     "1": 219,
+     "2": 199,
+     "3": 182
+    },
+    "ops_by_kind": {
+     "add Decor": 180,
+     "add Wall": 172,
+     "move gate_1": 174,
+     "move lever_1": 160,
+     "set bridge_1.lateral_offset": 162,
+     "set bridge_1.length": 154,
+     "set bridge_1.width": 161
+    }
+   },
+   "hand_fix": {
+    "path": "scenes/F1-D/patches/m1_fix.json",
+    "sha256": "8599c68ec51e0f81de3120c3af65f68c4b2d7e1c071c99b7cc95a5f811dfd82d",
+    "ops": [
+     {
+      "op": "move",
+      "id": "lever_1",
+      "pos": [
+       -10,
+       0,
+       24
+      ]
+     },
+     {
+      "op": "set",
+      "id": "bridge_1",
+      "field": "length",
+      "value": 16
+     }
+    ],
+    "ok": true,
+    "codes": [],
+    "walk": "CONNECTED",
+    "scene_hash": "9cc6f35cdda44fe5ea751865a5bdef96acbd8714301c8c1d9c4d51d226a7a615"
+   },
+   "checks": {
+    "hardness_at_most_5_percent": true,
+    "broken_walk_disconnected": true,
+    "hand_fix_accepted": true,
+    "hand_fix_walk_connected": true
+   },
+   "passes": true
+  }
+ },
+ "passed": [
+  "F1-B",
+  "F1-C",
+  "F1-D"
+ ],
+ "dropped": []
+}
