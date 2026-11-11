@@ -6,6 +6,11 @@ and the replies for each revision in order, each with its request hash and its e
 verdict. Replies are written by hand to exercise the client, parser, validator and revision
 counting; they are **not model outputs** and say so in `provenance`.
 
+The classified episode is either a WS-08 `classification.json` episode (`{"file", "episode"}`) or
+one scene version of a recorded experiment episode (`{"episode_dir", "version"}`, WS-14: the M1
+fixtures in `architect/fixtures/m1/` observe the live gate's bundles, which the dry run's
+FakeOperator reproduces attempt for attempt, so their requests are the dry run's requests).
+
 `replay(name)` runs `propose_until_valid` with a `FixtureArchitect` (replies looked up by
 request hash, so a changed prompt or input is a loud `FixtureMiss`, never a silent mismatch).
 `compute_request_shas(name)` replays by turn order instead, to refresh the hashes after a
@@ -21,14 +26,19 @@ from worldsmith.architect import loop as lp
 from worldsmith.architect import prompt as pr
 from worldsmith.architect.client import (FIXTURE_DIR, FIXTURE_SCHEMA, REPO_ROOT, ArchitectConfigError,
                                          FixtureArchitect, RawResponse, fixture_path)
-from worldsmith.grammar.scene import load_scene
+from worldsmith.grammar.scene import canonical_hash, load_scene
 
 _KEYS = {"schema", "name", "provenance", "why", "scene", "classification", "stage", "prompt_mode",
          "max_revisions", "turns", "expect"}
 
 
+M1_DIR = "m1"      # WS-14: M1 replies for the m2_hard dry run (`architect/fixtures/m1/<name>.json`)
+
+
 def fixture_names() -> list[str]:
-    return sorted(p.stem for p in FIXTURE_DIR.glob("*.json"))
+    """Every fixture: the WS-10 ones by stem, the WS-14 M1 ones as `m1/<stem>`."""
+    return sorted(p.stem for p in FIXTURE_DIR.glob("*.json")) + \
+        sorted(f"{M1_DIR}/{p.stem}" for p in (FIXTURE_DIR / M1_DIR).glob("*.json"))
 
 
 def load_fixture(name_or_path) -> dict:
@@ -44,8 +54,18 @@ def load_fixture(name_or_path) -> dict:
 
 def _inputs(doc: dict):
     scene = load_scene(REPO_ROOT / doc["scene"])
-    cl_doc = json.loads((REPO_ROOT / doc["classification"]["file"]).read_text(encoding="utf-8"))
-    ep = next(e for e in cl_doc["episodes"] if e["episode"] == doc["classification"]["episode"])
+    cl = doc["classification"]
+    if "episode_dir" in cl:
+        # A recorded experiment episode (ADR 0010 bundle): the classified attempt rows of one
+        # scene version, as the orchestrator shows them to the architect (episode.observed_of).
+        vdir = REPO_ROOT / cl["episode_dir"] / f"v{cl['version']}"
+        if canonical_hash(load_scene(vdir / "scene.json")) != canonical_hash(scene):
+            raise ArchitectConfigError(f"{doc['name']}: {vdir}/scene.json is not the fixture's scene")
+        rows = [json.loads(p.read_text(encoding="utf-8"))
+                for p in sorted((vdir / "attempts").glob("[0-9]*.json"), key=lambda p: int(p.stem))]
+        return scene, pr.observed_from_classification({"attempts": rows, "episode_tags": []})
+    cl_doc = json.loads((REPO_ROOT / cl["file"]).read_text(encoding="utf-8"))
+    ep = next(e for e in cl_doc["episodes"] if e["episode"] == cl["episode"])
     return scene, pr.observed_from_classification(ep)
 
 

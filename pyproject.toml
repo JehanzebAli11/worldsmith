@@ -44,7 +44,7 @@ packages = [
 [tool.setuptools.package-data]
 "worldsmith.grammar" = ["schema.json", "patch_schema.json", "patch_schema_0.2.json", "bounds.yaml", "templates/*.luau", "templates/events/*.luau"]
 "worldsmith.runner" = ["templates/*.luau"]
-"worldsmith.architect" = ["prompt.md", "prompt_redteam.md", "fixtures/*.json"]
+"worldsmith.architect" = ["prompt.md", "prompt_redteam.md", "fixtures/*.json", "fixtures/m1/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

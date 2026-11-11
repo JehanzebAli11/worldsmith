@@ -1,0 +1,53 @@
+{
+  "schema": "worldsmith.architect_fixture/0.1",
+  "name": "f1b_m1_exhausted",
+  "provenance": "hand-written for the WS-14 m2_hard dry run (11 Nov 2026); not a model output",
+  "why": "M1, F1-B: moving the goal (STAGE_OP_FORBIDDEN), a no-op length, then the right patch inside a code fence: three rejected revisions, the architect budget is used up (not repaired).",
+  "scene": "scenes/F1-B/scene.json",
+  "classification": {
+    "episode_dir": "bundles/experiments/gate_f1b/B0/ep0",
+    "version": 1
+  },
+  "stage": "M1",
+  "prompt_mode": "baseline",
+  "max_revisions": 3,
+  "turns": [
+    {
+      "request_sha": "46d39345d42f666dbf0e3ee77a289777f46f2c543eb13408e1e6085969856b95",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b\", \"ops\": [{\"op\": \"move\", \"id\": \"goal\", \"pos\": [0, 0, 24]}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "REJECTED",
+        "codes": [
+          "STAGE_OP_FORBIDDEN"
+        ]
+      }
+    },
+    {
+      "request_sha": "8bc7732b7377eed2ce33113795759b09e2d7e3a1d98fe918208896d45d1a83b6",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b\", \"ops\": [{\"op\": \"set\", \"id\": \"bridge_1\", \"field\": \"length\", \"value\": 16}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "REJECTED",
+        "codes": [
+          "NOOP_PATCH"
+        ]
+      }
+    },
+    {
+      "request_sha": "4ce9311f5d67d6651abec3c99e30ab5d4edcc0c383646fd9b05888754e6dc89d",
+      "response_text": "```json\n{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b\", \"ops\": [{\"op\": \"set\", \"id\": \"bridge_1\", \"field\": \"lateral_offset\", \"value\": 0}]}\n```",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "MALFORMED",
+        "malformed_reason": "CODE_FENCE"
+      }
+    }
+  ],
+  "expect": {
+    "revisions_used": 3,
+    "rejected": 3,
+    "exhausted": true,
+    "accepted_on": null
+  }
+}

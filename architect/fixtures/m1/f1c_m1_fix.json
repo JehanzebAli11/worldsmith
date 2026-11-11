@@ -1,0 +1,30 @@
+{
+  "schema": "worldsmith.architect_fixture/0.1",
+  "name": "f1c_m1_fix",
+  "provenance": "hand-written for the WS-14 m2_hard dry run (11 Nov 2026); not a model output",
+  "why": "M1, F1-C: the hand fix (1 op) on the first revision; the dry run plays it SUCCESS (repaired).",
+  "scene": "scenes/F1-C/scene.json",
+  "classification": {
+    "episode_dir": "bundles/experiments/gate_f1c/B0/ep0",
+    "version": 1
+  },
+  "stage": "M1",
+  "prompt_mode": "baseline",
+  "max_revisions": 3,
+  "turns": [
+    {
+      "request_sha": "c455f48d39f599d7e7dba7397447aec4bd7d09f73a7c839329b364fd8cfe857e",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585\", \"ops\": [{\"op\": \"move\", \"id\": \"lever_1\", \"pos\": [-10, 0, 24]}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "ACCEPTED"
+      }
+    }
+  ],
+  "expect": {
+    "revisions_used": 1,
+    "rejected": 0,
+    "exhausted": false,
+    "accepted_on": 1
+  }
+}

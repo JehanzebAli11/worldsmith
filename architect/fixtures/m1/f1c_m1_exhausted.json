@@ -1,0 +1,54 @@
+{
+  "schema": "worldsmith.architect_fixture/0.1",
+  "name": "f1c_m1_exhausted",
+  "provenance": "hand-written for the WS-14 m2_hard dry run (11 Nov 2026); not a model output",
+  "why": "M1, F1-C: removing protected wall_ledge (STAGE_OP_FORBIDDEN), the lever moved off its ledge (UNSUPPORTED), then the right patch inside a code fence: three rejected revisions, the architect budget is used up (not repaired).",
+  "scene": "scenes/F1-C/scene.json",
+  "classification": {
+    "episode_dir": "bundles/experiments/gate_f1c/B0/ep0",
+    "version": 1
+  },
+  "stage": "M1",
+  "prompt_mode": "baseline",
+  "max_revisions": 3,
+  "turns": [
+    {
+      "request_sha": "c455f48d39f599d7e7dba7397447aec4bd7d09f73a7c839329b364fd8cfe857e",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585\", \"ops\": [{\"op\": \"remove\", \"id\": \"wall_ledge\"}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "REJECTED",
+        "codes": [
+          "STAGE_OP_FORBIDDEN",
+          "PROTECTED_CHANGED"
+        ]
+      }
+    },
+    {
+      "request_sha": "a3cc192ecc9fb8413a120316002e21ae4a3d63794cd61064f68a345ea82026fb",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585\", \"ops\": [{\"op\": \"move\", \"id\": \"lever_1\", \"pos\": [-30, 0, 24]}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "REJECTED",
+        "codes": [
+          "UNSUPPORTED"
+        ]
+      }
+    },
+    {
+      "request_sha": "7c8b15b64790c295698815d8b3a2061d0fd25978f8c497ffaea3fb4631260487",
+      "response_text": "```json\n{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585\", \"ops\": [{\"op\": \"move\", \"id\": \"lever_1\", \"pos\": [-10, 0, 24]}]}\n```",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "MALFORMED",
+        "malformed_reason": "CODE_FENCE"
+      }
+    }
+  ],
+  "expect": {
+    "revisions_used": 3,
+    "rejected": 3,
+    "exhausted": true,
+    "accepted_on": null
+  }
+}

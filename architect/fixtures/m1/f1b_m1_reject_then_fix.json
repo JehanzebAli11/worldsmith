@@ -1,0 +1,50 @@
+{
+  "schema": "worldsmith.architect_fixture/0.1",
+  "name": "f1b_m1_reject_then_fix",
+  "provenance": "hand-written for the WS-14 m2_hard dry run (11 Nov 2026); not a model output",
+  "why": "M1, F1-B: prose, then a 40-stud-wide bridge (OUT_OF_BOUNDS), then the hand fix: two rejected revisions (one malformed), accepted on revision 3.",
+  "scene": "scenes/F1-B/scene.json",
+  "classification": {
+    "episode_dir": "bundles/experiments/gate_f1b/B0/ep0",
+    "version": 1
+  },
+  "stage": "M1",
+  "prompt_mode": "baseline",
+  "max_revisions": 3,
+  "turns": [
+    {
+      "request_sha": "46d39345d42f666dbf0e3ee77a289777f46f2c543eb13408e1e6085969856b95",
+      "response_text": "All three attempts fall in the gap_1 area although bridge_1 is full length: it sits 10 studs to the side of the path. I would set bridge_1.lateral_offset to 0.",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "MALFORMED",
+        "malformed_reason": "NOT_JSON"
+      }
+    },
+    {
+      "request_sha": "184f1816d7c859a86430b605219aff4353ff84d2a2b0178f903a36259a59b023",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b\", \"ops\": [{\"op\": \"set\", \"id\": \"bridge_1\", \"field\": \"width\", \"value\": 40}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "REJECTED",
+        "codes": [
+          "OUT_OF_BOUNDS"
+        ]
+      }
+    },
+    {
+      "request_sha": "1262dd03b3c396e27c8553a0cde0f2d284c6b142df438ecb35514a51a8b62099",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b\", \"ops\": [{\"op\": \"set\", \"id\": \"bridge_1\", \"field\": \"lateral_offset\", \"value\": 0}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "ACCEPTED"
+      }
+    }
+  ],
+  "expect": {
+    "revisions_used": 3,
+    "rejected": 2,
+    "exhausted": false,
+    "accepted_on": 3
+  }
+}

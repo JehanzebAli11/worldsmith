@@ -1,0 +1,50 @@
+{
+  "schema": "worldsmith.architect_fixture/0.1",
+  "name": "f1a_m1_reject_then_fix",
+  "provenance": "hand-written for the WS-14 m2_hard dry run (11 Nov 2026); not a model output",
+  "why": "M1, F1-A: prose, then a Wall laid in the gap as a floor (NEW_FLOOR), then the hand fix: two rejected revisions (one malformed), accepted on revision 3.",
+  "scene": "scenes/F1-A/scene.json",
+  "classification": {
+    "file": "bundles/m0/classification.json",
+    "episode": "F1-A"
+  },
+  "stage": "M1",
+  "prompt_mode": "baseline",
+  "max_revisions": 3,
+  "turns": [
+    {
+      "request_sha": "a18edd0c30088cb4731d2ed344cffd3a386c5b79c85f6cc93f05c5be43ac92ad",
+      "response_text": "The character falls into gap_1 every time: bridge_1 is 6 studs long and the gap is 16. Setting bridge_1.length to 16 should let it reach plat_b.",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "MALFORMED",
+        "malformed_reason": "NOT_JSON"
+      }
+    },
+    {
+      "request_sha": "bd198929c7d213f24e55f8e1a2ae8d502d80ecd0b20aa3dee2508c4fac6c98ef",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d\", \"ops\": [{\"op\": \"add\", \"entity\": {\"id\": \"wall_floor_1\", \"type\": \"Wall\", \"pos\": [0, -1, 44], \"size\": [6, 1, 16]}}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "REJECTED",
+        "codes": [
+          "NEW_FLOOR"
+        ]
+      }
+    },
+    {
+      "request_sha": "ebbf399829ad23c6742991150bc7db760a79c586d28e36d7f6530eecc26d4414",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d\", \"ops\": [{\"op\": \"set\", \"id\": \"bridge_1\", \"field\": \"length\", \"value\": 16}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "ACCEPTED"
+      }
+    }
+  ],
+  "expect": {
+    "revisions_used": 3,
+    "rejected": 2,
+    "exhausted": false,
+    "accepted_on": 3
+  }
+}

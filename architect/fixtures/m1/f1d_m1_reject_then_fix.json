@@ -1,0 +1,50 @@
+{
+  "schema": "worldsmith.architect_fixture/0.1",
+  "name": "f1d_m1_reject_then_fix",
+  "provenance": "hand-written for the WS-14 m2_hard dry run (11 Nov 2026); not a model output",
+  "why": "M1, F1-D: prose, then a crate dropped on the walkway (PATH_BLOCKED), then the hand fix: two rejected revisions (one malformed), accepted on revision 3.",
+  "scene": "scenes/F1-D/scene.json",
+  "classification": {
+    "episode_dir": "bundles/experiments/gate_f1d/B0/ep0",
+    "version": 1
+  },
+  "stage": "M1",
+  "prompt_mode": "baseline",
+  "max_revisions": 3,
+  "turns": [
+    {
+      "request_sha": "96eb7f9fcecde4a5720ea234fb170e1036c9eeda639266fd55444cbd9e6a7713",
+      "response_text": "No LEVER_ACTIVATED and STUCK at the gate: lever_1 is behind wall_ledge. bridge_1 is also only 6 studs over a 16-stud gap, so both need fixing: move lever_1 to [-10, 0, 24] and set bridge_1.length to 16.",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "MALFORMED",
+        "malformed_reason": "NOT_JSON"
+      }
+    },
+    {
+      "request_sha": "4ea3c31872d7faa8df2cbf8301a3c56f66b85036285c1cdd317e94eafd8730d4",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387\", \"ops\": [{\"op\": \"add\", \"entity\": {\"id\": \"decor_crate_1\", \"type\": \"Decor\", \"palette\": \"crate\", \"pos\": [0, 1, 28], \"size\": [4, 2, 4]}}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "REJECTED",
+        "codes": [
+          "PATH_BLOCKED"
+        ]
+      }
+    },
+    {
+      "request_sha": "f18ccd8d5030607a50b3ee3390fa654637b9d2db427b61ea5e941a896bb241c3",
+      "response_text": "{\"schema\": \"worldsmith.patch/0.2\", \"base_hash\": \"16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387\", \"ops\": [{\"op\": \"move\", \"id\": \"lever_1\", \"pos\": [-10, 0, 24]}, {\"op\": \"set\", \"id\": \"bridge_1\", \"field\": \"length\", \"value\": 16}]}",
+      "stop_reason": "end_turn",
+      "expect": {
+        "verdict": "ACCEPTED"
+      }
+    }
+  ],
+  "expect": {
+    "revisions_used": 3,
+    "rejected": 2,
+    "exhausted": false,
+    "accepted_on": 3
+  }
+}

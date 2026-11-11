@@ -120,3 +120,46 @@ def test_dry_run_of_each_gate_scene_matches_the_live_gate(gate, tmp_path):
     assert [(v["outcomes"], v["tags"]) for v in ds["versions"]] == [(v["outcomes"], v["tags"]) for v in ls["versions"]]
     assert ds["final"]["verdict"] == ls["final"]["verdict"]
     assert _observed(dry_ep) == _observed(live)
+# --- the M1 architect fixtures (hand-written replies; not model outputs) -------------------------
+
+@pytest.mark.parametrize("name", M1_NAMES)
+def test_m1_fixtures_replay_as_declared(name):
+    doc = fx.load_fixture(name)
+    assert "not a model output" in doc["provenance"] and doc["stage"] == "M1" and doc["max_revisions"] == 3
+    res, log = fx.replay(name)
+    assert [r.verdict for r in res.revisions] == [t["expect"]["verdict"] for t in doc["turns"]]
+    for rev, t in zip(res.revisions, doc["turns"]):
+        assert set(t["expect"].get("codes", [])) <= set(rev.codes), (name, rev.codes)
+        if "malformed_reason" in t["expect"]:
+            assert rev.malformed["reason"] == t["expect"]["malformed_reason"]
+    e = doc["expect"]
+    assert (res.used, res.rejected, res.exhausted) == (e["revisions_used"], e["rejected"], e["exhausted"])
+    assert (res.accepted.index if res.accepted else None) == e["accepted_on"]
+
+
+def test_m1_fixtures_are_listed_and_hashed():
+    names = fx.fixture_names()
+    assert [n for n in names if n.startswith("m1/")] == sorted(M1_NAMES)
+    for n in names:                                          # the request hashes are current
+        assert [t["request_sha"] for t in fx.load_fixture(n)["turns"]] == fx.compute_request_shas(n), n
+
+
+def test_m1_fixtures_observe_the_live_gate_or_m0():
+    """F1-B/C/D fixtures read the live gate's B0 attempts (which the dry run reproduces); F1-A's read
+    M0's classification (which the dry run also reproduces: test_ws11_orchestrator)."""
+    for n in M1_NAMES:
+        doc = fx.load_fixture(n)
+        cl, key = doc["classification"], n.split("/")[1][:3]
+        if key == "f1a":
+            assert cl == {"file": "bundles/m0/classification.json", "episode": "F1-A"}
+        else:
+            assert cl == {"episode_dir": f"bundles/experiments/gate_{key}/B0/ep0", "version": 1}
+            scene, observed = fx._inputs(doc)
+            assert observed == _observed(REPO_ROOT / cl["episode_dir"])
+
+
+def test_fixture_inputs_refuse_a_bundle_of_another_scene():
+    doc = fx.load_fixture("m1/f1c_m1_fix")
+    doc = dict(doc, classification={"episode_dir": "bundles/experiments/gate_f1b/B0/ep0", "version": 1})
+    with pytest.raises(fx.ArchitectConfigError, match="not the fixture's scene"):
+        fx._inputs(doc)
