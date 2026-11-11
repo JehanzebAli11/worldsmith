@@ -1154,3 +1154,36 @@ pending; **5 architect call pending**; 4 refused; 2 setup (jzapi missing); 1 oth
 5. `--dry-run` cannot cover B3 in `m2_hard` (the WS-10 fixtures are F1-A M0 replies; FakeOperator
    only knows bridge length). Add M1 dry-run fixtures and a lever rule to FakeOperator before the
    run? Recommended: yes, CPU only, a small follow-up.
+
+## 2026-11-11 · WS-14 live gate (control thread; relay)
+
+**Done**: the six gate experiments declared in `3366470` before any run (`config/experiments/gate_f1{b,c,d}{,_fix}.yaml`:
+B0, 1 episode, N 3, k 3, player p0.v3, controller `cd9a7a0a…`, no architect, $0) ran live in
+`places/worldsmith-lab.rbxl`, relayed call by call.
+
+**Verified** (from each `bundles/experiments/<id>/B0/ep0/summary.json` and `v1/readback.compare.txt`)
+
+| experiment | scene | outcomes | expected (ADR 0013) | read-back |
+|---|---|---|---|---|
+| gate_f1b | 2b54bbe7 | FELL x3 (KILL_FLOOR_TOUCHED in the gap_1 area) | FELL 3/3 | 26 nodes, 0 differences |
+| gate_f1b_fix | 74c137b1 | SUCCESS x3 | SUCCESS 3/3 | 26, 0 |
+| gate_f1c | e916fde2 | STUCK x3, no LEVER_ACTIVATED | STUCK 3/3 | 27, 0 |
+| gate_f1c_fix | 53abb4ab | SUCCESS x3 | SUCCESS 3/3 | 27, 0 |
+| gate_f1d | 16d226d1 | STUCK x3, no LEVER_ACTIVATED | STUCK 3/3 | 27, 0 |
+| gate_f1d_fix | 9cc6f35c | SUCCESS x3 | SUCCESS 3/3 | 27, 0 |
+
+- All three fixtures pass the live gate. No HARNESS_ERROR, CONNECTOR_ERROR or INCONSISTENT.
+- Relay slip, disclosed in `bundles/experiments/gate_f1b/RELAY_NOTE.md`: gate_f1b call 003
+  (`get_studio_mode`) was answered `stop` without the live call; all other calls were live.
+- Observed, not a defect: in the F1-C/F1-D fixes the `lever_zone` waypoint is never reached (the
+  character stops near x = -9.25 after MoveTo gives up) but the lever's zone is touched on the way,
+  so the gate opens. STUCK plays take about 47 s (T_attempt 60 s). One gate_f1d attempt had a
+  Studio network blip (DnsResolve warnings, a play that started late); its outcome was normal.
+
+**Next**
+1. Owner decisions (WS-14 HANDOFF open questions 1–4): suite format, prompt cap 32000, B0/B1
+   episodes, M1 dry-run fixtures.
+2. Owner approval of m2_hard's worst case ($37.728 as declared, or as revised by those decisions)
+   before any paid call.
+
+**Open questions**: none new.

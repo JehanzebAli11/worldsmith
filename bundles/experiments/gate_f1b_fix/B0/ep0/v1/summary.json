@@ -1,0 +1,69 @@
+{
+ "attempted": 3,
+ "attempts": [
+  {
+   "attempt": 1,
+   "cause": null,
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "BRIDGE_CROSSED",
+    "GOAL_TOUCHED"
+   ],
+   "fell_in_area": null,
+   "outcome": "SUCCESS",
+   "stuck": "NOT_STUCK",
+   "tags": [
+    "SUCCESS"
+   ]
+  },
+  {
+   "attempt": 2,
+   "cause": null,
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "BRIDGE_CROSSED",
+    "GOAL_TOUCHED"
+   ],
+   "fell_in_area": null,
+   "outcome": "SUCCESS",
+   "stuck": "NOT_STUCK",
+   "tags": [
+    "SUCCESS"
+   ]
+  },
+  {
+   "attempt": 3,
+   "cause": null,
+   "events": [
+    "LEVER_ACTIVATED",
+    "GATE_OPENED",
+    "BRIDGE_CROSSED",
+    "GOAL_TOUCHED"
+   ],
+   "fell_in_area": null,
+   "outcome": "SUCCESS",
+   "stuck": "NOT_STUCK",
+   "tags": [
+    "SUCCESS"
+   ]
+  }
+ ],
+ "build": {
+  "build_line": "WS_BUILD_OK|74c137b1180168319c0c3d9469e91b484d6fc828a8a69c47485404c8c6a71f21|26",
+  "descendants": 26,
+  "expected_descendants": 26,
+  "ok": true,
+  "readback_differences": 0
+ },
+ "detail": "",
+ "episode": "B0/ep0",
+ "n": 3,
+ "scene_hash": "74c137b1180168319c0c3d9469e91b484d6fc828a8a69c47485404c8c6a71f21",
+ "schema": "worldsmith.version_summary/0.1",
+ "status": "complete",
+ "successes": 3,
+ "verdict": "PASS",
+ "version": 1
+}

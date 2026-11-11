@@ -1,0 +1,15 @@
+{
+ "config_file": "gate_f1c.yaml",
+ "config_sha256": "b5bf018bfe22665914ab22ad64d3d0ee756febc10486b8a482a90a2e4149fc24",
+ "created": "2026-11-11T12:05:57Z",
+ "dry_run": false,
+ "experiment": "gate_f1c",
+ "n_attempts": 3,
+ "player": {
+  "controller_sha256": "cd9a7a0a21ccd32ea7e14990f17b7bba58083f1bfeb2a81e77cf2e122a2d0f8c",
+  "t_attempt_s": 60,
+  "version": "p0.v3"
+ },
+ "rule": "declared before runs: the runner refuses this folder if the config's hash differs",
+ "schema": "worldsmith.experiment_lock/0.1"
+}

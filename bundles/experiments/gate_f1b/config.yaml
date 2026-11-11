@@ -1,0 +1,68 @@
+# Live gate for WS-14 fixture F1-B (broken scene), ADR 0013. Declared and committed on 11 Nov 2026
+# BEFORE any run of it; a change after the first bundle means a NEW experiment id.
+# Expected (pre-declared, ADR 0013 table): FELL in the gap_1 area, 3 of 3, with read-back 0 differences.
+# Same rule as M0: an inconsistent result (for example 2 of 3, or a different outcome tag) means
+# stop and debug; the bar is never lowered. One condition (B0, no patch); no architect call, nothing paid.
+# Player, route, timing, preflight and classifier are smoke_f1e_p0v3b's (p0.v3).
+schema: worldsmith.experiment/0.1
+experiment: gate_f1b
+stage: M1                       # ADR 0007 (unused: B0 proposes nothing)
+
+scene:
+  file: scenes/F1-B/scene.json
+  canonical_hash: 2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b
+
+player:
+  version: p0.v3
+  tier: P0
+  driver: "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps"
+  claim: "Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result."
+  template: runner/templates/p0_controller_v3.luau
+  route:
+    file: config/p0_route_F1.json
+    sha256: b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a
+  timing:
+    t_attempt: 60       # s, T_attempt (server-side deadline in the controller), as M0
+    t_waypoint: 10
+    settle: 2
+    tick: 0.05
+    sample_every: 1     # s, position samples while alive, as in the earlier player
+  controller_sha256: cd9a7a0a21ccd32ea7e14990f17b7bba58083f1bfeb2a81e77cf2e122a2d0f8c
+
+n_attempts: 3           # SPEC section 9: N = 3 per scene version
+pass_k: 3               # 3/3; never lowered. 0 < successes < 3 stops the episode (INCONSISTENT)
+max_revisions: 3        # SPEC sections 6 and 12: proposals per episode, rejects included
+caps:                   # SPEC section 12, enforced per episode (hard stop, not a target)
+  attempts_per_episode: 12          # N x (1 + max_revisions)
+  architect_calls_per_episode: 3
+
+origin: [0, 100, 0]
+gap_area_margin_studs: 4
+tool_timeouts_s:
+  get_studio_mode: 15
+  run_code: 30
+  start_stop_play: 30
+  run_script_in_play_mode: 90       # > t_attempt, so the controller's deadline fires first
+
+preflight:                          # ADR 0011: read-only probe before every build (right place, one driver)
+  script: runner/templates/preflight_v1.luau
+  sha256: 29ffe3d7d717a08910e831054040bcd24098d90a540dc6b7e359627023fdbd6c
+
+classifier:
+  file: config/classifier.yaml
+  sha256: cb884ae43587edf41a278520db40c126f184062794dc920cc86d6c7a53454cee
+
+architect:
+  ladder: config/architect_ladder.yaml
+  ladder_sha256: 14219e3e779d829427270ad48ac460c14a15aa874e02bc1505f0e717dac2a08a
+  job: architect_ladder             # JzLab budgets.yaml, cap $90 (ROADMAP section 9)
+  prompt: baseline
+  prompt_sha256: df1b7a125269a66a054f74fbccfd22098b61bd79e3549adb1f4aedb14f5f83bd
+  prompt_bytes_cap: 24000           # jzapi byte bound of one request; larger requests are refused unsent
+
+# Gate: one condition, one episode of N = 3 attempts. The architect block above is required by the loader and unused.
+conditions:
+  - {id: B0, proposer: none, episodes: 1}
+
+dry_run:
+  fixtures: {}
