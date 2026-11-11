@@ -1,0 +1,31 @@
+{
+  "schema": "worldsmith.scene/0.1",
+  "scene_id": "f1_c",
+  "family": "F1",
+  "version": 1,
+  "units": "stud",
+  "up": "+Y",
+  "bounds": {"min": [-40, -40, -10], "max": [40, 40, 80]},
+  "protected": ["spawn", "goal", "kill_floor", "bounds", "plat_a", "corridor", "ledge_1", "wall_ledge", "plat_b", "gap_1", "wall_l1", "wall_l2", "wall_r", "trig_bridge", "trig_goal"],
+  "constraints": {"min_gap": 12, "min_lever_detour": 10, "player_physics": "locked", "required_events": ["BRIDGE_CROSSED", "GOAL_TOUCHED"]},
+  "entities": [
+    {"id": "plat_a", "type": "Platform", "pos": [0, -1, 6], "size": [16, 2, 12]},
+    {"id": "spawn", "type": "Spawn", "on": "plat_a"},
+    {"id": "corridor", "type": "Platform", "pos": [0, -1, 24], "size": [10, 2, 24]},
+    {"id": "wall_l1", "type": "Wall", "pos": [-4.5, 4, 16], "size": [1, 8, 8]},
+    {"id": "wall_l2", "type": "Wall", "pos": [-4.5, 4, 32], "size": [1, 8, 8]},
+    {"id": "wall_r", "type": "Wall", "pos": [4.5, 4, 24], "size": [1, 8, 24]},
+    {"id": "ledge_1", "type": "Platform", "pos": [-11, -1, 24], "size": [12, 2, 8]},
+    {"id": "wall_ledge", "type": "Wall", "pos": [-12, 4, 24], "size": [2, 8, 8]},
+    {"id": "lever_1", "type": "Lever", "on": "ledge_1", "pos": [-16, 0, 24], "controls": "gate_1"},
+    {"id": "gate_1", "type": "Gate", "pos": [0, 4, 33.5], "size": [8, 8, 1], "opens_on": "lever_1"},
+    {"id": "gap_1", "type": "Gap", "from": "corridor", "to": "plat_b", "axis": "+Z", "width": 16},
+    {"id": "bridge_1", "type": "Bridge", "spans": "gap_1", "length": 16, "width": 6, "thickness": 1, "lateral_offset": 0},
+    {"id": "trig_bridge", "type": "Trigger", "event": "BRIDGE_CROSSED", "on": "gap_1", "region": "landing", "height": 6},
+    {"id": "plat_b", "type": "Platform", "pos": [0, -1, 60], "size": [16, 2, 16]},
+    {"id": "goal", "type": "Goal", "on": "plat_b", "size": [4, 1, 4]},
+    {"id": "trig_goal", "type": "Trigger", "event": "GOAL_TOUCHED", "on": "goal", "region": "whole", "height": 6},
+    {"id": "kill_floor", "type": "KillFloor", "pos": [0, -30, 34], "size": [64, 2, 80]},
+    {"id": "decor_1", "type": "Decor", "palette": "lamp", "pos": [6, 3, 1], "size": [1, 6, 1]}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "schema": "worldsmith.patch/0.2",
+  "base_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387",
+  "ops": [
+    {"op": "move", "id": "lever_1", "pos": [-10, 0, 24]},
+    {"op": "set", "id": "bridge_1", "field": "length", "value": 16}
+  ]
+}

@@ -11,7 +11,9 @@ SCENES_ROOT = REPO_ROOT / "scenes"
 F1A = SCENES_ROOT / "F1-A" / "scene.json"
 F1A_FIX = SCENES_ROOT / "F1-A" / "fix.json"
 F1E = SCENES_ROOT / "F1-E" / "scene.json"
-FIXTURES = [F1A, F1A_FIX, F1E]
+# WS-14 broken fixtures (ADR 0013) and the scenes their hand-authored M1 patches produce.
+WS14 = [SCENES_ROOT / n / f for n in ("F1-B", "F1-C", "F1-D") for f in ("scene.json", "fix.json")]
+FIXTURES = [F1A, F1A_FIX, F1E, *WS14]
 
 # SPEC section 6: the closed entity-type set.
 ENTITY_TYPES = {

@@ -11,4 +11,10 @@ identify hand-authored fixtures. They are not results.
 | --- | --- | --- | --- |
 | `F1-A/fix.json` | f1_a | 1 | `49371fa767666577d2f1c30571231069af8eeaeb2eace76e6e832f38c281a396` |
 | `F1-A/scene.json` | f1_a | 1 | `92f866098bfb850cf4c464179887a862f305c143c8e0b38efdc7978493cddb1d` |
+| `F1-B/fix.json` | f1_b | 2 | `74c137b1180168319c0c3d9469e91b484d6fc828a8a69c47485404c8c6a71f21` |
+| `F1-B/scene.json` | f1_b | 1 | `2b54bbe734386084383cc192386ed47d72805855034c6704dbc1e0c5d1df1a4b` |
+| `F1-C/fix.json` | f1_c | 2 | `53abb4abcafc90d8323aae77722fb93dd984bd81aedfdb7d463b71d639fce6f0` |
+| `F1-C/scene.json` | f1_c | 1 | `e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585` |
+| `F1-D/fix.json` | f1_d | 2 | `9cc6f35cdda44fe5ea751865a5bdef96acbd8714301c8c1d9c4d51d226a7a615` |
+| `F1-D/scene.json` | f1_d | 1 | `16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387` |
 | `F1-E/scene.json` | f1_e | 1 | `f8a8e654274354e33b340da77235f6b27ea0aa01fcdd55235fd2c98d45df0db3` |
