@@ -1,0 +1,9 @@
+{
+ "error": null,
+ "index": 13,
+ "relay_elapsed_note": "request written -> answer saved; includes the operator's relay time",
+ "relay_elapsed_s": 16.452,
+ "t_response": "2026-11-11T20:55:05.465133Z",
+ "text": "stop",
+ "tool": "get_studio_mode"
+}

@@ -1,0 +1,289 @@
+[
+ {
+  "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+  "candidate_hash": null,
+  "codes": [
+   "GATE_BYPASSED",
+   "OUTSIDE_ROOM"
+  ],
+  "cost_usd": null,
+  "detail": {
+   "b2": {
+    "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+    "codes": [
+     "GATE_BYPASSED",
+     "OUTSIDE_ROOM"
+    ],
+    "episode": 0,
+    "graph_jump": "CONNECTED",
+    "graph_walk": "DISCONNECTED",
+    "index": 0,
+    "ok": false,
+    "patch": {
+     "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+     "ops": [
+      {
+       "id": "gate_1",
+       "op": "move",
+       "pos": [
+        14.211,
+        -126.379,
+        135.382
+       ]
+      },
+      {
+       "field": "lateral_offset",
+       "id": "bridge_1",
+       "op": "set",
+       "value": 6.176
+      }
+     ],
+     "schema": "worldsmith.patch/0.2"
+    },
+    "patch_hash": "44682960e851dea362c8a54d4604af5846cab8b3579bcf494723e546e5e831af",
+    "rng": {
+     "derivation": "worldsmith.b2/0.1|seed=0|episode=0|proposal=0",
+     "seed": 8884782297876714068,
+     "state_sha256": "f01d23d1904bb58b539c9dfc72d9b0ecaf47abb1b2662bd8486ba5626161ab5d"
+    },
+    "sampler": "worldsmith.b2/0.1",
+    "seed": 0,
+    "stage": "M1",
+    "warnings": [
+     "GRAPH_DISCONNECTED_WALK"
+    ]
+   },
+   "on_version": 1
+  },
+  "error": null,
+  "graph_walk": "DISCONNECTED",
+  "index": 1,
+  "malformed": null,
+  "model_calls": 0,
+  "patch": {
+   "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+   "ops": [
+    {
+     "id": "gate_1",
+     "op": "move",
+     "pos": [
+      14.211,
+      -126.379,
+      135.382
+     ]
+    },
+    {
+     "field": "lateral_offset",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 6.176
+    }
+   ],
+   "schema": "worldsmith.patch/0.2"
+  },
+  "request_sha": null,
+  "source": "random_valid",
+  "verdict": "REJECTED",
+  "warnings": [
+   "GRAPH_DISCONNECTED_WALK"
+  ]
+ },
+ {
+  "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+  "candidate_hash": null,
+  "codes": [
+   "OUTSIDE_ROOM",
+   "PENETRATION"
+  ],
+  "cost_usd": null,
+  "detail": {
+   "b2": {
+    "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+    "codes": [
+     "OUTSIDE_ROOM",
+     "PENETRATION"
+    ],
+    "episode": 0,
+    "graph_jump": "DISCONNECTED",
+    "graph_walk": "DISCONNECTED",
+    "index": 1,
+    "ok": false,
+    "patch": {
+     "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+     "ops": [
+      {
+       "entity": {
+        "id": "b2_wall_1_0",
+        "pos": [
+         -131.509,
+         82.929,
+         197.569
+        ],
+        "size": [
+         48.164,
+         9.426,
+         52.445
+        ],
+        "type": "Wall"
+       },
+       "op": "add"
+      },
+      {
+       "field": "length",
+       "id": "bridge_1",
+       "op": "set",
+       "value": 43.198
+      }
+     ],
+     "schema": "worldsmith.patch/0.2"
+    },
+    "patch_hash": "148c7f23db337c76356251bde4afe1f43678482ad95f7db4e9f84eedcfc068c0",
+    "rng": {
+     "derivation": "worldsmith.b2/0.1|seed=0|episode=0|proposal=1",
+     "seed": 1018292198999215657,
+     "state_sha256": "916391e4562a347f74b7f5a94db54681bb0c68aa9e5f1d82a8281c8f59da6e1e"
+    },
+    "sampler": "worldsmith.b2/0.1",
+    "seed": 0,
+    "stage": "M1",
+    "warnings": [
+     "GRAPH_DISCONNECTED_WALK"
+    ]
+   },
+   "on_version": 1
+  },
+  "error": null,
+  "graph_walk": "DISCONNECTED",
+  "index": 2,
+  "malformed": null,
+  "model_calls": 0,
+  "patch": {
+   "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+   "ops": [
+    {
+     "entity": {
+      "id": "b2_wall_1_0",
+      "pos": [
+       -131.509,
+       82.929,
+       197.569
+      ],
+      "size": [
+       48.164,
+       9.426,
+       52.445
+      ],
+      "type": "Wall"
+     },
+     "op": "add"
+    },
+    {
+     "field": "length",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 43.198
+    }
+   ],
+   "schema": "worldsmith.patch/0.2"
+  },
+  "request_sha": null,
+  "source": "random_valid",
+  "verdict": "REJECTED",
+  "warnings": [
+   "GRAPH_DISCONNECTED_WALK"
+  ]
+ },
+ {
+  "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+  "candidate_hash": null,
+  "codes": [
+   "OUTSIDE_ROOM"
+  ],
+  "cost_usd": null,
+  "detail": {
+   "b2": {
+    "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+    "codes": [
+     "OUTSIDE_ROOM"
+    ],
+    "episode": 0,
+    "graph_jump": "DISCONNECTED",
+    "graph_walk": "DISCONNECTED",
+    "index": 2,
+    "ok": false,
+    "patch": {
+     "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+     "ops": [
+      {
+       "entity": {
+        "id": "b2_decor_2_0",
+        "palette": "banner",
+        "pos": [
+         -21.069,
+         -161.191,
+         206.378
+        ],
+        "size": [
+         6.24,
+         0.589,
+         0.527
+        ],
+        "type": "Decor"
+       },
+       "op": "add"
+      }
+     ],
+     "schema": "worldsmith.patch/0.2"
+    },
+    "patch_hash": "d55ab6cca8f9994f86fabff69e827c76def20dd0987271175a32fe930bf80fb9",
+    "rng": {
+     "derivation": "worldsmith.b2/0.1|seed=0|episode=0|proposal=2",
+     "seed": 11164638306861740598,
+     "state_sha256": "513ac667dcc0862f52036575a30c3dd637c2a09d4a3f8fd0020406d214cb84b1"
+    },
+    "sampler": "worldsmith.b2/0.1",
+    "seed": 0,
+    "stage": "M1",
+    "warnings": [
+     "GRAPH_DISCONNECTED_WALK"
+    ]
+   },
+   "on_version": 1
+  },
+  "error": null,
+  "graph_walk": "DISCONNECTED",
+  "index": 3,
+  "malformed": null,
+  "model_calls": 0,
+  "patch": {
+   "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+   "ops": [
+    {
+     "entity": {
+      "id": "b2_decor_2_0",
+      "palette": "banner",
+      "pos": [
+       -21.069,
+       -161.191,
+       206.378
+      ],
+      "size": [
+       6.24,
+       0.589,
+       0.527
+      ],
+      "type": "Decor"
+     },
+     "op": "add"
+    }
+   ],
+   "schema": "worldsmith.patch/0.2"
+  },
+  "request_sha": null,
+  "source": "random_valid",
+  "verdict": "REJECTED",
+  "warnings": [
+   "GRAPH_DISCONNECTED_WALK"
+  ]
+ }
+]

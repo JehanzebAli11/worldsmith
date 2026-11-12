@@ -1,0 +1,40 @@
+[
+ {
+  "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+  "candidate_hash": "53abb4abcafc90d8323aae77722fb93dd984bd81aedfdb7d463b71d639fce6f0",
+  "codes": [],
+  "cost_usd": 0.0207175,
+  "detail": {
+   "model_id": "claude-sonnet-5-5",
+   "model_role": "sonnet",
+   "on_version": 1,
+   "prompt_bytes_bound": 17630,
+   "provider": "jzapi",
+   "stop_reason": "end_turn"
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 1,
+  "malformed": null,
+  "model_calls": 1,
+  "patch": {
+   "base_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+   "ops": [
+    {
+     "id": "lever_1",
+     "op": "move",
+     "pos": [
+      -10,
+      0,
+      24
+     ]
+    }
+   ],
+   "schema": "worldsmith.patch/0.2"
+  },
+  "request_sha": "c455f48d39f599d7e7dba7397447aec4bd7d09f73a7c839329b364fd8cfe857e",
+  "source": "architect",
+  "verdict": "ACCEPTED",
+  "warnings": []
+ }
+]

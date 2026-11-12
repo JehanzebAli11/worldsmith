@@ -1,0 +1,132 @@
+{
+ "architect_calls": 1,
+ "attempts_used": 6,
+ "canonical": [
+  {
+   "n": 3,
+   "outcomes": [
+    "STUCK",
+    "STUCK",
+    "STUCK"
+   ],
+   "scene_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+   "successes": 0,
+   "version": 1
+  },
+  {
+   "n": 3,
+   "outcomes": [
+    "SUCCESS",
+    "SUCCESS",
+    "SUCCESS"
+   ],
+   "scene_hash": "53abb4abcafc90d8323aae77722fb93dd984bd81aedfdb7d463b71d639fce6f0",
+   "successes": 3,
+   "version": 2
+  }
+ ],
+ "caps": {
+  "architect_calls_per_episode": 3,
+  "attempts_per_episode": 12,
+  "max_revisions": 3
+ },
+ "condition": "B3-opus",
+ "config_sha256": "897a730aa0ce244181e525bd638c83b82945b6a05e00a851436a61d37baca285",
+ "cost_usd_reported": 0.038835,
+ "detail": "",
+ "disclosure": "P0 player p0.v3: Substrate probe: the patch changes the real engine outcome. Not an Autopilot or agent result.",
+ "dry_run": false,
+ "episode": "B3-opus/ep1",
+ "experiment": "m2_hard_f1c",
+ "final": {
+  "n": 3,
+  "scene_hash": "53abb4abcafc90d8323aae77722fb93dd984bd81aedfdb7d463b71d639fce6f0",
+  "successes": 3,
+  "verdict": "PASS",
+  "version": 2
+ },
+ "model_calls": 1,
+ "n": 3,
+ "pass_k": 3,
+ "passed_final": true,
+ "passed_original": false,
+ "player": {
+  "controller_sha256": "cd9a7a0a21ccd32ea7e14990f17b7bba58083f1bfeb2a81e77cf2e122a2d0f8c",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "freeze_manifest_sha": null,
+  "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+  "t_attempt_s": 60,
+  "tier": "P0",
+  "version": "p0.v3"
+ },
+ "proposer": "architect",
+ "repaired": true,
+ "revisions": {
+  "accepted": 1,
+  "errors": 0,
+  "malformed": 0,
+  "max": 3,
+  "rejected": 0,
+  "used": 1,
+  "verdicts": [
+   "ACCEPTED"
+  ]
+ },
+ "role": "opus",
+ "schema": "worldsmith.episode_summary/0.1",
+ "seed": null,
+ "stage": "M1",
+ "status": "complete",
+ "versions": [
+  {
+   "attempted": 3,
+   "n": 3,
+   "outcomes": [
+    "STUCK",
+    "STUCK",
+    "STUCK"
+   ],
+   "scene_hash": "e916fde28607c2b5db5db4ed48f05e0c63655131a1b30c2f795ada8b2d38f585",
+   "status": "complete",
+   "successes": 0,
+   "tags": [
+    [
+     "STUCK"
+    ],
+    [
+     "STUCK"
+    ],
+    [
+     "STUCK"
+    ]
+   ],
+   "verdict": "FAIL",
+   "version": 1
+  },
+  {
+   "attempted": 3,
+   "n": 3,
+   "outcomes": [
+    "SUCCESS",
+    "SUCCESS",
+    "SUCCESS"
+   ],
+   "scene_hash": "53abb4abcafc90d8323aae77722fb93dd984bd81aedfdb7d463b71d639fce6f0",
+   "status": "complete",
+   "successes": 3,
+   "tags": [
+    [
+     "SUCCESS"
+    ],
+    [
+     "SUCCESS"
+    ],
+    [
+     "SUCCESS"
+    ]
+   ],
+   "verdict": "PASS",
+   "version": 2
+  }
+ ]
+}
