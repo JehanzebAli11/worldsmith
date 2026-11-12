@@ -23,9 +23,27 @@ PR #40). Full design: [`docs/SPEC.md`](docs/SPEC.md).
 The validator rejects all 69 abuse cases in `tests/abuse/reject/` and accepts the 13 legitimate
 ones in `tests/abuse/accept/` (CPU tests).
 
+### Harder rooms: `m2_hard` (11–12 Nov 2026)
+
+Four rooms at the wider M1 patch stage (bridge, lever, gate and walls can change), player p0.v3,
+3 attempts per version. Rooms repaired, out of episodes run (`bundles/experiments/m2_hard_<room>/results.json`):
+
+| Room (defect) | No patch | Hand fix | Random valid patch | Haiku | Sonnet | Opus |
+| --- | --- | --- | --- | --- | --- | --- |
+| F1-A (bridge too short) | 0/1 | 1/1 | 0/3 | 3/3 | 3/3 | 3/3 |
+| F1-B (bridge 10 studs off the path) | 0/1 | 1/1 | 0/3 | 3/3 | 3/3 | 3/3 |
+| F1-C (lever walled off) | 0/1 | 1/1 | 0/3 | 0/3 | 3/3 | 3/3 |
+| F1-D (lever walled off and bridge short) | 0/1 | 1/1 | 0/3 | 0/3 | 3/3 | 3/3 |
+| **Total** | 0/4 | 4/4 | 0/12 | 6/12 | 12/12 | 12/12 |
+
+Architect calls used: Haiku 26, Sonnet 19, Opus 14 (Opus needed one call in 11 of its 12 episodes).
+Spend: 59 calls, $0.983522 (`results/usage.csv`), against a declared worst case of $37.728.
+Haiku found the bridge fixes but never a lever position the validator accepts (too short a detour,
+a moved gate, or a forbidden op). Relay notes for the few non-live answers are in each part's `RELAY_NOTE.md`.
+
 What this does not show yet: the player is a scripted walker (server-side `MoveTo` waypoints,
-never jumps), not an AI agent. B3 is one episode per model, and F1-A is easy enough that a random
-valid patch also fixes it, so it doesn't separate the models. Harder rooms come next.
+never jumps), not an AI agent. Three episodes per model per room are counts, not rates, and four
+hand-built rooms are not a benchmark. Next: more rooms and episodes before any rate or ranking claim.
 
 ## Build log
 

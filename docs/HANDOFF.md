@@ -1266,3 +1266,31 @@ not pushed)
 2. The M1 fixtures cannot express an accepted-but-still-broken revision followed by another
    revision (a fixture holds one scene and one observation). Leave that path to the orchestrator
    tests (scripted architects), or extend the fixture format? Recommended: leave it.
+
+## 2026-11-12 · m2_hard run complete (control thread; relay)
+
+**Done**: all four parts of `config/experiments/m2_hard.yaml` (owner-approved worst case $37.728)
+ran live, relayed call by call; architect calls answered by the owner's Mac loop.
+
+**Verified** (each part's `results.json`; spend from `results/usage.csv`, rows after 2026-11-11)
+
+| part | B0 | B1 | B2 | B3-haiku | B3-sonnet | B3-opus |
+|---|---|---|---|---|---|---|
+| m2_hard_f1a | 0/1 | 1/1 | 0/3 | 3/3 | 3/3 | 3/3 |
+| m2_hard_f1b | 0/1 | 1/1 | 0/3 | 3/3 | 3/3 | 3/3 |
+| m2_hard_f1c | 0/1 | 1/1 | 0/3 | 0/3 | 3/3 | 3/3 |
+| m2_hard_f1d | 0/1 | 1/1 | 0/3 | 0/3 | 3/3 | 3/3 |
+
+- Architect calls per episode: haiku f1a [2,1,2], f1b [1,1,1], f1c [3,3,3], f1d [3,3,3]; sonnet
+  [1,2,2], [1,1,1], [1,3,1], [1,2,3]; opus [1,1,1], [1,1,1], [1,1,1], [3,1,1].
+- Spend: 59 calls, $0.983522 (haiku 26 / $0.039376, sonnet 19 / $0.399992, opus 14 / $0.544154).
+- B2's 36 proposals were all rejected, as `bundles/hardness/` predicted for seeds 0–2.
+- Relay deviations are disclosed in `bundles/experiments/m2_hard_f1b/RELAY_NOTE.md`, `m2_hard_f1c/`
+  and `m2_hard_f1d/`; none touched a play outcome.
+
+**Next**
+1. More rooms (and episodes) before any rate or ranking claim; candidates: the "gate not linked"
+   and "low clearance" families (SPEC §5), which need their own ADR and stage.
+2. Kickoff follow-up post with these counts (n stated, player tier labelled).
+
+**Open questions**: none new.

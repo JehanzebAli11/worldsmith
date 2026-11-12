@@ -1,0 +1,20 @@
+{
+ "condition_role": "haiku",
+ "cost_usd": 0.0015987750000000002,
+ "latency_s": 10.113637124886736,
+ "model_id": "claude-haiku-5-5",
+ "model_role": "haiku",
+ "provider": "jzapi",
+ "request_id": "req_011CgxcgC8CnRtYirW6C3UTz",
+ "request_sha": "62dad7740357611f768b2714c9e85fc89b4a5de16651e8e2a43e79eed100ffe4",
+ "response_text": "{\"schema\":\"worldsmith.patch/0.2\",\"base_hash\":\"8ec90840edfb7fede5fd25d0cae3f8e6fd1fbc66591f71762d550a2cbde8a000\",\"ops\":[{\"op\":\"move\",\"id\":\"lever_1\",\"pos\":[-8,0,24]}]}",
+ "schema": "worldsmith.architect_reply/0.1",
+ "stop_reason": "end_turn",
+ "usage": {
+  "cache_creation_input_tokens": 787,
+  "cache_read_input_tokens": 0,
+  "cache_write_1h_tokens": 0,
+  "input_tokens": 5894,
+  "output_tokens": 1822
+ }
+}

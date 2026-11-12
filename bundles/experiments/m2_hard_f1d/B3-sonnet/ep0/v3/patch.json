@@ -1,0 +1,15 @@
+{
+ "base_hash": "8ec90840edfb7fede5fd25d0cae3f8e6fd1fbc66591f71762d550a2cbde8a000",
+ "ops": [
+  {
+   "id": "lever_1",
+   "op": "move",
+   "pos": [
+    -10,
+    0,
+    24
+   ]
+  }
+ ],
+ "schema": "worldsmith.patch/0.2"
+}

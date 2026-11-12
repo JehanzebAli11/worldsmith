@@ -1,0 +1,52 @@
+{
+ "caps": {
+  "architect_calls_per_episode": 3,
+  "attempts_per_episode": 12
+ },
+ "condition": "B3-opus",
+ "config_sha256": "897a730aa0ce244181e525bd638c83b82945b6a05e00a851436a61d37baca285",
+ "dry_run": false,
+ "episode": "B3-opus/ep2",
+ "experiment": "m2_hard_f1d",
+ "index": 2,
+ "max_revisions": 3,
+ "n_attempts": 3,
+ "nonces": [
+  [
+   "2f57d0ddbef93f4a",
+   "cc2144d6010e09df",
+   "fbf3fe78ba8e4fa3"
+  ],
+  [
+   "68c77ec15416985a",
+   "b9224a282ca11d42",
+   "84a9d4562471c052"
+  ],
+  [
+   "12f4f54ac3ceb145",
+   "d3bac8e498566369",
+   "82fa0026d9d81496"
+  ],
+  [
+   "f311258a5298f47b",
+   "e0a162ac18ff8498",
+   "5681458e9bd48cc8"
+  ]
+ ],
+ "pass_k": 3,
+ "player": {
+  "controller_sha256": "cd9a7a0a21ccd32ea7e14990f17b7bba58083f1bfeb2a81e77cf2e122a2d0f8c",
+  "driver": "server-scripted Humanoid:MoveTo waypoints via run_script_in_play_mode; never jumps",
+  "freeze_manifest_sha": null,
+  "route_sha256": "b9514a4b5bba46e9c77e7554486515e7de6e26ff0cfe1d77a62e26e1b525b36a",
+  "t_attempt_s": 60,
+  "tier": "P0",
+  "version": "p0.v3"
+ },
+ "proposer": "architect",
+ "role": "opus",
+ "scene_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387",
+ "schema": "worldsmith.episode/0.1",
+ "seed": null,
+ "stage": "M1"
+}

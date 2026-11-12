@@ -1,0 +1,7 @@
+{
+ "args": {},
+ "index": 3,
+ "t_request": "2026-11-12T01:51:08.146487Z",
+ "timeout_s": 15,
+ "tool": "get_studio_mode"
+}

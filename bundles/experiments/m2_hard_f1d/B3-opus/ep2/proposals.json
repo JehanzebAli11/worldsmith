@@ -1,0 +1,138 @@
+[
+ {
+  "base_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387",
+  "candidate_hash": null,
+  "codes": [
+   "PENETRATION"
+  ],
+  "cost_usd": 0.039311,
+  "detail": {
+   "model_id": "claude-opus-5-5",
+   "model_role": "opus",
+   "on_version": 1,
+   "prompt_bytes_bound": 17629,
+   "provider": "jzapi",
+   "stop_reason": "end_turn"
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 1,
+  "malformed": null,
+  "model_calls": 1,
+  "patch": {
+   "base_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387",
+   "ops": [
+    {
+     "id": "lever_1",
+     "op": "move",
+     "pos": [
+      -10.5,
+      0,
+      24
+     ]
+    },
+    {
+     "field": "length",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 16
+    }
+   ],
+   "schema": "worldsmith.patch/0.2"
+  },
+  "request_sha": "96eb7f9fcecde4a5720ea234fb170e1036c9eeda639266fd55444cbd9e6a7713",
+  "source": "architect",
+  "verdict": "REJECTED",
+  "warnings": []
+ },
+ {
+  "base_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387",
+  "candidate_hash": null,
+  "codes": [
+   "DETOUR_TOO_SHORT"
+  ],
+  "cost_usd": 0.0394894,
+  "detail": {
+   "model_id": "claude-opus-5-5",
+   "model_role": "opus",
+   "on_version": 1,
+   "prompt_bytes_bound": 18384,
+   "provider": "jzapi",
+   "stop_reason": "end_turn"
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 2,
+  "malformed": null,
+  "model_calls": 1,
+  "patch": {
+   "base_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387",
+   "ops": [
+    {
+     "id": "lever_1",
+     "op": "move",
+     "pos": [
+      -9.5,
+      0,
+      24
+     ]
+    },
+    {
+     "field": "length",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 16
+    }
+   ],
+   "schema": "worldsmith.patch/0.2"
+  },
+  "request_sha": "fc3ec3fdd094ba4b3455ebebfc6556a96bbf51cef68474306696b1ed8e226f40",
+  "source": "architect",
+  "verdict": "REJECTED",
+  "warnings": []
+ },
+ {
+  "base_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387",
+  "candidate_hash": "5e3734cd81b983049e0fe41ae2f63f84c3c1e17fc375a3016a17e5dd0e0529e1",
+  "codes": [],
+  "cost_usd": 0.06442540000000001,
+  "detail": {
+   "model_id": "claude-opus-5-5",
+   "model_role": "opus",
+   "on_version": 1,
+   "prompt_bytes_bound": 19133,
+   "provider": "jzapi",
+   "stop_reason": "end_turn"
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 3,
+  "malformed": null,
+  "model_calls": 1,
+  "patch": {
+   "base_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387",
+   "ops": [
+    {
+     "id": "lever_1",
+     "op": "move",
+     "pos": [
+      -10,
+      0,
+      21
+     ]
+    },
+    {
+     "field": "length",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 16
+    }
+   ],
+   "schema": "worldsmith.patch/0.2"
+  },
+  "request_sha": "ed6c3f8b437048e4e2f88cf0bebb89fc738cdf54d3a46e3654aa0624edc0ba76",
+  "source": "architect",
+  "verdict": "ACCEPTED",
+  "warnings": []
+ }
+]

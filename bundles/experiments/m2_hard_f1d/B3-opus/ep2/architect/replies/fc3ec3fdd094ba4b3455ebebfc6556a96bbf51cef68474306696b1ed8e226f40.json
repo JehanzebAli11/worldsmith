@@ -1,0 +1,20 @@
+{
+ "condition_role": "opus",
+ "cost_usd": 0.0394894,
+ "latency_s": 9.433581582969055,
+ "model_id": "claude-opus-5-5",
+ "model_role": "opus",
+ "provider": "jzapi",
+ "request_id": "req_011CgxnTYiVQKiZkuBAqkgDw",
+ "request_sha": "fc3ec3fdd094ba4b3455ebebfc6556a96bbf51cef68474306696b1ed8e226f40",
+ "response_text": "{\"schema\":\"worldsmith.patch/0.2\",\"base_hash\":\"16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387\",\"ops\":[{\"op\":\"move\",\"id\":\"lever_1\",\"pos\":[-9.5,0,24]},{\"op\":\"set\",\"id\":\"bridge_1\",\"field\":\"length\",\"value\":16}]}",
+ "schema": "worldsmith.architect_reply/0.1",
+ "stop_reason": "end_turn",
+ "usage": {
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 787,
+  "cache_write_1h_tokens": 0,
+  "input_tokens": 5618,
+  "output_tokens": 843
+ }
+}

@@ -1,0 +1,259 @@
+{
+ "attempt": 2,
+ "call_index": 21,
+ "cause": null,
+ "detail": "BRIDGE_CROSSED then GOAL_TOUCHED",
+ "events": [
+  "LEVER_ACTIVATED",
+  "GATE_OPENED",
+  "BRIDGE_CROSSED",
+  "GOAL_TOUCHED"
+ ],
+ "events_agree": true,
+ "events_detail": [
+  {
+   "event": "LEVER_ACTIVATED",
+   "id": "lever_1",
+   "pos": [
+    -3.96,
+    3.0,
+    22.43
+   ],
+   "t_server": 1794475557.786
+  },
+  {
+   "event": "GATE_OPENED",
+   "id": "gate_1",
+   "pos": null,
+   "t_server": 1794475557.786
+  },
+  {
+   "event": "BRIDGE_CROSSED",
+   "id": "trig_bridge",
+   "pos": [
+    0.0,
+    3.0,
+    48.01
+   ],
+   "t_server": 1794475569.286
+  },
+  {
+   "event": "GOAL_TOUCHED",
+   "id": "trig_goal",
+   "pos": [
+    0.0,
+    3.0,
+    55.45
+   ],
+   "t_server": 1794475570.052
+  }
+ ],
+ "fell_in_area": null,
+ "hypothesis": null,
+ "nonce": "b9224a282ca11d42",
+ "outcome": "SUCCESS",
+ "raw_file": "attempts/2.raw.txt",
+ "raw_sha256": "d3a9b45b5bd426ccccac9261f5dedd3b889a65a03e4ae94518519149fad8d891",
+ "relay_elapsed_s": 97.007,
+ "report": {
+  "characters_added": 1,
+  "detail": "goal event seen",
+  "died": false,
+  "events_dropped": 0,
+  "ground_steps": 0,
+  "ground_test": "floor",
+  "ground_test_end": "floor",
+  "jumps": 0,
+  "last_supported": "0.00,3.57,58.84",
+  "max_dt_warm": 0.332,
+  "pos_died": "na",
+  "ray_dist": -1,
+  "removed": false,
+  "samples": [
+   {
+    "pos": "0.00,3.00,17.06",
+    "t": 2.6517735414672643
+   },
+   {
+    "pos": "-5.49,3.00,23.61",
+    "t": 3.5681162499822676
+   },
+   {
+    "pos": "-10.42,2.98,23.98",
+    "t": 4.4849252498243
+   },
+   {
+    "pos": "-10.44,2.99,24.01",
+    "t": 5.402041249908507
+   },
+   {
+    "pos": "-10.41,2.97,23.99",
+    "t": 6.317789541557431
+   },
+   {
+    "pos": "-10.40,2.97,23.98",
+    "t": 7.2532723331823945
+   },
+   {
+    "pos": "-10.41,2.99,23.99",
+    "t": 8.21805683313869
+   },
+   {
+    "pos": "-10.44,2.99,24.00",
+    "t": 9.150859499815851
+   },
+   {
+    "pos": "-10.44,2.99,24.00",
+    "t": 10.083980583352968
+   },
+   {
+    "pos": "-10.45,2.99,23.99",
+    "t": 11.034125624923036
+   },
+   {
+    "pos": "-6.31,3.00,24.00",
+    "t": 11.934906083159149
+   },
+   {
+    "pos": "-0.19,3.00,29.33",
+    "t": 12.867956458125263
+   },
+   {
+    "pos": "-0.01,3.00,35.26",
+    "t": 13.784594249911606
+   },
+   {
+    "pos": "0.00,3.00,46.43",
+    "t": 14.717423333320767
+   },
+   {
+    "pos": "0.00,3.00,56.01",
+    "t": 15.617509208153933
+   }
+  ],
+  "samples_dropped": 0,
+  "scene_hash": "5e3734cd81b983049e0fe41ae2f63f84c3c1e17fc375a3016a17e5dd0e0529e1",
+  "settle_drift": 0,
+  "settle_max_offset": 0,
+  "settle_steps": 30,
+  "spawn_offset": 0,
+  "spawn_pos": "0.00,0.10,6.00",
+  "start_pos": "0.00,3.20,6.00",
+  "status": "route_done",
+  "t_died": -1,
+  "t_end": 15.850438083289191,
+  "t_route_start": 1.717315083136782,
+  "ticks": 236,
+  "warm_dts": [
+   0.242,
+   0.332,
+   0.284,
+   0.031,
+   0.085,
+   0.034,
+   0.033,
+   0.02,
+   0.011,
+   0.007,
+   0.033,
+   0.014,
+   0.003
+  ],
+  "warm_frames": 13,
+  "warm_wall_s": 0.88,
+  "waypoints": [
+   {
+    "died": false,
+    "i": 1,
+    "name": "corridor",
+    "pos": "0.00,3.00,19.39",
+    "reached": true,
+    "t": 2.78425066662021
+   },
+   {
+    "died": false,
+    "i": 2,
+    "name": "ledge_entry",
+    "pos": "-5.51,3.00,23.63",
+    "reached": true,
+    "t": 3.4525912499520928
+   },
+   {
+    "died": false,
+    "i": 3,
+    "name": "lever_zone",
+    "pos": "-10.45,2.99,23.99",
+    "reached": false,
+    "t": 11.468484750017524
+   },
+   {
+    "died": false,
+    "i": 4,
+    "name": "corridor_mid",
+    "pos": "-0.81,3.00,24.00",
+    "reached": true,
+    "t": 12.317349208286032
+   },
+   {
+    "died": false,
+    "i": 5,
+    "name": "before_gate",
+    "pos": "-0.07,3.00,30.36",
+    "reached": true,
+    "t": 13.000719083240256
+   },
+   {
+    "died": false,
+    "i": 6,
+    "name": "past_gate",
+    "pos": "-0.01,3.00,34.76",
+    "reached": true,
+    "t": 13.53452920820564
+   },
+   {
+    "died": false,
+    "i": 7,
+    "name": "bridge",
+    "pos": "-0.00,3.00,39.29",
+    "reached": true,
+    "t": 14.083724916679785
+   },
+   {
+    "died": false,
+    "i": 8,
+    "name": "landing",
+    "pos": "0.00,3.00,54.40",
+    "reached": true,
+    "t": 15.250717041548342
+   },
+   {
+    "died": false,
+    "i": 9,
+    "name": "goal",
+    "pos": "0.00,3.96,59.39",
+    "reached": true,
+    "t": 15.850402874872088
+   }
+  ]
+ },
+ "stuck": {
+  "epsilon_studs": 2.0,
+  "max_gap_s": 0.965,
+  "max_sample_gap_s": 1.0,
+  "n_samples": 25,
+  "reason": "dense samples (max gap 0.96 s) and no 10 s window under 2.0 studs",
+  "result": "NOT_STUCK",
+  "route_phase_s": 14.133,
+  "window": null,
+  "window_s": 10
+ },
+ "t_wall": "2026-11-12T09:26:40.738433Z",
+ "tags": [
+  "SUCCESS"
+ ],
+ "tool": {
+  "duration_s": 15.850954000139609,
+  "error": "nil",
+  "is_timeout": false
+ }
+}

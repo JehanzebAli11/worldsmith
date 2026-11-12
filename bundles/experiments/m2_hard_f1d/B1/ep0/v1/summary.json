@@ -1,0 +1,54 @@
+{
+ "attempted": 3,
+ "attempts": [
+  {
+   "attempt": 1,
+   "cause": "UNCLASSIFIED",
+   "events": [],
+   "fell_in_area": null,
+   "outcome": "STUCK",
+   "stuck": "STUCK",
+   "tags": [
+    "STUCK"
+   ]
+  },
+  {
+   "attempt": 2,
+   "cause": "UNCLASSIFIED",
+   "events": [],
+   "fell_in_area": null,
+   "outcome": "STUCK",
+   "stuck": "STUCK",
+   "tags": [
+    "STUCK"
+   ]
+  },
+  {
+   "attempt": 3,
+   "cause": "UNCLASSIFIED",
+   "events": [],
+   "fell_in_area": null,
+   "outcome": "STUCK",
+   "stuck": "STUCK",
+   "tags": [
+    "STUCK"
+   ]
+  }
+ ],
+ "build": {
+  "build_line": "WS_BUILD_OK|16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387|27",
+  "descendants": 27,
+  "expected_descendants": 27,
+  "ok": true,
+  "readback_differences": 0
+ },
+ "detail": "",
+ "episode": "B1/ep0",
+ "n": 3,
+ "scene_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387",
+ "schema": "worldsmith.version_summary/0.1",
+ "status": "complete",
+ "successes": 0,
+ "verdict": "FAIL",
+ "version": 1
+}

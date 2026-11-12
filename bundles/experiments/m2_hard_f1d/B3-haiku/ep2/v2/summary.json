@@ -1,0 +1,54 @@
+{
+ "attempted": 3,
+ "attempts": [
+  {
+   "attempt": 1,
+   "cause": "UNCLASSIFIED",
+   "events": [],
+   "fell_in_area": null,
+   "outcome": "STUCK",
+   "stuck": "STUCK",
+   "tags": [
+    "STUCK"
+   ]
+  },
+  {
+   "attempt": 2,
+   "cause": "UNCLASSIFIED",
+   "events": [],
+   "fell_in_area": null,
+   "outcome": "STUCK",
+   "stuck": "STUCK",
+   "tags": [
+    "STUCK"
+   ]
+  },
+  {
+   "attempt": 3,
+   "cause": "UNCLASSIFIED",
+   "events": [],
+   "fell_in_area": null,
+   "outcome": "STUCK",
+   "stuck": "STUCK",
+   "tags": [
+    "STUCK"
+   ]
+  }
+ ],
+ "build": {
+  "build_line": "WS_BUILD_OK|8ec90840edfb7fede5fd25d0cae3f8e6fd1fbc66591f71762d550a2cbde8a000|27",
+  "descendants": 27,
+  "expected_descendants": 27,
+  "ok": true,
+  "readback_differences": 0
+ },
+ "detail": "",
+ "episode": "B3-haiku/ep2",
+ "n": 3,
+ "scene_hash": "8ec90840edfb7fede5fd25d0cae3f8e6fd1fbc66591f71762d550a2cbde8a000",
+ "schema": "worldsmith.version_summary/0.1",
+ "status": "complete",
+ "successes": 0,
+ "verdict": "FAIL",
+ "version": 2
+}

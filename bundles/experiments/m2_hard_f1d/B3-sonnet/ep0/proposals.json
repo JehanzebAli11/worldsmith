@@ -1,0 +1,77 @@
+[
+ {
+  "base_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387",
+  "candidate_hash": "8ec90840edfb7fede5fd25d0cae3f8e6fd1fbc66591f71762d550a2cbde8a000",
+  "codes": [],
+  "cost_usd": 0.0195155,
+  "detail": {
+   "model_id": "claude-sonnet-5-5",
+   "model_role": "sonnet",
+   "on_version": 1,
+   "prompt_bytes_bound": 17629,
+   "provider": "jzapi",
+   "stop_reason": "end_turn"
+  },
+  "error": null,
+  "graph_walk": "DISCONNECTED",
+  "index": 1,
+  "malformed": null,
+  "model_calls": 1,
+  "patch": {
+   "base_hash": "16d226d197fab76625a767ec82e9aa62d1eebe5b6b97dccbfd96f2ff4bfc0387",
+   "ops": [
+    {
+     "field": "length",
+     "id": "bridge_1",
+     "op": "set",
+     "value": 16
+    }
+   ],
+   "schema": "worldsmith.patch/0.1"
+  },
+  "request_sha": "96eb7f9fcecde4a5720ea234fb170e1036c9eeda639266fd55444cbd9e6a7713",
+  "source": "architect",
+  "verdict": "ACCEPTED",
+  "warnings": [
+   "GRAPH_DISCONNECTED_WALK"
+  ]
+ },
+ {
+  "base_hash": "8ec90840edfb7fede5fd25d0cae3f8e6fd1fbc66591f71762d550a2cbde8a000",
+  "candidate_hash": "abb9557fa87caf42a75fa808fcb34acca6ae139f676696d74652b3a0fbbc6953",
+  "codes": [],
+  "cost_usd": 0.0216115,
+  "detail": {
+   "model_id": "claude-sonnet-5-5",
+   "model_role": "sonnet",
+   "on_version": 2,
+   "prompt_bytes_bound": 18149,
+   "provider": "jzapi",
+   "stop_reason": "end_turn"
+  },
+  "error": null,
+  "graph_walk": "CONNECTED",
+  "index": 2,
+  "malformed": null,
+  "model_calls": 1,
+  "patch": {
+   "base_hash": "8ec90840edfb7fede5fd25d0cae3f8e6fd1fbc66591f71762d550a2cbde8a000",
+   "ops": [
+    {
+     "id": "lever_1",
+     "op": "move",
+     "pos": [
+      -10,
+      0,
+      24
+     ]
+    }
+   ],
+   "schema": "worldsmith.patch/0.2"
+  },
+  "request_sha": "cd181ba61d97c1a3ea6937e9e6d561b7b2126a3d4ba63c602707f928d2beda69",
+  "source": "architect",
+  "verdict": "ACCEPTED",
+  "warnings": []
+ }
+]
