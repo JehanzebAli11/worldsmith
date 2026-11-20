@@ -1,0 +1,10 @@
+{
+ "note": "Worldsmith F1-A-wide (B0): F1-A with bridge_1 cut to 2 studs, leaving a 14-stud gap. Autopilot's first run showed a perfect edge jump covers about 10 studs (F1-A's 10-stud gap was crossable), so 14 is out of reach for any player. Build: python autopilot_demo/build_room.py autopilot_demo/scenes/F1-A-wide.json",
+ "prompts": [
+  {
+   "id": "F1Aw-B0",
+   "prompt": "The player spawns in a test room (Workspace/Worldsmith). Verify that the player can get from the spawn to the green goal pad (Workspace/Worldsmith/goal) by playing: walking, jumping and using what the room offers. Moving or teleporting the player, or changing the room, doesn't count.",
+   "expected": "DENIED"
+  }
+ ]
+}

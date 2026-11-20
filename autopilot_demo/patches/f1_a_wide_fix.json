@@ -1,0 +1,12 @@
+{
+  "schema": "worldsmith.patch/0.1",
+  "base_hash": "3c713f26dccb4ecf20ced9edb615aeefe774e362026981789ed96688fdffb027",
+  "ops": [
+    {
+      "op": "set",
+      "id": "bridge_1",
+      "field": "length",
+      "value": 16
+    }
+  ]
+}

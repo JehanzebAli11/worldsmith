@@ -1,0 +1,10 @@
+{
+ "note": "F1-A-wide after f1_a_wide_fix.json (bridge_1 16, the full gap), accepted by the validator at M1. Build: python autopilot_demo/build_room.py autopilot_demo/scenes/F1-A-wide.json --patch autopilot_demo/patches/f1_a_wide_fix.json --stage M1",
+ "prompts": [
+  {
+   "id": "F1Aw-B1",
+   "prompt": "The player spawns in a test room (Workspace/Worldsmith). Verify that the player can get from the spawn to the green goal pad (Workspace/Worldsmith/goal) by playing: walking, jumping and using what the room offers. Moving or teleporting the player, or changing the room, doesn't count.",
+   "expected": "CONFIRMED"
+  }
+ ]
+}
